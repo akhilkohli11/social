@@ -1,0 +1,23 @@
+CREATE TABLE SHOW_META_DETA(
+      show_id VARCHAR(100) NOT NULL ,
+      show_name VARCHAR(100) NOT NULL,
+           hashtag VARCHAR(300) DEFAULT NULL,
+      show_twitter_handle_id VARCHAR(100) DEFAULT NULL,
+       show_caste_handle_id VARCHAR(100) DEFAULT NULL,
+   PRIMARY KEY ( show_id )
+  );
+
+      CREATE TABLE SHOW_TWEET(
+            id BIGINT  NOT NULL AUTO_INCREMENT,
+            tweet longtext character set utf8 collate utf8_polish_ci DEFAULT NULL,
+            tweetText longtext character set utf8 collate utf8_polish_ci DEFAULT NULL,
+            show_name VARCHAR(100) DEFAULT NULL,
+            created_on  DATETIME NOT NULL ,
+            sentimentalScore INT NOT NULL,
+         PRIMARY KEY ( id ),
+         INDEX(show_name),
+        INDEX(show_name,sentimentalScore)
+
+        );
+
+
