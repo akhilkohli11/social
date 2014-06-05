@@ -39,4 +39,17 @@
     </servlet>
 
 
+
+    <!--<servlet>-->
+        <!--<servlet-name>Jersey Servlet</servlet-name>-->
+        <!--<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>-->
+        <!--<init-param>-->
+            <!--<param-name>com.sun.jersey.config.property.packages</param-name>-->
+            <!--<param-value>twitter.api</param-value>-->
+        <!--</init-param>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>Jersey Servlet</servlet-name>-->
+        <!--<url-pattern>/rest/*</url-pattern>-->
+    <!--</servlet-mapping>-->
 </web-app>
