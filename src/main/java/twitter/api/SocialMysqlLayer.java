@@ -87,7 +87,6 @@ public class SocialMysqlLayer {
 
                 preparedStatement.executeUpdate();
 
-                System.out.println("updating"+newid);
                 rs = statement.executeQuery("select * from SHOW_TWEET where id>"+newid+" limit 1");
                 output.write(String.valueOf(newid));
                 output.newLine();
