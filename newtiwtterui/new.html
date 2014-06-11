@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="http://f.vimeocdn.com/p/1.4.32/css/api_examples.css">
+</head>
+<body>
+<div class="wrapper">
+    <div class="container">
+        <div>
+
+            <!--
+                IMPORTANT!: Make sure the player_id param you submit in the url matches the actual ID of your iframe element.
+            -->
+            <iframe id="player" src="http://player.vimeo.com/video/7100569?api=1&amp;player_id=player" width="540" height="304" frameborder="0" webkitallowfullscreen allowfullscreen></iframe>
+
+            <button id="playButton">Play</button>
+            <button id="pauseButton">Pause</button>
+            <button id="unloadButton">Unload</button>
+
+        </div>
+    </div>
+</div>
+
+<script src="http://f.vimeocdn.com/js_v5/froogaloop2.min.js?923d7-1399965524"></script>
+<script>
+        /**
+         * Called once a vimeo player is loaded and ready to receive
+         * commands. You can add events and make api calls only after this
+         * function has been called.
+         *
+         * @param String $player_id — id of the iframe element firing the event. This is
+         * useful when listening to multiple videos so you can identify which one fired
+         * the event.
+         */
+        function ready(player_id) {
+            // Keep a reference to Froogaloop for this player
+            var player = $f(player_id),
+
+                playButton = document.getElementById('playButton'),
+                pauseButton = document.getElementById('pauseButton'),
+                unloadBUtton = document.getElementById('unloadButton');
+
+            /**
+             * Attach event listeners.
+             *
+             * If you're using a javascript framework like jQuery or Mootools
+             * you'll probably use their addEvent method to add the click events.
+             * Here we're just using the standard W3C addEventListener method. If
+             * you need IE8 support, you'll need to use attachEvent for IE8 and
+             * addEventListener for everything else (or just use jQuery or MooTools).
+             */
+
+            playButton.addEventListener('click', function() {
+                player.api('play');
+            });
+
+            pauseButton.addEventListener('click', function() {
+                player.api('pause');
+            });
+
+            unloadButton.addEventListener('click', function() {
+                player.api('unload');
+            });
+        }
+
+        window.addEventListener('load', function() {
+            //Attach the ready event to the iframe
+            $f(document.getElementById('player')).addEvent('ready', ready);
+        });
+    </script>
+</body>
+</html>

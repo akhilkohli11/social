@@ -1,0 +1,79 @@
+<HTML>
+<HEAD>
+<LINK href="twitter.css" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+    <script src="twitter-widget.js"></script>
+
+   <script src="http://platform.twitter.com/widgets.js"></script>
+    <title>Testing Pie Chart</title>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?2.1.3"></script>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.geom.js?2.1.3"></script>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.layout.js?2.1.3"></script>
+
+</HEAD>
+<!-- Begin Content -->
+<div id="content">
+
+    <!-- Begin Twitter Feed Area  -->
+    <div class="twitterfeed">
+
+        <div class="styled-select">
+            <select id="ddlViewBy">
+                <option>PrettyLittleLiars</option>
+                <option>AmericasGotTalent</option>
+                <option>OrangeIstheNewBlack</option>
+                <option>KeepingUpWiththeKardashians</option>
+                <option>LastComicStanding</option>
+                <option>TheBachelorette</option>
+                <option>MajorCrimes</option>
+                <option>Mistresses</option>
+                <option>Motive</option>
+                <option>SoYouThinkYouCanDance</option>
+                <option>Undateable</option>
+                <option>TheWilWheatonProject</option>
+                <option>MasterChef</option>
+                <option>RoyalPains</option>
+                <option>BeautyandtheBeast</option>
+                <option>BetonYourBaby</option>
+                <option>Crossbones</option>
+                <option>EscapeClub</option>
+                <option>ExtremeWeightLoss</option>
+                <option>GangRelated</option>
+                <option>JenniferFalls</option>
+                <option>JimmyKimmelLive</option>
+
+
+            </select>
+            </div>
+            <button   class="myButton"
+                    id="showTweet"><em></em>ShowTweets</button>
+            <button  class="myButton"
+                    id="positive"><em></em>Positive Tweets</button>
+        <button  class="myButton"
+                 id="neutral"><em></em>Neutral tweets</button>
+        <button  class="myButton"
+                 id="negative"><em></em>Negative Tweets</button>
+            <button   class="myButton"
+                    id="tweetsentimental"><em></em>Tweet Sentimental Analysis</button>
+            <button   class="myButton"
+                    id="trends"><em></em>Show Trends</button>
+
+
+
+        <div id="tweet">
+            <img src="index.jpg" width="99" height="75"  />
+
+        </div>
+
+        <div id="sentiment">
+
+        </div>
+
+    </div>
+    <!-- End Twitter Feed Area  -->
+
+</div>
+<!-- End Content -->
+
+</div>
+</HTML>

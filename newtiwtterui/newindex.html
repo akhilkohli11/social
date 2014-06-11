@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<HEAD>
+    <LINK href="twitter.css" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+    <script src="twitterData.js"></script>
+
+    <script src="http://platform.twitter.com/widgets.js"></script>
+    <script src="http://d3js.org/d3.v3.js"></script>
+
+    <title>Testing Pie Chart</title>
+
+</HEAD>
+<body>
+
+<div id="newcontent">
+
+    <!-- Begin Twitter Feed Area  -->
+    <div class="twitterfeed">
+
+        <div class="styled-select">
+            <select id="ddlViewBy">
+                <option>PrettyLittleLiars</option>
+                <option>AmericasGotTalent</option>
+                <option>OrangeIstheNewBlack</option>
+                <option>KeepingUpWiththeKardashians</option>
+                <option>LastComicStanding</option>
+                <option>TheBachelorette</option>
+                <option>MajorCrimes</option>
+                <option>Mistresses</option>
+                <option>Motive</option>
+                <option>SoYouThinkYouCanDance</option>
+                <option>Undateable</option>
+                <option>TheWilWheatonProject</option>
+                <option>MasterChef</option>
+                <option>RoyalPains</option>
+                <option>BeautyandtheBeast</option>
+                <option>BetonYourBaby</option>
+                <option>Crossbones</option>
+                <option>EscapeClub</option>
+                <option>ExtremeWeightLoss</option>
+                <option>GangRelated</option>
+                <option>JenniferFalls</option>
+                <option>JimmyKimmelLive</option>
+
+
+            </select>
+        </div>
+        <button   class="myButton"
+                  id="showTweet"><em></em>Tweet Graph</button>
+        <button   class="myButton"
+                  id="positiveTweet"><em></em>Positive Tweet Graph</button>
+        <button   class="myButton"
+                  id="negativeTweet"><em></em>Negative Tweet Graph</button>
+        <button   class="myButton"
+                  id="neutralTweet"><em></em>Neutral Tweet Graph</button>
+
+        <button   class="myButton"
+                  id="allgraphshow"><em>TweetStats</em></button>
+
+        <button   class="myButton"
+                  id="topthree"><em>Top 3 trending show tweet graph</em></button>
+
+        <button   class="myButton"
+                  id="trending"><em>Rankwise Show Listing</em></button>
+
+
+
+
+        <div id="tweet">
+            <img src="index.jpg" width="99" height="75"  />
+
+        </div>
+
+        <div id="sentiment">
+
+        </div>
+
+    </div>
+    </div>
+    <!-- End Twitter Feed Area  -->
+
+</div>
+</body>

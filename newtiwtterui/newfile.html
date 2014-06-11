@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<head>
+    <title>Adobe Primetime pay-TV pass: Popup vs Iframe example</title>
+    <script type="text/javascript" src="http:////ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+    <script language="JavaScript" type="text/javascript">
+        /* JavaScript API wrapper functions */
+        /* Reference to the AccessEnabler */
+        var accessEnablerObject = null;
+        /* FlashPlayer needed version */
+        var flashPlayerVersion = "10.1.53";
+        /* Define the requestor ID which is the programmer/aggregator ID. */
+        var requestorID = "REF";
+        var mvpdList = {};  // The list of cached MVPDs
+        var mvpdWindow;  // The reference to the popup with the MVPD login page
+        var cancelTimer = 0;
+        var useIframeLoginStyle = false; // by default use popup implementation
+        function checkQueryParameters(variableName) {
+            var query = window.location.search.split("?")[1];
+            var queryParams = query.split('&');
+            for (var i = 0; i < queryParams.length; i++) {
+                var pair = queryParams[i].split('=');
+                if (decodeURIComponent(pair[0]) == variableName) {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+            return null;
+        }
+        function loadAccessEnabler() {
+            var accessEnablerLocation = "http://entitlement.auth-staging.adobe.com/entitlement/AccessEnabler.swf";
+            var flashvars = false;
+            var params = {
+                menu: "false",
+                quality: "high",
+                align: "middle",
+                AllowScriptAccess: "always",
+                swliveconnect: "true",
+                color: "#33FF22"
+            };
+            var attributes = {
+                id: "AccessEnabler",
+                name: "AccessEnabler"
+            };
+            swfobject.embedSWF(accessEnablerLocation, "contentAccessEnabler", "1", "1", flashPlayerVersion, "swf/expressInstall.swf", flashvars, params, attributes);
+            // if browser is ie then force using the iframe
+            if ($.browser.msie) {
+                useIframeLoginStyle = true;
+            }
+
+            if (useIframeLoginStyle == true) {
+                $("#mvpddiv").html("<div style=\"background: red\"><input type=\"button\" id=\"btnCloseIframe\" value=\"X\" onclick=\"closeIframeAction();\"></div> <br/> <iframe id=\"mvpdframe\" name=\"mvpdframe\" src=\"about:blank\"></iframe>");
+            }
+        }
+        /*
+         * Callback indicating that the AccessEnabler swf has initialized
+         */
+        function swfLoaded() {
+            accessEnablerObject = $('#AccessEnabler').get(0);
+            // Using a custom implementation of the MVPD picker
+            accessEnablerObject.setProviderDialogURL('none');
+            accessEnablerObject.setRequestor(requestorID);
+        }
+        function logout() {
+            accessEnablerObject.logout();
+        }
+        function setAuthenticationStatus(authenticated, errorCode) {
+            if (authenticated == 0) {
+                $('#logout').hide();
+            } else if (authenticated == 1) {
+                $('#logout').show();
+            }
+        }
+        function authenticate() {
+            var selectedMvpd = $('#mvpdList').val()[0];
+            if (!useIframeLoginStyle) {
+             //   if (mvpdList[selectedMvpd].popup)
+              {
+                    mvpdWindow = window.open("http://entitlement.auth-staging.adobe.com", "mvpdframe", "width=" + 30 + ",height=" + 40, true);
+                    if (!mvpdWindow) {
+                        // Message to user that popup blocker is not allowing the authentication process to start
+                    }
+                    //watch the mvpd popup for close
+                    clearInterval(cancelTimer);
+                    cancelTimer = setInterval(checkClosed, 200);
+                }
+            }
+            accessEnablerObject.setSelectedProvider(selectedMvpd);
+        }
+        function checkClosed() {
+            try {
+                if (mvpdWindow && mvpdWindow["closed"]) {
+                    clearInterval(cancelTimer);
+                    accessEnablerObject.setSelectedProvider(null);
+                    accessEnablerObject.getAuthentication();
+                    $('#mvpddiv').hide();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        function setConfig(configXML) {
+            mvpdList = [];
+            $.each($($.parseXML(configXML)).find('mvpd'), function (idx, item) {
+                var mvpdId = $(item).find('id').text();
+                mvpdList[mvpdId] = {
+                    displayName: $(item).find('displayName').text(),
+                    logo: $(item).find('logoUrl').text(),
+                    popup: $(item).find('iFrameRequired').text() == "true",
+                    width: $(item).find('iFrameWidth').text(),
+                    height: $(item).find('iFrameHeight').text()
+                };
+                $('#mvpdList').append($('<option value="' + mvpdId + '" title="' + mvpdId + '">' + mvpdList[mvpdId].displayName + '</option>'));
+            });
+            accessEnablerObject.getAuthentication();
+        }
+        /*
+         * The custom non-Flash MVPD selector dialog will be implemented in this function.
+         */
+        function displayProviderDialog(providers) {
+            $('#picker').show();
+        }
+        function createIFrame(width, height) {
+            $('#mvpddiv').show();
+            // create iframe
+            if (useIframeLoginStyle) {
+                var createIFrameInWidthText = document.getElementById("createIFrameInWidth");
+                var createIFrameInHeightText = document.getElementById("createIFrameInHeight");
+                createIFrameInWidthText.value = width;
+                createIFrameInHeightText.value = height;
+                // Create the iFrame to the specified width and height for the auth page
+                ifrm = document.createElement("IFRAME");
+                ifrm.width = width + "px";
+                ifrm.height = height + "px";
+                ifrm.name = "mvpdframe";
+                ifrm.frameborder = "0";
+                ifrm.style.border = "0";
+                ifrm.style.zIndex = "1";
+                document.getElementById('mvpddiv').appendChild(ifrm);
+                // Copied from the entitlement document
+                // Move the div to be centered on the page relative to the size of the iFrame
+                document.getElementById('mvpddiv').style.visibility = "visible";
+                document.getElementById('mvpddiv').style.position = "absolute";
+                document.getElementById('mvpddiv').style.top = "50px";
+                document.getElementById('mvpddiv').style.left = "50%";
+                document.getElementById('mvpddiv').style.zIndex = "98";
+                document.getElementById('mvpddiv').style.marginLeft = "-" + width / 2 + "px";
+                // Force the name into the DOM since it is still not refreshed, for IE
+                window.frames["mvpdframe"].name = "mvpdframe";
+            }
+        }
+        /*
+         * The code the correctly closes the opened IFrame and does not leave the
+         * AccessEnabler in an undefined state.
+         */
+        function closeIframeAction() {
+            accessEnablerObject.setSelectedProvider(null);
+            accessEnablerObject.getAuthentication();
+            /* We use the “about:blank” value so that when the iFrame loads
+             * we do not see the the previous MVPD.
+             */
+            document.getElementById('mvpdframe').src = "about:blank";
+            document.getElementById('mvpddiv').style.visibility = "hidden";
+            document.getElementById('mvpddiv').style.display = "none";
+        }
+    </script>
+</head>
+<body onload="javascript:loadAccessEnabler();">
+<div id="aeHolder">
+    <div name="contentAccessEnabler" id="contentAccessEnabler"></div>
+</div>
+<div id="info" style="background-color: #c5ddfc">
+    <p>When adding the query parameter <i>useIframeLoginStyle=false</i> overwrite the behavior to always use a popup.
+    </p>
+    <p>When adding the query parameter <i>useIframeLoginStyle=true</i> overwrite the behavior to always use an iframe.
+    </p>
+</div>
+<div id="mvpddiv">
+    <p>
+        <strong>No login window?</strong>
+        <br/>
+        <a href="javascript:mvpdWindow.focus();">Click here to open it.</a>
+        <br/>
+        Still not working? Check popup blockers!
+    </p>
+</div>
+<div id="logout" >
+    <a href="javascript:logout();">Logout</a> to restart authentication flow.
+</div>
+<div id="picker" >
+    Choose MVPD: <br/>
+    <select id="mvpdList" multiple>
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="mercedes">Mercedes</option>
+        <option value="audi">Audi</option>
+    </select>
+    <br/>
+    <a id="authenticateButton" href="javascript:authenticate();">Authenticate</a>
+</div>
+</body>
