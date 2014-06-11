@@ -19,7 +19,7 @@ public class ReadFile {
             String sCurrentLine;
             SocialMysqlLayer socialMysqlLayer=new SocialMysqlLayer(MYSQL_DRIVER,MYSQL_URL);
 
-            br = new BufferedReader(new FileReader("/tmp/showsfinal.txt"));
+            br = new BufferedReader(new FileReader("/tmp/twitterfiles//showsfinal.txt"));
             int count=1;
           //  socialMysqlLayer.readData();
             while ((sCurrentLine = br.readLine()) != null) {

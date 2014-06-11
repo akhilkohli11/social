@@ -8,11 +8,14 @@ import javax.servlet.http.*;
 public class Loader extends HttpServlet {
 
 
-        int accesses = 0;
 
     public void init() {
         try {
             System.out.println(": initialised dsdsdsdssd");
+            NewService newService=new NewService();
+            newService.init();
+            FileService fileService=new FileService();
+            fileService.init();
             LoadApp.init();
         }
         catch (Exception e)
@@ -29,7 +32,6 @@ public class Loader extends HttpServlet {
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
 
-            accesses++;
-            out.print("Number of times this servlet has been accessed:" + accesses);
+
         }
     }
