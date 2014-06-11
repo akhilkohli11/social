@@ -151,7 +151,7 @@ public class TwitterDataRetriever {
         }
         try {
             socialMysqlLayer.populateTweetData( msg.trim(), tweettext.trim(), showName.trim(),
-                    createdAt, time, 1);
+                    createdAt, time,findSentiment(tweet));
         }
         catch (Exception e)
         {

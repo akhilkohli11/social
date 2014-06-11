@@ -30,7 +30,7 @@ public class MainJava {
             // Tab delimited file will be written to data with the name tab-file.csv
             String time="Mon Jun 09 01:25:14 +0000 2014";
             System.out.println(new Timestamp(df.parse(time).getTime()));
-            socialMysqlLayer.updateTime();
+            socialMysqlLayer.updateTime(1);
         } catch (Exception e) {
             System.out.println("Error Printing Tab Delimited File");
         }

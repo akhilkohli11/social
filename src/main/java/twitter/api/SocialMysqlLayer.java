@@ -19,7 +19,7 @@ public class SocialMysqlLayer {
     Map<String,List> timeMap=new HashMap<String, List>();
     DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
-    public void updateTime() throws Exception{
+    public void updateTime(long newid) throws Exception{
         DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
 
@@ -28,13 +28,14 @@ public class SocialMysqlLayer {
         Statement statement=null;
         ResultSet rs;
         PreparedStatement preparedStatement;
+        File file = new File("/tmp/time.tsv");
+        file.createNewFile();
         try {
-
+            output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
             int count=0;
-            long newid=0;
              rs = statement.executeQuery("select tweetText,ID from SHOW_TWEET where id>"+newid+" limit 1");
             int newcount=0;
             while (rs.next()) {
@@ -88,7 +89,8 @@ public class SocialMysqlLayer {
 
                 System.out.println("updating"+newid);
                 rs = statement.executeQuery("select * from SHOW_TWEET where id>"+newid+" limit 1");
-
+                output.write(String.valueOf(newid));
+                output.newLine();
 
 
             }
@@ -113,7 +115,7 @@ public class SocialMysqlLayer {
             } catch (SQLException se) {
                 se.printStackTrace();
             }//end finally try
-
+            output.close();
         }
     }
 
