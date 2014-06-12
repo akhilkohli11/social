@@ -5,6 +5,7 @@
     <LINK href="twitter.css" rel="stylesheet" type="text/css">
     <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
     <script src="twitterData.js"></script>
+    <script src="jquery.awesomeCloud-0.2.min.js"></script>
 
     <script src="http://platform.twitter.com/widgets.js"></script>
     <script src="http://d3js.org/d3.v3.js"></script>
@@ -15,7 +16,9 @@
 <body>
 
 <div id="newcontent">
-
+    <div id="tweet">
+        <img src="index.jpg" width="99" height="75"  />
+        <br/>
     <!-- Begin Twitter Feed Area  -->
     <div class="twitterfeed">
 
@@ -47,29 +50,59 @@
 
             </select>
         </div>
-        <button   class="myButton"
+        <br/><br/><br/>
+        <div class="styled-select">
+            <select id="time">
+                <option>jun7to14</option>
+
+            </select>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+            <button   class="myButton"
                   id="showTweet"><em></em>Tweet Graph</button>
         <button   class="myButton"
-                  id="positiveTweet"><em></em>Positive Tweet Graph</button>
+                  id="positive"><em></em>Positive Tweet Graph</button>
         <button   class="myButton"
-                  id="negativeTweet"><em></em>Negative Tweet Graph</button>
+                  id="negative"><em></em>Negative Tweet Graph</button>
         <button   class="myButton"
-                  id="neutralTweet"><em></em>Neutral Tweet Graph</button>
-
-        <button   class="myButton"
-                  id="allgraphshow"><em>TweetStats</em></button>
+                  id="neutral"><em></em>Neutral Tweet Graph</button><br/>
 
         <button   class="myButton"
-                  id="topthree"><em>Top 3 trending show tweet graph</em></button>
+                  id="all"><em>TweetStats</em></button>
 
         <button   class="myButton"
-                  id="trending"><em>Rankwise Show Listing</em></button>
+                  id="top"><em>Top 3 trending show tweet graph</em></button>
+
+        <button   class="myButton"
+                  id="trending"><em>Trends</em></button><br/>
 
 
 
 
-        <div id="tweet">
-            <img src="index.jpg" width="99" height="75"  />
+        </div>
+
+        <div role="main" style="display:none;" id="maindiv">
+
+            <div id="wordcloud2" class="wordcloud">
+                <span data-weight="9">Satisfaction</span>
+                <span data-weight="50">Orange Is the New Black</span>
+                <span data-weight="50">Orange Is the New Black</span>
+                <span data-weight="45">Keeping Up With the Kardashians</span>
+                <span data-weight="40">Pretty Little Liars</span>
+                <span data-weight="35">Beauty and the Beast</span>
+                <span data-weight="30">The Wil Wheaton Project</span>
+                <span data-weight="30">MasterChef</span>
+                <span data-weight="30">Jimmy Kimmel Live</span>
+                <span data-weight="25">So You Think You Can Dance</span>
+                <span data-weight="25">Gang Related</span>
+                <span data-weight="20">America's Got Talent</span>
+                <span data-weight="25">The Bachelorette</span>
+                <span data-weight="20">Last Comic Standing</span>
+
+
+            </div>
 
         </div>
 

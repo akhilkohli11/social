@@ -18,7 +18,7 @@ public class SocialMysqlLayer {
 
     Map<String,List> timeMap=new HashMap<String, List>();
     DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-
+    String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
     public void updateTime(long newid) throws Exception{
         DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
@@ -28,7 +28,7 @@ public class SocialMysqlLayer {
         Statement statement=null;
         ResultSet rs;
         PreparedStatement preparedStatement;
-        File file = new File("/tmp/time.tsv");
+        File file = new File(fileDirectory+"time.tsv");
         file.createNewFile();
         try {
             output = new BufferedWriter(new FileWriter(file));
@@ -126,7 +126,7 @@ public class SocialMysqlLayer {
         ResultSet rs;
         PreparedStatement preparedStatement;
         try {
-            File file = new File("/tmp/twitterfiles/"+fileName+".tsv");
+            File file = new File(fileDirectory+fileName+".tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);
@@ -158,7 +158,11 @@ public class SocialMysqlLayer {
                     output.write(create.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "") + "\t" + 0 + "\t");
 
                     for (String showName : showNames) {
-                        int finalcount = showToDateToTweetMap.get(showName).get(create);
+                        int finalcount=0;
+                        try {
+                            finalcount = showToDateToTweetMap.get(showName).get(create);
+                        }catch (Exception e)
+                        {}
                         output.write(finalcount + "\t");
                         System.out.println(showName + create + "    " + finalcount);
                     }
@@ -222,7 +226,7 @@ public class SocialMysqlLayer {
          PreparedStatement preparedStatement;
         try {
             String newshow=new String(showName);
-            File file = new File("/tmp/twitterfiles/"+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv");
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);
@@ -301,7 +305,7 @@ public class SocialMysqlLayer {
         PreparedStatement preparedStatement;
         try {
             String newshow=new String(showName);
-            File file = new File("/tmp/twitterfiles/"+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"positive.tsv");
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"positive.tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);
@@ -375,7 +379,7 @@ public class SocialMysqlLayer {
         PreparedStatement preparedStatement;
         try {
             String newshow=new String(showName);
-            File file = new File("/tmp/twitterfiles/"+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"negative.tsv");
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"negative.tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);
@@ -450,7 +454,7 @@ public class SocialMysqlLayer {
         PreparedStatement preparedStatement;
         try {
             String newshow=new String(showName);
-            File file = new File("/tmp/twitterfiles/"+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"neutral.tsv");
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"neutral.tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);
@@ -525,7 +529,7 @@ public class SocialMysqlLayer {
         PreparedStatement preparedStatement;
         try {
             String newshow=new String(showName);
-            File file = new File("/tmp/twitterfiles/"+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"all.tsv");
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"all.tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);

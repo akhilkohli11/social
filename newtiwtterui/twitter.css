@@ -133,3 +133,13 @@
     stroke: steelblue;
     stroke-width: 1.5px;
     }
+
+    .wordcloud {
+    				border: 5px solid #066;
+    				height: 3in;
+    				margin: 0.5in auto;
+    				padding: 0;
+    				page-break-after: always;
+    				page-break-inside: avoid;
+    				width: 7in;
+    			}

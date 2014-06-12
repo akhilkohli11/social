@@ -5,31 +5,86 @@ var neutral=0;
 $(document).ready(function(){
 
 $('#showTweet').click(function() {
-showGraph();
+ $('#maindiv').hide();
+showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+".tsv");
 
 });
 
-$('#showTweet').click(function() {
-showGraph();
+$('#positive').click(function() {
+ $('#maindiv').hide();
+showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"positive.tsv");
 
 });
 
-$('#showTweet').click(function() {
-showGraph();
+$('#negative').click(function() {
+ $('#maindiv').hide();
+showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"negative.tsv");
 
 });
 
-$('#showTweet').click(function() {
-showGraph();
+$('#neutral').click(function() {
+ $('#maindiv').hide();
+showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"neutral.tsv");
 
 });
 
-$('#showTweet').click(function() {
-showGraph();
+$('#all').click(function() {
+ $('#maindiv').hide();
+showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"all.tsv");
 
 });
 
-function showGraph()
+$('#top').click(function() {
+ $('#maindiv').hide();
+showGraph($("#time :selected").text()+"combinationtweet.tsv");
+
+});
+
+//
+//('#negativeTweet').click(function() {
+// $('#maindiv').hide();
+//showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"negative.tsv");
+//
+//});
+//
+//('#neutralTweet').click(function() {
+// $('#maindiv').hide();
+//showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"neutral.tsv");
+//
+//});
+//
+
+
+//('#positiveTweet').click(function() {
+////$('#maindiv').hide();
+//alert($("#time :selected").text()+$("#ddlViewBy :selected").text()+"positive.tsv");
+//showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"positive.tsv");
+//
+//});
+
+$('#trending').click(function() {
+d3.select("svg")
+       .remove();
+        $('#maindiv').show();
+
+});
+
+
+				$("#wordcloud2").awesomeCloud({
+					"size" : {
+						"grid" : 9,
+						"factor" : 1
+					},
+					"options" : {
+						"color" : "random-dark",
+						"rotationRatio" : 0.35
+					},
+					"font" : "'Times New Roman', Times, serif",
+					"shape" : "circle"
+				});
+
+
+function showGraph(fileNme)
 {
 d3.select("svg")
        .remove();
@@ -65,8 +120,7 @@ var svg = d3.select("body").append("tweet").append("svg")
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-var fileNme="jun7to14JimmyKimmelLive.tsv";
-
+//var fileNme="jun7to14KeepingUpWiththeKardashians.tsv";
 d3.tsv(fileNme, function(error, data) {
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
 
@@ -103,7 +157,7 @@ d3.tsv(fileNme, function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "start")
-      .text("Num Tweets");
+      .text("Tweets");
 
   var city = svg.selectAll(".city")
       .data(cities)

@@ -17,7 +17,7 @@ public class NewService {
             try {
                 TwitterDataRetriever.init();
                 SocialMysqlLayer socialMysqlLayer = new SocialMysqlLayer(MYSQL_DRIVER, MYSQL_URL);
-                socialMysqlLayer.updateTime(601);
+                socialMysqlLayer.updateTime(120900);
             }catch (Exception e)
             {
                 e.printStackTrace();
