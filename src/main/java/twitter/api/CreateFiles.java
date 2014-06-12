@@ -34,6 +34,10 @@ public class CreateFiles {
 
             }
            socialMysqlLayer.showAllShowsTweets(showNames,"jun7to14combinationtweet","2014-06-07 00:00:00","2014-06-14 00:00:00");
+
+
+
+
       //      socialMysqlLayer.showTrends();
 
         } catch (IOException e) {
