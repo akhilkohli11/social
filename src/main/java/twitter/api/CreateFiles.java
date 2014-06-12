@@ -37,7 +37,7 @@ public class CreateFiles {
                 showNames.add(showName);
 
             }
-            socialMysqlLayer.showAllShowsTweets(showNames,"jun7to10combinationtweet","2014-06-07 00:00:00","2014-06-09 00:00:00");
+          //  socialMysqlLayer.showAllShowsTweets(showNames,"jun7to10combinationtweet","2014-06-07 00:00:00","2014-06-09 00:00:00");
 
 
             br = new BufferedReader(new FileReader("/tmp/showsfinal.txt"));

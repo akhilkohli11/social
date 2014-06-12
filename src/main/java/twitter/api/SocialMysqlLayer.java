@@ -516,7 +516,7 @@ public class SocialMysqlLayer {
         PreparedStatement preparedStatement;
         try {
             String newshow=new String(showName);
-            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"positivetext");
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"positivetext.tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);
@@ -572,7 +572,7 @@ public class SocialMysqlLayer {
         PreparedStatement preparedStatement;
         try {
             String newshow=new String(showName);
-            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"alltext");
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"alltext.tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);

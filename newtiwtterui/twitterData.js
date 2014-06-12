@@ -81,7 +81,7 @@ d3.select("svg")
        .remove();
    $('#maindiv').hide();
   $('#tweet').text('')  ;
-    var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"positivetext.txt";
+    var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"positivetext.tsv";
   $.get(file, function(data) {
       var lines = data.split("\n");
                 $.each(lines, function(n, item) {
@@ -112,7 +112,7 @@ d3.select("svg")
        .remove();
    $('#maindiv').hide();
   $('#tweet').text('');
-  var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"alltext";
+  var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"alltext.tsv";
   $.get(file, function(data) {
       var lines = data.split("\n");
                 $.each(lines, function(n, item) {
