@@ -6,36 +6,42 @@ $(document).ready(function(){
 
 $('#showTweet').click(function() {
  $('#maindiv').hide();
+   $('#tweet').text('');
 showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+".tsv");
 
 });
 
 $('#positive').click(function() {
  $('#maindiv').hide();
+   $('#tweet').text('');
 showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"positive.tsv");
 
 });
 
 $('#negative').click(function() {
  $('#maindiv').hide();
+   $('#tweet').text('');
 showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"negative.tsv");
 
 });
 
 $('#neutral').click(function() {
  $('#maindiv').hide();
+   $('#tweet').text('');
 showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"neutral.tsv");
 
 });
 
 $('#all').click(function() {
  $('#maindiv').hide();
+   $('#tweet').text('');
 showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"all.tsv");
 
 });
 
 $('#top').click(function() {
  $('#maindiv').hide();
+   $('#tweet').text('');
 showGraph($("#time :selected").text()+"combinationtweet.tsv");
 
 });
@@ -65,9 +71,58 @@ showGraph($("#time :selected").text()+"combinationtweet.tsv");
 $('#trending').click(function() {
 d3.select("svg")
        .remove();
+         $('#tweet').text('');
         $('#maindiv').show();
 
 });
+
+$('#pos').click(function(){
+d3.select("svg")
+       .remove();
+   $('#maindiv').hide();
+  $('#tweet').text('');
+  $.get($("#time :selected").text()+$("#ddlViewBy :selected").text()+"positivetext", function(data) {
+      var lines = data.split("\n");
+                $.each(lines, function(n, item) {
+                var jsonText=$.parseJSON(item);
+                  $('#tweet').append('<div><p>' + jsonText.text.linkify() + '</p></div>'+ '<div id="web_intent">' + '<span class="time">' + relative_time(jsonText.created_at) + '</span>' + '<img src="index.jpg" width="16" height="16" alt="Retweet">' + '<a href="http://twitter.com/intent/retweet?tweet_id=' + jsonText.id_str + '">' + 'Retweet</a>' + '<img src="index.jpg" width="16" height="16" alt="Reply">' + '<a href="http://twitter.com/intent/tweet?in_reply_to=' + jsonText.id_str + '">' + 'Reply</a>' + '<img src="index.jpg" width="16" height="16" alt="Favorite">' + '<a href="http://twitter.com/intent/favorite?tweet_id=' + jsonText .id_str + '">' + 'Favorite</a>' + '</div>' + '<hr />');
+
+          });
+      }, "text")
+});
+
+$('#neg').click(function(){
+d3.select("svg")
+       .remove();
+   $('#maindiv').hide();
+  $('#tweet').text('');
+  $.get($("#time :selected").text()+$("#ddlViewBy :selected").text()+"negativetext", function(data) {
+      var lines = data.split("\n");
+                $.each(lines, function(n, item) {
+                var jsonText=$.parseJSON(item);
+                  $('#tweet').append('<div><p>' + jsonText.text.linkify() + '</p></div>'+ '<div id="web_intent">' + '<span class="time">' + relative_time(jsonText.created_at) + '</span>' + '<img src="index.jpg" width="16" height="16" alt="Retweet">' + '<a href="http://twitter.com/intent/retweet?tweet_id=' + jsonText.id_str + '">' + 'Retweet</a>' + '<img src="index.jpg" width="16" height="16" alt="Reply">' + '<a href="http://twitter.com/intent/tweet?in_reply_to=' + jsonText.id_str + '">' + 'Reply</a>' + '<img src="index.jpg" width="16" height="16" alt="Favorite">' + '<a href="http://twitter.com/intent/favorite?tweet_id=' + jsonText .id_str + '">' + 'Favorite</a>' + '</div>' + '<hr />');
+
+          });
+      }, "text")
+});
+
+$('#all').click(function(){
+d3.select("svg")
+       .remove();
+   $('#maindiv').hide();
+  $('#tweet').text('');
+  $.get($("#time :selected").text()+$("#ddlViewBy :selected").text()+"alltext", function(data) {
+      var lines = data.split("\n");
+                $.each(lines, function(n, item) {
+                var jsonText=$.parseJSON(item);
+                  $('#tweet').append('<div><p>' + jsonText.text.linkify() + '</p></div>'+ '<div id="web_intent">' + '<span class="time">' + relative_time(jsonText.created_at) + '</span>' + '<img src="index.jpg" width="16" height="16" alt="Retweet">' + '<a href="http://twitter.com/intent/retweet?tweet_id=' + jsonText.id_str + '">' + 'Retweet</a>' + '<img src="index.jpg" width="16" height="16" alt="Reply">' + '<a href="http://twitter.com/intent/tweet?in_reply_to=' + jsonText.id_str + '">' + 'Reply</a>' + '<img src="index.jpg" width="16" height="16" alt="Favorite">' + '<a href="http://twitter.com/intent/favorite?tweet_id=' + jsonText .id_str + '">' + 'Favorite</a>' + '</div>' + '<hr />');
+
+          });
+      }, "text")
+});
+
+
+
 
 
 				$("#wordcloud2").awesomeCloud({
@@ -180,4 +235,37 @@ d3.tsv(fileNme, function(error, data) {
 });
 }
 
+function relative_time(time_value) {
+  var values = time_value.split(" ");
+  time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
+  var parsed_date = Date.parse(time_value);
+  var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+  var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+  delta = delta + (relative_to.getTimezoneOffset() * 60);
+
+  var r = '';
+  if (delta < 60) {
+        r = 'a minute ago';
+  } else if(delta < 120) {
+        r = 'couple of minutes ago';
+  } else if(delta < (45*60)) {
+        r = (parseInt(delta / 60)).toString() + ' minutes ago';
+  } else if(delta < (90*60)) {
+        r = 'an hour ago';
+  } else if(delta < (24*60*60)) {
+        r = '' + (parseInt(delta / 3600)).toString() + ' hours ago';
+  } else if(delta < (48*60*60)) {
+        r = '1 day ago';
+  } else {
+        r = (parseInt(delta / 86400)).toString() + ' days ago';
+  }
+
+      return r;
+  }
+
+  String.prototype.linkify = function() {
+         return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&\?\/.=]+/, function(m) {
+                return m.link(m);
+        });
+  };
 });
