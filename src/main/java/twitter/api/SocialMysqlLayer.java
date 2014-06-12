@@ -578,7 +578,7 @@ public class SocialMysqlLayer {
             Class.forName(jdbcDriverStr);
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
-            String query = "select tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? order by lastupdated desc limit 30";
+            String query = "select tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? order by created_on desc limit 30";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1,bottomtime);
             preparedStatement.setString(2,uppertime);
