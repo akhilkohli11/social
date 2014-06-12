@@ -324,10 +324,12 @@ public class SocialMysqlLayer {
             while (rs.next()) {
                 output.newLine();
                 String create = rs.getString("created_on");
-                query = "select created_on from SHOW_TWEET where created_on=? and show_name=?";
+                query = "select created_on from SHOW_TWEET where created_on=? and show_name=? and sentimentalScore>=?";
                 preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1,create);
                 preparedStatement.setString(2,showName);
+                preparedStatement.setInt(3,2);
+
                 ResultSet resultSet1=preparedStatement.executeQuery();
                 int finalcount=0;
                 while (resultSet1.next())
@@ -399,10 +401,11 @@ public class SocialMysqlLayer {
             while (rs.next()) {
                 output.newLine();
                 String create = rs.getString("created_on");
-                query = "select created_on from SHOW_TWEET where created_on=? and show_name=?";
+                query = "select created_on from SHOW_TWEET where created_on=? and show_name=? and sentimentalScore<=?";
                 preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1,create);
                 preparedStatement.setString(2,showName);
+                preparedStatement.setInt(3,0);
                 ResultSet resultSet1=preparedStatement.executeQuery();
                 int finalcount=0;
                 while (resultSet1.next())
@@ -417,6 +420,235 @@ public class SocialMysqlLayer {
                 showToDateToTweetMapNegative.get(showName).put(create,finalcount);
                 output.write(create.replaceAll("00:00:00.0","").replaceAll(" ","").replaceAll("-","")+"\t"+finalcount+"\t"+0);
                 System.out.println("nagative" + showName + create + "    " + finalcount);
+            }
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            output.close();
+
+        }
+        return null;
+    }
+
+
+    public List<String> showNeutralTweetText(String showName,String fileName,String bottomtime,String uppertime) throws Exception {
+
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        try {
+            String newshow=new String(showName);
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"neutraltext.tsv");
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String query = "select tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? and sentimentalScore=? limit 30";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,bottomtime);
+            preparedStatement.setString(2,uppertime);
+            preparedStatement.setString(3,showName);
+            preparedStatement.setInt(4, 1);
+
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            //STEP 5: Extract data from result set
+            output.write("date"+"\t"+showName+"\t"+"time");
+            while (rs.next()) {
+                output.write(rs.getString("tweet"));
+                output.newLine();
+            }
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            output.close();
+
+        }
+        return null;
+    }
+
+    public List<String> showNegativeTweetText(String showName,String fileName,String bottomtime,String uppertime) throws Exception {
+
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        try {
+            String newshow=new String(showName);
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"negativetext.tsv");
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String query = "select tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? and sentimentalScore<=? limit 30";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,bottomtime);
+            preparedStatement.setString(2,uppertime);
+            preparedStatement.setString(3,showName);
+            preparedStatement.setInt(4, 0);
+
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            //STEP 5: Extract data from result set
+            output.write("date"+"\t"+showName+"\t"+"time");
+            while (rs.next()) {
+                output.write(rs.getString("tweet"));
+                output.newLine();
+            }
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            output.close();
+
+        }
+        return null;
+    }
+
+    public List<String> showPositiveTweetText(String showName,String fileName,String bottomtime,String uppertime) throws Exception {
+
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        try {
+            String newshow=new String(showName);
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"positivetext.tsv");
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String query = "select tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? and sentimentalScore<=? limit 30";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,bottomtime);
+            preparedStatement.setString(2,uppertime);
+            preparedStatement.setString(3,showName);
+            preparedStatement.setInt(4, 0);
+
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            //STEP 5: Extract data from result set
+            output.write("date"+"\t"+showName+"\t"+"time");
+            while (rs.next()) {
+                output.write(rs.getString("tweet"));
+                output.newLine();
+            }
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            output.close();
+
+        }
+        return null;
+    }
+
+    public List<String> showAllTweetText(String showName,String fileName,String bottomtime,String uppertime) throws Exception {
+
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        try {
+            String newshow=new String(showName);
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"alltext.tsv");
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String query = "select tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? limit 30";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,bottomtime);
+            preparedStatement.setString(2,uppertime);
+            preparedStatement.setString(3,showName);
+
+
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            //STEP 5: Extract data from result set
+            output.write("date"+"\t"+showName+"\t"+"time");
+            while (rs.next()) {
+                output.write(rs.getString("tweet"));
+                output.newLine();
             }
             //  getResultSet(resultSet);
 
@@ -474,10 +706,11 @@ public class SocialMysqlLayer {
             while (rs.next()) {
                 output.newLine();
                 String create = rs.getString("created_on");
-                query = "select created_on from SHOW_TWEET where created_on=? and show_name=?";
+                query = "select created_on from SHOW_TWEET where created_on=? and show_name=? and sentimentalScore=?";
                 preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1,create);
                 preparedStatement.setString(2,showName);
+                preparedStatement.setInt(3,1);
                 ResultSet resultSet1=preparedStatement.executeQuery();
                 int finalcount=0;
                 while (resultSet1.next())
