@@ -76,6 +76,6 @@ public class FileService {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 2, 200, TimeUnit.MINUTES);
+        service.scheduleAtFixedRate(command, 2, 900, TimeUnit.MINUTES);
     }
 }
