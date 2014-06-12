@@ -80,8 +80,9 @@ $('#pos').click(function(){
 d3.select("svg")
        .remove();
    $('#maindiv').hide();
-  $('#tweet').text('');
-  $.get($("#time :selected").text()+$("#ddlViewBy :selected").text()+"positivetext", function(data) {
+  $('#tweet').text('')  ;
+    var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"positivetext";
+  $.get(file, function(data) {
       var lines = data.split("\n");
                 $.each(lines, function(n, item) {
                 var jsonText=$.parseJSON(item);
@@ -111,7 +112,8 @@ d3.select("svg")
        .remove();
    $('#maindiv').hide();
   $('#tweet').text('');
-  $.get($("#time :selected").text()+$("#ddlViewBy :selected").text()+"alltext", function(data) {
+  var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"alltext";
+  $.get(file, function(data) {
       var lines = data.split("\n");
                 $.each(lines, function(n, item) {
                 var jsonText=$.parseJSON(item);
