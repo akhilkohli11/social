@@ -81,7 +81,7 @@ d3.select("svg")
        .remove();
    $('#maindiv').hide();
   $('#tweet').text('')  ;
-    var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"positivetext";
+    var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"positivetext.txt";
   $.get(file, function(data) {
       var lines = data.split("\n");
                 $.each(lines, function(n, item) {
