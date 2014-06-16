@@ -522,7 +522,7 @@ public class SocialMysqlLayer {
             Class.forName(jdbcDriverStr);
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
-            String query = "select tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? and sentimentalScore<=? limit 30";
+            String query = "select distinct tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? and sentimentalScore<=? limit 100";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1,bottomtime);
             preparedStatement.setString(2,uppertime);
@@ -578,7 +578,7 @@ public class SocialMysqlLayer {
             Class.forName(jdbcDriverStr);
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
-            String query = "select tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? order by created_on desc limit 30";
+            String query = "select distinct tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? order by created_on desc limit 100";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1,bottomtime);
             preparedStatement.setString(2,uppertime);
@@ -591,82 +591,6 @@ public class SocialMysqlLayer {
             while (rs.next()) {
                 output.write(rs.getString("tweet"));
                 output.newLine();
-            }
-            //  getResultSet(resultSet);
-
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } catch (Exception e) {
-            //Handle errors for Class.forName
-            e.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (statement != null)
-                    connection.close();
-            } catch (SQLException se) {
-            }// do nothing
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }//end finally try
-            output.close();
-
-        }
-        return null;
-    }
-
-    public List<String> showNeutral(String showName,String fileName,String bottomtime,String uppertime) throws Exception {
-
-        BufferedWriter output=null;
-        Connection connection=null;
-        Statement statement=null;
-        ResultSet rs;
-        PreparedStatement preparedStatement;
-        try {
-            String newshow=new String(showName);
-            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"neutral");
-            file.createNewFile();
-            output = new BufferedWriter(new FileWriter(file));
-            Class.forName(jdbcDriverStr);
-            connection = DriverManager.getConnection(jdbcURL);
-            statement = connection.createStatement();
-            String query = "select distinct created_on  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? and sentimentalScore=?";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1,bottomtime);
-            preparedStatement.setString(2,uppertime);
-            preparedStatement.setString(3,showName);
-            preparedStatement.setInt(4, 1);
-
-            rs = preparedStatement.executeQuery();
-            int count=1;
-            //STEP 5: Extract data from result set
-            output.write("date"+"\t"+showName+"\t"+"time");
-            while (rs.next()) {
-                output.newLine();
-                String create = rs.getString("created_on");
-                query = "select created_on from SHOW_TWEET where created_on=? and show_name=? and sentimentalScore=?";
-                preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setString(1,create);
-                preparedStatement.setString(2,showName);
-                preparedStatement.setInt(3,1);
-                ResultSet resultSet1=preparedStatement.executeQuery();
-                int finalcount=0;
-                while (resultSet1.next())
-                {
-                    finalcount++;
-                }
-                HashMap<String,Integer> timetoTweetMap= showToDateToTweetMapNeutral.get(showName);
-                if(timetoTweetMap==null)
-                {
-                    showToDateToTweetMapNeutral.put(showName, new HashMap<String, Integer>());
-                }
-                showToDateToTweetMapNeutral.get(showName).put(create,finalcount);
-                output.write(create.replaceAll("00:00:00.0","").replaceAll(" ","").replaceAll("-","")+"\t"+finalcount+"\t"+0);
-                System.out.println("neutral " + showName + create + "    " + finalcount);
             }
             //  getResultSet(resultSet);
 
