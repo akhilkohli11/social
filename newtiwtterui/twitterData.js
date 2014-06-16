@@ -111,7 +111,6 @@ $('#sentiment').click(function(){
 $('#maindiv').hide();
    $('#tweet').text('');
 showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"all.tsv");
-
 });
 
 $('#all').click(function(){
