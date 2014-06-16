@@ -134,6 +134,22 @@
     stroke-width: 1.5px;
     }
 
+    #content {
+      overflow:auto;
+      width: 600px;
+      background: gray;
+    }
+
+    #positivetweet, #tweet {
+      width: 40%;
+      margin:5px;
+      padding: 1em;
+      background: white;
+    }
+
+    #tweet  { float:left;  }
+    #positivetweet { float:right; }
+
     .wordcloud {
     				border: 5px solid #066;
     				height: 3in;
@@ -143,3 +159,35 @@
     				page-break-inside: avoid;
     				width: 7in;
     			}
+
+    h1 {
+    padding: 0;
+    margin: 0;
+    font-size: 1.9em;
+    line-height: 1.5;
+    font-weight: normal;
+    color: #365DA0;
+    }
+
+    p {
+    	padding:0 10px;
+    	margin:0 0 1em
+    }
+
+    .outer {
+    	width:402px;
+    	border:1px solid #000;
+    	clear:both;
+    	overflow:hidden;
+    	margin:0 auto 20px;
+    }
+    .float {
+    	float:left;
+    	width:200px;
+    	border-right:1px solid #000;
+    }
+    .f2 {
+    	border:none;
+    	border-left:1px solid #000;
+    	margin-left:-1px;
+    }

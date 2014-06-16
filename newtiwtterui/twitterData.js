@@ -4,36 +4,38 @@ var neutral=0;
 
 $(document).ready(function(){
 
-$('#showTweet').click(function() {
- $('#maindiv').hide();
-   $('#tweet').text('');
-showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+".tsv");
-
-});
-
-$('#positive').click(function() {
- $('#maindiv').hide();
-   $('#tweet').text('');
-showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"positive.tsv");
-
-});
-
-$('#negative').click(function() {
- $('#maindiv').hide();
-   $('#tweet').text('');
-showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"negative.tsv");
-
-});
-
-$('#neutral').click(function() {
- $('#maindiv').hide();
-   $('#tweet').text('');
-showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"neutral.tsv");
-
-});
+//$('#showTweet').click(function() {
+// $('#maindiv').hide();
+//   $('#tweet').text('');
+//showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+".tsv");
+//
+//});
+//
+//$('#positive').click(function() {
+// $('#maindiv').hide();
+//   $('#tweet').text('');
+//showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"positive.tsv");
+//
+//});
+//
+//$('#negative').click(function() {
+// $('#maindiv').hide();
+//   $('#tweet').text('');
+//showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"negative.tsv");
+//
+//});
+//
+//$('#neutral').click(function() {
+// $('#maindiv').hide();
+//   $('#tweet').text('');
+//showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"neutral.tsv");
+//
+//});
 
 $('#all').click(function() {
  $('#maindiv').hide();
+       $('#newdiv').hide();
+     $('#positivetweet').text('');
    $('#tweet').text('');
 showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"all.tsv");
 
@@ -41,7 +43,10 @@ showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"all.tsv"
 
 $('#top').click(function() {
  $('#maindiv').hide();
+       $('#newdiv').hide();
+
    $('#tweet').text('');
+       $('#positivetweet').text('');
 showGraph($("#time :selected").text()+"combinationtweet.tsv");
 
 });
@@ -71,45 +76,37 @@ showGraph($("#time :selected").text()+"combinationtweet.tsv");
 $('#trending').click(function() {
 d3.select("svg")
        .remove();
+             $('#newdiv').hide();
+
          $('#tweet').text('');
+             $('#positivetweet').text('');
         $('#maindiv').show();
 
 });
 
-$('#pos').click(function(){
-d3.select("svg")
-       .remove();
-   $('#maindiv').hide();
-  $('#tweet').text('')  ;
-    var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"positivetext.tsv";
-  $.get(file, function(data) {
-      var lines = data.split("\n");
-                $.each(lines, function(n, item) {
-                var jsonText=$.parseJSON(item);
-                  $('#tweet').append('<div><p>' + jsonText.text.linkify() + '</p></div>'+ '<div id="web_intent">' + '<span class="time">' + relative_time(jsonText.created_at) + '</span>' + '<img src="index.jpg" width="16" height="16" alt="Retweet">' + '<a href="http://twitter.com/intent/retweet?tweet_id=' + jsonText.id_str + '">' + 'Retweet</a>' + '<img src="index.jpg" width="16" height="16" alt="Reply">' + '<a href="http://twitter.com/intent/tweet?in_reply_to=' + jsonText.id_str + '">' + 'Reply</a>' + '<img src="index.jpg" width="16" height="16" alt="Favorite">' + '<a href="http://twitter.com/intent/favorite?tweet_id=' + jsonText .id_str + '">' + 'Favorite</a>' + '</div>' + '<hr />');
+//$('#pos').click(function(){
+//d3.select("svg")
+//       .remove();
+//   $('#maindiv').hide();
+//  $('#tweet').text('')  ;
+//    var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"positivetext.tsv";
+//  $.get(file, function(data) {
+//      var lines = data.split("\n");
+//                $.each(lines, function(n, item) {
+//                var jsonText=$.parseJSON(item);
+//                  $('#tweet').append('<div><p>' + jsonText.text.linkify() + '</p></div>'+ '<div id="web_intent">' + '<span class="time">' + relative_time(jsonText.created_at) + '</span>' + '<img src="index.jpg" width="16" height="16" alt="Retweet">' + '<a href="http://twitter.com/intent/retweet?tweet_id=' + jsonText.id_str + '">' + 'Retweet</a>' + '<img src="index.jpg" width="16" height="16" alt="Reply">' + '<a href="http://twitter.com/intent/tweet?in_reply_to=' + jsonText.id_str + '">' + 'Reply</a>' + '<img src="index.jpg" width="16" height="16" alt="Favorite">' + '<a href="http://twitter.com/intent/favorite?tweet_id=' + jsonText .id_str + '">' + 'Favorite</a>' + '</div>' + '<hr />');
+//
+//          });
+//      }, "text")
+//});
 
-          });
-      }, "text")
-});
-
-$('#neg').click(function(){
-d3.select("svg")
-       .remove();
-   $('#maindiv').hide();
-  $('#tweet').text('');
-  $.get($("#time :selected").text()+$("#ddlViewBy :selected").text()+"negativetext", function(data) {
-      var lines = data.split("\n");
-                $.each(lines, function(n, item) {
-                var jsonText=$.parseJSON(item);
-                  $('#tweet').append('<div><p>' + jsonText.text.linkify() + '</p></div>'+ '<div id="web_intent">' + '<span class="time">' + relative_time(jsonText.created_at) + '</span>' + '<img src="index.jpg" width="16" height="16" alt="Retweet">' + '<a href="http://twitter.com/intent/retweet?tweet_id=' + jsonText.id_str + '">' + 'Retweet</a>' + '<img src="index.jpg" width="16" height="16" alt="Reply">' + '<a href="http://twitter.com/intent/tweet?in_reply_to=' + jsonText.id_str + '">' + 'Reply</a>' + '<img src="index.jpg" width="16" height="16" alt="Favorite">' + '<a href="http://twitter.com/intent/favorite?tweet_id=' + jsonText .id_str + '">' + 'Favorite</a>' + '</div>' + '<hr />');
-
-          });
-      }, "text")
-});
 
 $('#sentiment').click(function(){
 $('#maindiv').hide();
+      $('#newdiv').hide();
+
    $('#tweet').text('');
+       $('#positivetweet').text('');
 showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"all.tsv");
 });
 
@@ -117,8 +114,12 @@ $('#all').click(function(){
 d3.select("svg")
        .remove();
    $('#maindiv').hide();
+      $('#newdiv').show();
+
   $('#tweet').text('');
+   $('#positivetweet').text('');
   var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"alltext.tsv";
+                    $('#tweet').append("<h1><p>Tweets</p></h1>")
   $.get(file, function(data) {
       var lines = data.split("\n");
                 $.each(lines, function(n, item) {
@@ -127,6 +128,18 @@ d3.select("svg")
 
           });
       }, "text")
+
+                          $('#positivetweet').append("<h1><p>Positive Tweets</p></h1>")
+
+       var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"positivetext.tsv";
+        $.get(file, function(data) {
+            var lines = data.split("\n");
+                      $.each(lines, function(n, item) {
+                      var jsonText=$.parseJSON(item);
+                        $('#positivetweet').append('<div><p>' + jsonText.text.linkify() + '</p></div>'+ '<div id="web_intent">' + '<span class="time">' + relative_time(jsonText.created_at) + '</span>' + '<img src="index.jpg" width="16" height="16" alt="Retweet">' + '<a href="http://twitter.com/intent/retweet?tweet_id=' + jsonText.id_str + '">' + 'Retweet</a>' + '<img src="index.jpg" width="16" height="16" alt="Reply">' + '<a href="http://twitter.com/intent/tweet?in_reply_to=' + jsonText.id_str + '">' + 'Reply</a>' + '<img src="index.jpg" width="16" height="16" alt="Favorite">' + '<a href="http://twitter.com/intent/favorite?tweet_id=' + jsonText .id_str + '">' + 'Favorite</a>' + '</div>' + '<hr />');
+
+                });
+            }, "text")
 });
 
 
