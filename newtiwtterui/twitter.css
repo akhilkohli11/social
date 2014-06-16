@@ -145,10 +145,9 @@
       margin:5px;
       padding: 1em;
       background: white;
+
     }
 
-    #tweet  { float:left;  }
-    #positivetweet { float:right; }
 
     .wordcloud {
     				border: 5px solid #066;
