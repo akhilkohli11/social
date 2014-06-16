@@ -36,7 +36,7 @@ public class FileService {
 //                    socialMysqlLayer.showPositive(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
 //                    socialMysqlLayer.showNeutral(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
 //                    socialMysqlLayer.showNegative(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
-                    socialMysqlLayer.negativepositiveneutralAll(showName,"jun7to14","2014-06-07 00:00:00","2014-06-09 00:00:00");
+                    socialMysqlLayer.negativepositiveneutralAll(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
 //                  //  socialMysqlLayer.showNeutralTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
                     socialMysqlLayer.showPositiveTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
                     socialMysqlLayer.showAllTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
@@ -57,12 +57,11 @@ public class FileService {
 //                    socialMysqlLayer.showPositive(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
 //                    socialMysqlLayer.showNeutral(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
 //                    socialMysqlLayer.showNegative(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-                    socialMysqlLayer.negativepositiveneutralAll(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
 //                   // socialMysqlLayer.showNeutralTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-                    socialMysqlLayer.showNegativeTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+//                    socialMysqlLayer.showNegativeTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
                     socialMysqlLayer.showPositiveTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
                     socialMysqlLayer.showAllTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-                  //  socialMysqlLayer.negativepositiveneutralAll(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+                    socialMysqlLayer.negativepositiveneutralAll(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
 
                     showNames.add(showName);
 
