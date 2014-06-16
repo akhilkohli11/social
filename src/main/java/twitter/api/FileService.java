@@ -36,11 +36,11 @@ public class FileService {
 //                    socialMysqlLayer.showPositive(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
 //                    socialMysqlLayer.showNeutral(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
 //                    socialMysqlLayer.showNegative(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
-                    socialMysqlLayer.negativepositiveneutralAll(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
+           //         socialMysqlLayer.negativepositiveneutralAll(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
 //                  //  socialMysqlLayer.showNeutralTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
-                    socialMysqlLayer.showPositiveTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
-                    socialMysqlLayer.showAllTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
-                    socialMysqlLayer.showNegativeTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
+ //                   socialMysqlLayer.showPositiveTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
+ //                   socialMysqlLayer.showAllTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
+                    socialMysqlLayer.showNegativeTweetText(showName,"jun7to10","2014-06-08 00:00:00","2014-06-09 00:00:00");
 
                     showNames.add(showName);
 
@@ -50,22 +50,22 @@ public class FileService {
 
                 br = new BufferedReader(new FileReader("/tmp/showsfinal.txt"));
                showNames=new ArrayList<String>();
-                while ((sCurrentLine = br.readLine()) != null) {
-                    String[] buffer = StringUtils.split(sCurrentLine, "@", 2);
-                    String showName = buffer[0].trim();
-                    socialMysqlLayer.readTweets(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-//                    socialMysqlLayer.showPositive(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-//                    socialMysqlLayer.showNeutral(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-//                    socialMysqlLayer.showNegative(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-//                   // socialMysqlLayer.showNeutralTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-//                    socialMysqlLayer.showNegativeTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-                    socialMysqlLayer.showPositiveTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-                    socialMysqlLayer.showAllTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-                    socialMysqlLayer.negativepositiveneutralAll(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
-
-                    showNames.add(showName);
-
-                }
+//                while ((sCurrentLine = br.readLine()) != null) {
+//                    String[] buffer = StringUtils.split(sCurrentLine, "@", 2);
+//                    String showName = buffer[0].trim();
+//                    socialMysqlLayer.readTweets(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+////                    socialMysqlLayer.showPositive(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+////                    socialMysqlLayer.showNeutral(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+////                    socialMysqlLayer.showNegative(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+////                   // socialMysqlLayer.showNeutralTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+////                    socialMysqlLayer.showNegativeTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+//                    socialMysqlLayer.showPositiveTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+//                    socialMysqlLayer.showAllTweetText(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+//                    socialMysqlLayer.negativepositiveneutralAll(showName,"jun10to14","2014-06-10 00:00:00","2014-06-14 00:00:00");
+//
+//                    showNames.add(showName);
+//
+//                }
                // socialMysqlLayer.showAllShowsTweets(showNames,"jun10to14combinationtweet","2014-06-10 00:00:00","2014-06-14 00:00:00");
 
                 //      socialMysqlLayer.showTrends();
@@ -86,6 +86,6 @@ public class FileService {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 2, 900, TimeUnit.MINUTES);
+        service.scheduleAtFixedRate(command, 1, 900, TimeUnit.MINUTES);
     }
 }

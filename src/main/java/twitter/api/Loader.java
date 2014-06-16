@@ -15,7 +15,7 @@ public class Loader extends HttpServlet {
             NewService newService=new NewService();
          //   newService.init();
             FileService fileService=new FileService();
-           // fileService.init();
+           fileService.init();
             LoadApp.init();
         }
         catch (Exception e)

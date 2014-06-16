@@ -460,13 +460,13 @@ public class SocialMysqlLayer {
         PreparedStatement preparedStatement;
         try {
             String newshow=new String(showName);
-            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"negativetext");
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"negativetext.tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
-            String query = "select tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? and sentimentalScore<=? limit 30";
+            String query = "select distinct tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? and sentimentalScore<=? ";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1,bottomtime);
             preparedStatement.setString(2,uppertime);

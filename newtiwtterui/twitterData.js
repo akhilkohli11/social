@@ -44,9 +44,11 @@ showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"all.tsv"
 $('#top').click(function() {
  $('#maindiv').hide();
        $('#newdiv').hide();
-
+                    $('#onemorediv').hide();
    $('#tweet').text('');
        $('#positivetweet').text('');
+              $('#negativeTweet').text('');
+
 showGraph($("#time :selected").text()+"combinationtweet.tsv");
 
 });
@@ -80,6 +82,9 @@ d3.select("svg")
 
          $('#tweet').text('');
              $('#positivetweet').text('');
+                    $('#negativeTweet').text('');
+                    $('#onemorediv').hide();
+
         $('#maindiv').show();
 
 });
@@ -104,9 +109,13 @@ d3.select("svg")
 $('#sentiment').click(function(){
 $('#maindiv').hide();
       $('#newdiv').hide();
+            $('#onemorediv').hide();
+
 
    $('#tweet').text('');
        $('#positivetweet').text('');
+              $('#negativeTweet').text('');
+
 showGraph($("#time :selected").text()+$("#ddlViewBy :selected").text()+"all.tsv");
 });
 
@@ -115,11 +124,14 @@ d3.select("svg")
        .remove();
    $('#maindiv').hide();
       $('#newdiv').show();
+                $('#onemorediv').hide();
 
   $('#tweet').text('');
    $('#positivetweet').text('');
+          $('#negativeTweet').text('');
+
   var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"alltext.tsv";
-                    $('#tweet').append("<h1><p>Tweets</p></h1>")
+                    $('#tweet').append("<h1><p>All Tweets</p></h1>")
   $.get(file, function(data) {
       var lines = data.split("\n");
                 $.each(lines, function(n, item) {
@@ -140,11 +152,60 @@ d3.select("svg")
 
                 });
             }, "text")
+
+            $('#negativeTweet').append("<h1><p>Negative Tweets</p></h1>")
+
+                   var file=$("#time :selected").text()+$("#ddlViewBy :selected").text()+"negativetext.tsv";
+                    $.get(file, function(data) {
+                        var lines = data.split("\n");
+                                  $.each(lines, function(n, item) {
+                                  var jsonText=$.parseJSON(item);
+                                    $('#negativeTweet').append('<div><p>' + jsonText.text.linkify() + '</p></div>'+ '<div id="web_intent">' + '<span class="time">' + relative_time(jsonText.created_at) + '</span>' + '<img src="index.jpg" width="16" height="16" alt="Retweet">' + '<a href="http://twitter.com/intent/retweet?tweet_id=' + jsonText.id_str + '">' + 'Retweet</a>' + '<img src="index.jpg" width="16" height="16" alt="Reply">' + '<a href="http://twitter.com/intent/tweet?in_reply_to=' + jsonText.id_str + '">' + 'Reply</a>' + '<img src="index.jpg" width="16" height="16" alt="Favorite">' + '<a href="http://twitter.com/intent/favorite?tweet_id=' + jsonText .id_str + '">' + 'Favorite</a>' + '</div>' + '<hr />');
+
+                            });
+                        }, "text")
 });
 
 
+$('#geo').click(function(){
+
+$('#maindiv').hide();
+      $('#newdiv').hide();
+                  $('#onemorediv').show();
+
+   $('#tweet').text('');
+       $('#positivetweet').text('');
+       $('#negativeTweet').text('');
+                     $('#chart_div').text('');
+              $('#chart_div').show();
+              drawRegionsMap();
+
+});
+
+function drawRegionsMap() {
+
+            var randomNum = Math.floor(Math.random() * 100);
+
+                      var data = google.visualization.arrayToDataTable([
+                        ['Country', 'Popularity'],
+                        ['Germany', Math.floor(Math.random() * 100)],
+                        ['United States', Math.floor(Math.random() * 1000)],
+                        ['Brazil', Math.floor(Math.random() * 300)],
+                        ['Canada', Math.floor(Math.random() * 500)],
+                        ['France', Math.floor(Math.random() * 100)],
+                        ['RU', Math.floor(Math.random() * 600)],
+                        ['INDIA', Math.floor(Math.random() * 400)]
+
+                      ]);
+
+                      var options = {};
+
+                      var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+                      chart.draw(data, options);
 
 
+
+}
 
 				$("#wordcloud2").awesomeCloud({
 					"size" : {

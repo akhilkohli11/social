@@ -140,7 +140,7 @@
       background: gray;
     }
 
-    #positivetweet, #tweet {
+    #positivetweet, #tweet,#negativeTweet {
       width: 40%;
       margin:5px;
       padding: 1em;

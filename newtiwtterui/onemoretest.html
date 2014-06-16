@@ -1,0 +1,29 @@
+<html>
+<head>
+    <!--<script type='text/javascript' src='https://www.google.com/jsapi'></script>-->
+    <script type='text/javascript' src='jsapi.js'></script>
+
+    <script type='text/javascript'>
+
+      function drawRegionsMap() {
+        var data = google.visualization.arrayToDataTable([
+          ['Country', 'Popularity'],
+          ['Germany', 300],
+          ['United States', 800],
+          ['Brazil', 200],
+          ['Canada', 300],
+          ['France', 600],
+          ['RU', 90]
+        ]);
+
+        var options = {};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    };
+    </script>
+</head>
+<body>
+<div id="chart_div" style="width: 900px; height: 500px;"></div>
+</body>
+</html>

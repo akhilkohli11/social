@@ -6,10 +6,13 @@
     <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
     <script src="twitterData.js"></script>
     <script src="jquery.awesomeCloud-0.2.min.js"></script>
-
+    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+    <script type='text/javascript'>
+     google.load('visualization', '1', {'packages': ['geochart']});
+     google.setOnLoadCallback(drawRegionsMap);
+    </script>
     <script src="http://platform.twitter.com/widgets.js"></script>
     <script src="http://d3js.org/d3.v3.js"></script>
-
     <title>Social Prototype</title>
 
 </HEAD>
@@ -24,8 +27,8 @@
 
         <div class="styled-select">
             <select id="ddlViewBy">
-                <option>KeepingUpWiththeKardashians</option>
                 <option>AmericasGotTalent</option>
+                <option>KeepingUpWiththeKardashians</option>
                 <option>TheBachelorette</option>
                 <option>PrettyLittleLiars</option>
                 <option>LastComicStanding</option>
@@ -80,6 +83,9 @@
         <button   class="myButton"
                   id="all"><em>Tweets</em></button>
 
+        <button   class="myButton"
+                  id="geo"><em>Geo Distribution</em></button>
+
 
 
 
@@ -89,13 +95,22 @@
     </div>
 
         <div id="newdiv"  style="display:none;">
-            <div id="tweet" style="float:left; width: 550px; border:solid 1px black;border-bottom:5; ;">
+            <div id="tweet" style="float:left; width: 450px; border:solid 1px black;border-bottom:5; ;">
             </div>
 
-            <div id="positivetweet" style="float:left; width:550px; border:solid 1px black;border-bottom:5; ">
+            <div id="positivetweet" style="float:left; width:300px; border:solid 1px black;border-bottom:5; ">
                 </div>
 
+            <div id="negativeTweet" style="float:left; width:300px; border:solid 1px black;border-bottom:5; ">
+            </div>
+
+
+
+
         </div>
+         <div id="onemorediv"  style="display:none;">
+        <div id="chart_div" style="width: 550px; height: 500px;"></div>
+         </div>
 
         <div role="main" style="display:none;" id="maindiv">
 
