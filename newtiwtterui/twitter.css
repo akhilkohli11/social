@@ -140,8 +140,7 @@
       background: gray;
     }
 
-    #positivetweet, #tweet,#negativeTweet {
-      width: 40%;
+    #positivetweet, #tweet,#negativeTweet,#trend {
       margin:5px;
       padding: 1em;
       background: white;
@@ -152,12 +151,33 @@
     .wordcloud {
     				border: 5px solid #066;
     				height: 3in;
-    				margin: 0.5in auto;
+    			   width: 40%;
+    				 float:left;
+    				margin: 0.8in auto;
     				padding: 0;
     				page-break-after: always;
     				page-break-inside: avoid;
     				width: 7in;
     			}
+
+    			.newstyle{
+    			float:right; width:500px; border:solid 1px black;border-bottom:5;
+    			border: 5px solid #066;
+    			margin: 0.8in auto;
+                   padding: 0;
+                   page-break-after: always;
+                    page-break-inside: avoid;
+    			}
+    			td{
+    			padding: 0;
+                    margin: 0;
+                    font-size: 1.9em;
+                    line-height: 1.5;
+                    font-weight: normal;
+                    color: black;
+    			}
+
+
 
     h1 {
     padding: 0;
