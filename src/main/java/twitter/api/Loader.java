@@ -15,8 +15,9 @@ public class Loader extends HttpServlet {
             NewService newService=new NewService();
          //   newService.init();
             FileService fileService=new FileService();
-           fileService.init();
-            LoadApp.init();
+           //fileService.init();
+           // LoadApp.init();
+            JumblrMain.init();
         }
         catch (Exception e)
         {

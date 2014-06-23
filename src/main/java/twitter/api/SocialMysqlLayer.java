@@ -628,7 +628,7 @@ public class SocialMysqlLayer {
         PreparedStatement preparedStatement;
         try {
             String newshow=new String(showName);
-            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"all.tsv");
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);
@@ -704,41 +704,131 @@ public class SocialMysqlLayer {
 
 
 
-
-        public void showTrends() throws Exception{
+    public List<String> formFile(String showName,String fileName,String bottomtime,String uppertime) throws Exception {
 
         BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
         try {
-            File file = new File("/Users/akohli/IdeaProjects/app/files/"+"trends");
+            String newshow=new String(showName);
+            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv");
             file.createNewFile();
             output = new BufferedWriter(new FileWriter(file));
             Class.forName(jdbcDriverStr);
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("select tweet,show_name,sentimentalScore from SHOW_TWEET ");
+            String query = "select distinct created_on  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,bottomtime);
+            preparedStatement.setString(2,uppertime);
+            preparedStatement.setString(3,showName);
+            rs = preparedStatement.executeQuery();
             int count=1;
-            int postiveCount=0;
-            int neutralcount=0;
-            int negativecount=0;
-            Map<String,Integer> trends=new HashMap<String, Integer>();
             //STEP 5: Extract data from result set
+            output.write("date"+"\t"+"totalTweet"+"\t"+"positive"+"\t"+"negative"+"\t"+"neutral");
+            int finalcount=0;
             while (rs.next()) {
-                String tweet = rs.getString("tweet");
-                String show = rs.getString("show_name");
-                Integer number=trends.get(show);
-                if(number!=null)
+                output.newLine();
+                String create = rs.getString("created_on");
+                query = "select sentimentalScore from SHOW_TWEET where created_on=? and show_name=?";
+                preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1,create);
+                preparedStatement.setString(2,showName);
+                ResultSet resultSet1=preparedStatement.executeQuery();
+                int negCount=0;
+                int poscount=0;
+                int neutralcount=0;
+                while (resultSet1.next())
                 {
-                    number++;
-                    trends.put(show,number);
+                    String score = resultSet1.getString("sentimentalScore");
+                    if(Integer.parseInt(score)==1)
+                    {
+                        neutralcount++;
+                    }
+                    if(Integer.parseInt(score)>1)
+                    {
+                        poscount++;
+                    }
+                    if(Integer.parseInt(score)<1)
+                    {
+                        negCount++;
+                    }
+                    finalcount++;
                 }
-                else
-                {
-                    trends.put(show,1);
-                }
-                // System.out.println(show+"      "+showName);
-
-
+                //output.write(create.replaceAll("00:00:00.0","").replaceAll(" ","").replaceAll("-","")+"\t"+finalcount+"\t"+poscount+"\t"+negCount+"\t"+neutralcount);
+                System.out.println(showName + create + "    " + finalcount);
             }
+            trends.put(showName,finalcount);
+
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            output.close();
+
+        }
+        return null;
+    }
+
+
+    Map<String,Integer> trends=new HashMap<String, Integer>();
+
+        public void showTrends(String bottomtime,String uppertime) throws Exception{
+
+        BufferedWriter output=null;
+        try {
+            File file = new File(fileDirectory+"trends.tsv");
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+//            String query ="select show_name from SHOW_TWEET where created_on >=? and created_on<=?";
+//            preparedStatement = connection.prepareStatement(query);
+//            preparedStatement.setString(1,bottomtime);
+//            preparedStatement.setString(2,uppertime);
+//            ResultSet rs=preparedStatement.executeQuery();
+//            int count=1;
+//            int postiveCount=0;
+//            int neutralcount=0;
+//            int negativecount=0;
+//            Map<String,Integer> trends=new HashMap<String, Integer>();
+//            //STEP 5: Extract data from result set
+//            while (rs.next()) {
+//                String show = rs.getString("show_name");
+//                Integer number=trends.get(show);
+//                if(number!=null)
+//                {
+//                    number++;
+//                    trends.put(show,number);
+//                }
+//                else
+//                {
+//                    trends.put(show,1);
+//                }
+//                // System.out.println(show+"      "+showName);
+//
+//
+//            }
             int count1=0;
             int numbers[]=new int[10000];
             Map<Integer,String> trends1=new HashMap<Integer, String>();
@@ -774,7 +864,7 @@ public class SocialMysqlLayer {
                 if(!persisted.contains(trends1.get(numbers[i])) && trends1.get(numbers[i])!=null)
                 {
                     persisted.add(trends1.get(numbers[i]));
-                output.write(String.valueOf(trends1.get(numbers[i])));
+                output.write(String.valueOf(trends1.get(numbers[i])+"\t"+numbers[i]));
                 output.newLine();
                 }
             }
