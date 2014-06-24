@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<HEAD>
+    <LINK href="twitter.css" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+    <script src="tumblerData.js"></script>
+    <script src="d3.legend.js"></script>
+    <script src="jquery.awesomeCloud-0.2.min.js"></script>
+    <script src="d3.legend.js"></script>
+    <script src="http://platform.twitter.com/widgets.js"></script>
+    <script src="http://d3js.org/d3.v3.js"></script>
+    <title>Social Prototype</title>
+
+</HEAD>
+<body>
+
+<div id="newcontent">
+    <div>
+        <img src="index.jpg" width="99" height="75"  />
+        <br/>
+        <!-- Begin Twitter Feed Area  -->
+        <div class="twitterfeed">
+
+            <div class="styled-select">
+                <select id="ddlViewBy">
+                    <option>GameofThrones</option>
+                    <option>LastComicStanding</option>
+                    <option>MasterChef</option>
+                    <option>AmericasGotTalent</option>
+                    <option>OrangeIstheNewBlack</option>
+                    <option>KeepingUpWiththeKardashians</option>
+                    <option>TheBachelorette</option>
+                    <option>PrettyLittleLiars</option>
+                    <option>MajorCrimes</option>
+                    <option>Mistresses</option>
+                    <option>Motive</option>
+                    <option>SoYouThinkYouCanDance</option>
+                    <option>Undateable</option>
+                    <option>RoyalPains</option>
+                    <option>BeautyandtheBeast</option>
+                    <option>BetonYourBaby</option>
+                    <option>EscapeClub</option>
+                    <option>ExtremeWeightLoss</option>
+                    <option>GangRelated</option>
+                    <option>JenniferFalls</option>
+                    <option>JimmyKimmelLive</option>
+
+
+
+                </select>
+            </div>
+            <br/><br/><br/>
+            <div class="styled-select">
+                <select id="time">
+                    <option>jun</option>
+                    <option>may</option>
+                    <option>apr</option>
+
+                    <!-- <option>jun10to14</option>-->
+                </select>
+                </div>
+            <br/>
+                <br/><br/><br/>
+                <div class="styled-select">
+                    <select id="year">
+                        <option>2014</option>
+                      </select>
+                    <br/>
+                    </div>
+            <!--<button   class="myButton"-->
+            <!--id="showTweet"><em></em>Tweet Graph</button>-->
+            <!--&lt;!&ndash;<button   class="myButton"&ndash;&gt;-->
+            <!--id="positive"><em></em>Positive Tweet Graph</button>-->
+            <!--<button   class="myButton"-->
+            <!--id="negative"><em></em>Negative Tweet Graph</button>-->
+            <!--<button   class="myButton"-->
+            <!--id="neutral"><em></em>Neutral Tweet Graph</button><br/>-->
+
+            <button   class="myButton"
+                      id="videos"><em></em>Top 10 Videos Posts</button>
+
+            <!--<button   class="myButton"-->
+            <!--id="top"><em>Top 5 trending show tweet graph</em></button>-->
+
+            <button   class="myButton"
+                      id="photo"><em>Top 30 Photos of Month</em></button>
+            <br/>
+            <button   class="myButton"
+                      id="audio"><em>Top 10 Audio  Clips</em></button>
+            <button   class="myButton"
+                      id="text"><em>Top Read Blogs</em></button>
+            <button   class="myButton"
+                      id="graph"><em>Monthly multimedia graphs</em></button><br/>
+
+            <div id="legend" style="display:none;">
+            <div class="foo" style="background-color:#82CAFA;">Total</div><br>
+            <div class="foo" style="background-color:#B19CD9;">Photo</div><br>
+            <div class="foo" style="background-color:#DC143C;">Text</div><br>
+            <div class="foo" style="background-color:#7FE817;">Audio</div><br>
+            <div class="foo" style="background-color:#FF8C00;">Video</div><br>
+            </div>
+
+
+
+
+
+        </div>
+
+            <div id="multimedia" >
+            </div>
+        <div id="onemorediv"  style="display:none;">
+                 <div id="chart_div" style="width: 550px; height: 500px;"></div>
+        </div>
+
+</div>
+</div>
+<!-- End Twitter Feed Area  -->
+
+</div>
+</body>

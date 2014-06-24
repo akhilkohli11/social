@@ -188,6 +188,16 @@
     color: #365DA0;
     }
 
+     h3 {
+        padding: 0;
+        margin: 0;
+        font-size: 1.9em;
+        line-height: 1.5;
+        font-weight: normal;
+        color: #365DA0;
+        }
+
+
     p {
     	padding:0 10px;
     	margin:0 0 1em
@@ -209,4 +219,13 @@
     	border:none;
     	border-left:1px solid #000;
     	margin-left:-1px;
+    }
+
+    .foo {
+       border-color: rgba(0, 0, 0, 0.2);
+           border-style: solid;
+           border-width: 1px;
+           height: 10px;
+           margin: 0.1px auto;
+           width: 30px;
     }
