@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<HEAD>
+    <LINK href="twitter.css" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+    <script src="regionalTwitter.js"></script>
+    <script src="jquery.awesomeCloud-0.2.min.js"></script>
+    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+    <script type='text/javascript'>
+     google.load('visualization', '1', {'packages': ['geochart']});
+     google.setOnLoadCallback(drawRegionsMap);
+    </script>
+    <script src="http://platform.twitter.com/widgets.js"></script>
+    <script src="http://d3js.org/d3.v3.js"></script>
+    <title>Social Prototype</title>
+
+</HEAD>
+<body>
+
+<div id="newcontent">
+    <div>
+        <img src="index.jpg" width="99" height="75"  />
+        <br/>
+        <!-- Begin Twitter Feed Area  -->
+        <div class="twitterfeed">
+
+            <div class="styled-select">
+                <select id="ddlViewBy">
+                    <option>Mahabharat</option>
+                    <option>TaarakMehtaKaOoltahChashmah</option>
+                    <option>BalikaVadhu</option>
+                    <option>Jhalak</option>
+                    <option>AkashaDeepa</option>
+
+
+                </select>
+            </div>
+            <br/><br/><br/>
+            <div class="styled-select">
+                <select id="time">
+                    <option>jul1to2</option>
+                    <!-- <option>jun10to14</option>-->
+                </select>
+            </div>
+
+            <!--<button   class="myButton"-->
+            <!--id="showTweet"><em></em>Tweet Graph</button>-->
+            <!--&lt;!&ndash;<button   class="myButton"&ndash;&gt;-->
+            <!--id="positive"><em></em>Positive Tweet Graph</button>-->
+            <!--<button   class="myButton"-->
+            <!--id="negative"><em></em>Negative Tweet Graph</button>-->
+            <!--<button   class="myButton"-->
+            <!--id="neutral"><em></em>Neutral Tweet Graph</button><br/>-->
+
+            <button   class="myButton"
+                      id="sentiment"><em></em>Sentimental Graph</button>
+
+            <!--<button   class="myButton"-->
+            <!--id="top"><em>Top 5 trending show tweet graph</em></button>-->
+
+            <button   class="myButton"
+                      id="trending"><em>Trends</em></button>
+
+
+
+            <button   class="myButton"
+                      id="geo"><em>Geo Distribution</em></button>
+
+
+
+
+
+
+
+        </div>
+
+        <div id="newdiv"  style="display:none;">
+            <div id="tweet" style="float:left; width: 450px; border:solid 1px black;border-bottom:5; ;">
+            </div>
+
+            <div id="positivetweet" style="float:left; width:300px; border:solid 1px black;border-bottom:5; ">
+            </div>
+
+            <div id="negativeTweet" >
+            </div>
+
+
+
+
+        </div>
+        <div id="onemorediv"  style="display:none;">
+            <div id="chart_div" style="width: 400px; height: 300px;"></div>
+        </div>
+
+        <div role="main" style="display:none;" id="maindiv">
+
+            <div id="wordcloud2" class="wordcloud">
+                <span data-weight="50">Mahabharat</span>
+                <span data-weight="40">BalikaVadhu</span>
+                <span data-weight="30">Jhalak</span>
+                <span data-weight="35">TaarakMehtaKaOoltahChashmah</span>
+                <span data-weight="20">AkashaDeepa</span>
+                    
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+</div>
+<!-- End Twitter Feed Area  -->
+
+</div>
+</body>
