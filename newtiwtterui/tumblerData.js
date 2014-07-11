@@ -83,8 +83,6 @@ $('#multimedia').hide();
 showGraph($("#time :selected").text()+"tumblergraph"+$("#ddlViewBy :selected").text()+".tsv");
 });
 
-
-
 function showGraph(fileNme)
 {
 d3.select("svg")
