@@ -25,7 +25,9 @@
     <script type='text/javascript' src='https://www.google.com/jsapi'></script>
     <script type='text/javascript'>
      google.load('visualization', '1', {'packages': ['geochart']});
+        google.load('visualization', '1', {'packages': ['geomap']});
      google.setOnLoadCallback(drawRegionsMap);
+        google.setOnLoadCallback(countryMapUS);
     </script>
     <title>Social Prototype</title>
 
@@ -43,7 +45,7 @@
 
             <div>
 
-                    <select id="ddlViewBy" class="btn-default">
+                    <select id="ddlViewBy" onchange="changeFunction()" class="btn-default">
                     <option>MasterChef</option>
                     <option>OrangeIstheNewBlack</option>
                     <option>KeepingUpWiththeKardashians</option>
@@ -57,9 +59,14 @@
                     <option>BeautyandtheBeast</option>
                     <option>BetonYourBaby</option>
                     <option>JenniferFalls</option>
+                        <option>BuBuJingQing</option>
+                        <option>LeJunKai</option>
+                        <option>TheLegendofZhenHuan</option>
 
 
-                </select>
+
+
+                    </select>
             </div>
             <br/>
             <div >
@@ -104,7 +111,7 @@
 
             <div id="twitterButton" style="display:none;">
 
-                <button   class="btn btn-primary"
+                &nbsp;<button   class="btn btn-primary"
                           id="sentiment"><em></em>Sentimental Graph</button>&nbsp;
 
                 <!--<button   class="myButton"-->
@@ -117,7 +124,18 @@
                           id="all"><em>Tweets</em></button>&nbsp;
 
                 <button   class="btn btn-info"
-                          id="geo"><em>Geo Distribution</em></button>
+                          id="geo"><em>Geo Distribution</em></button>&nbsp;
+                <div id="usd" style="display:none;">
+                    <br/>
+                    &nbsp;<button   class="btn btn-info"
+                          id="usbutton"><em>US Geo Map</em></button><br/>
+                </div>
+
+                <div id="chinad" style="display:none;">
+                    <br/>
+                    &nbsp; <button   class="btn btn-info"
+                          id="chinabutton"><em>China Geo Map</em></button><br/>
+                   </div>
 
             </div>
 
@@ -135,7 +153,73 @@
 
             </div>
 
+            <!--<div id="wrapper">-->
 
+                <!--<section id="main">-->
+
+                    <!--<div id="content">-->
+
+                        <!--<h1>Create beautiful slideshows with jQuery Cycle</h1>-->
+                        <!--<p>by <a href="http://www.backslash.gr/">Nikos Tsaganos</a></p>-->
+                        <!--<p>for more demos like this visit <a href="http://www.backslash.gr/">Backslash.gr</a></p>-->
+
+
+                        <!--<h2>Slideshow #1</h2>-->
+
+                        <!--<div class="ss1_wrapper">-->
+
+                            <!--<a href="#" class="slideshow_prev"><span>Previous</span></a>-->
+                            <!--<a href="#" class="slideshow_next"><span>Next</span></a>-->
+
+                            <!--<div class="slideshow_paging"></div>-->
+
+                            <!--<div class="slideshow_box">-->
+                                <!--<div class="data"></div>-->
+
+                            <!--</div>-->
+
+                            <!--<div id="slideshow_1" class="slideshow">-->
+                                <!--<div class="slideshow_item">-->
+                                    <!--<div class="image"><a href="#"><img src="http://38.media.tumblr.com/1b53108b67f5636086993e4801d9493a/tumblr_n6z3akWJVj1qfjoh2o1_1280.jpg" alt="photo 1" width="900" height="400" /></a></div>-->
+                                    <!--<div class="data">-->
+                                        <!--<h4><a href="#">Donec sollicitudin enim sit</a></h4>-->
+                                        <!--<p>Sed mollis tristique lectus vitae aliquet. Quisque vitae metus ut velit varius feugiat. Maecenas luctus pulvinar elit et viverra. Aenean vel est nulla. </p>-->
+                                    <!--</div>-->
+
+                                <!--</div>-->
+
+                                <!--<div class="slideshow_item">-->
+                                    <!--<div class="image"><a href="#"><img src="http://38.media.tumblr.com/1b53108b67f5636086993e4801d9493a/tumblr_n6z3akWJVj1qfjoh2o1_1280.jpg" alt="photo 1" width="900" height="400" /></a></div>-->
+                                    <!--<div class="data">-->
+                                        <!--<h4><a href="#">Pellentesque lacinia metus</a></h4>-->
+                                        <!--<p>Integer pretium volutpat ligula sit amet pretium. Morbi nisi dui, rutrum ut bibendum sit amet, gravida eget dui. </p>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+
+
+                                <!--<div class="slideshow_item">-->
+                                    <!--<div class="image"><a href="#"><img src="photos/1.jpg" alt="photo 1" width="900" height="400" /></a></div>-->
+                                    <!--<div class="data">-->
+                                        <!--<h4><a href="#">Lorem ipsum dolor sit amet</a></h4>-->
+                                        <!--<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin enim sit amet dolor posuere dictum. Pellentesque lacinia metus non erat auctor vehicula.</p>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+
+                                <!--<div class="slideshow_item">-->
+
+                                    <!--<div class="image"><a href="#"><img src="photos/4.jpg" alt="photo 1" width="900" height="400" /></a></div>-->
+                                    <!--<div class="data">-->
+                                        <!--<h4><a href="#">Morbi nisi dui bibendum sit amet</a></h4>-->
+                                        <!--<p>Aliquam feugiat lorem at massa pulvinar interdum. Ut nulla est, vulputate eget facilisis vel, cursus nec sapien. Quisque tincidunt adipiscing lorem, tincidunt sodales lorem imperdiet quis.</p>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+
+                            <!--</div>-->
+
+                        <!--</div>-->
+                     <!--</div>-->
+                <!--</section>-->
+            <!--</div>-->
 
 
             <div id="legend" style="display:none;">
@@ -156,6 +240,7 @@
         </div>
         <div id="onemorediv"  style="display:none;">
             <div id="chart_div" style="width: 550px; height: 500px;"></div>
+            <div id='visualization'></div>
         </div>
 
     </div>
