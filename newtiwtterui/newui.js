@@ -55,6 +55,17 @@ function changeFunction()
     if($("#socialType :selected").text()=="TMS")
             {
                         $('#tmsbutton').show();
+                         if($("#ddlViewBy :selected").text()=="PhirBhiDilHaiHindustani" || $("#ddlViewBy :selected").text()=="AkeleHumAkeleTum"
+                                             )
+                                                {
+                                                                                                                        $('#watsond').show();
+
+                                                }
+                                                else
+                                                {
+                                                                    $('#watsond').hide();
+
+                                                }
             }
 
 }
@@ -171,6 +182,45 @@ d3.select("svg")
                            $('#multimedia').append('<div class=\"bg-warning\"><p>' + item.linkify() + '</p></div>');
                    });
                }, "text")
+
+
+});
+
+
+$('#watson').click(function(){
+        $('#legend').hide();
+d3.select("svg")
+       .remove();
+    $('#multimedia').text('');
+                $('#onemorediv').hide();
+    $('#multimedia').show();
+             $('#multimedia').append("<br/><br/><p class=\"text-center\"><h4> <p class=\"text-primary\">WhatsON INFO</p></h4></p><br/>");
+
+  var file=$("#ddlViewBy :selected").text()+".tsv";
+             $.get(file, function(data) {
+                              var lines = data.split("\n");
+                           $.each(lines, function(n, item) {
+                            var jsonText=$.parseJSON(item);
+                                $('#multimedia').append("<h6> <p class=\"text-info\">TITLE</p></h6>");
+                             $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.title.linkify() + '</p></div><br/>');
+                              $('#multimedia').append("<h6> <p class=\"text-info\">WhatsON ID</p></h6>");
+                               $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.id.linkify() + '</p></div><br/>');
+                                $('#multimedia').append("<h6> <p class=\"text-info\">TMS ID</p></h6>");
+                                 $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.tms_id.linkify() + '</p></div><br/>');
+                                   $('#multimedia').append("<h6> <p class=\"text-info\">Summary</p></h6>");
+                                    $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.desc.linkify() + '</p></div><br/>');
+                                      $('#multimedia').append("<h6> <p class=\"text-info\">Description</p></h6>");
+                                  $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.long_desc.linkify() + '</p></div><br/>');
+                                         $('#multimedia').append("<h6> <p class=\"text-info\">RELEASE YEAR</p></h6>");
+                                    $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.prod_year.linkify() + '</p></div><br/>');
+                                         $('#multimedia').append("<h6> <p class=\"text-info\">LANGUAGE</p></h6>");
+                                         if(jsonText.lang=="hi")
+                                              $('#multimedia').append('<div class=\"bg-warning\"><p>Hindi</p></div><br/>');
+
+
+
+                     });
+                 }, "text")
 
 
 });
@@ -379,7 +429,9 @@ d3.select("svg")
           if($("#ddlViewBy :selected").text()=="TheCondorHeroes" || $("#ddlViewBy :selected").text()=="BuBuJingQing"
                                ||$("#ddlViewBy :selected").text()=="LeJunKai"||$("#ddlViewBy :selected").text()=="TheLegendofZhenHuan"
                                || $("#ddlViewBy :selected").text()=="Mahabharat" ||
-                                                          $("#ddlViewBy :selected").text()=="BalikaVadhu")
+                                                          $("#ddlViewBy :selected").text()=="BalikaVadhu"||
+                                                          $("#ddlViewBy :selected").text()=="AkeleHumAkeleTum" ||
+                                                                                                                    $("#ddlViewBy :selected").text()=="PhirBhiDilHaiHindustani")
                                   {
                         var file="jun7to10"+$("#ddlViewBy :selected").text()+"alltext.tsv";
                                             $('#tweet').append("<p class=\"text-center\"><h3> <p class=\"text-primary\">All Tweets</p></h3></p><br/>")
