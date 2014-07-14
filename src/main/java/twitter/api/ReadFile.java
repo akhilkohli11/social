@@ -57,9 +57,5 @@ public class ReadFile {
         }
 
     }
-    private static void populateShowIDToShowName(SocialMysqlLayer socialMysqlLayer,String showID,String showName,String twitterHandle,String casteHandle,String hashtag) throws Exception
-    {
-         socialMysqlLayer.populateShowIDToShowName(showID,showName,twitterHandle,casteHandle,hashtag);
 
-    }
 }

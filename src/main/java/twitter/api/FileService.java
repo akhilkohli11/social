@@ -40,7 +40,7 @@ public class FileService {
 //                  //  socialMysqlLayer.showNeutralTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
  //                   socialMysqlLayer.showPositiveTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
  //                   socialMysqlLayer.showAllTweetText(showName,"jun7to10","2014-06-07 00:00:00","2014-06-09 00:00:00");
-                    socialMysqlLayer.showNegativeTweetText(showName,"jun7to10","2014-06-08 00:00:00","2014-06-09 00:00:00");
+                   // socialMysqlLayer.showNegativeTweetText(showName,"jun7to10","2014-06-08 00:00:00","2014-06-09 00:00:00");
 
                     showNames.add(showName);
 

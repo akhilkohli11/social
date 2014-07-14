@@ -28,13 +28,27 @@ function changeFunction()
                         {
                 $('#chinad').show();
                 $('#usd').hide();
+                $('#indiad').hide();
 
+
+
+
+                        }
+                        else if ($("#ddlViewBy :selected").text()=="Mahabharat" ||
+                        $("#ddlViewBy :selected").text()=="BalikaVadhu")
+                        {
+                            $('#usd').hide();
+                              $('#chinad').hide();
+                                $('#indiad').show();
 
                         }
                         else
                         {
                 $('#usd').show();
                 $('#chinad').hide();
+                 $('#indiad').hide();
+
+
 
                         }
         }
@@ -363,7 +377,9 @@ d3.select("svg")
           $('#negativeTweet').text('');
 
           if($("#ddlViewBy :selected").text()=="TheCondorHeroes" || $("#ddlViewBy :selected").text()=="BuBuJingQing"
-                               ||$("#ddlViewBy :selected").text()=="LeJunKai"||$("#ddlViewBy :selected").text()=="TheLegendofZhenHuan")
+                               ||$("#ddlViewBy :selected").text()=="LeJunKai"||$("#ddlViewBy :selected").text()=="TheLegendofZhenHuan"
+                               || $("#ddlViewBy :selected").text()=="Mahabharat" ||
+                                                          $("#ddlViewBy :selected").text()=="BalikaVadhu")
                                   {
                         var file="jun7to10"+$("#ddlViewBy :selected").text()+"alltext.tsv";
                                             $('#tweet').append("<p class=\"text-center\"><h3> <p class=\"text-primary\">All Tweets</p></h3></p><br/>")
@@ -459,6 +475,74 @@ $('#maindiv').hide();
          $('#chart_div').text('');
               $('#chart_div').hide();
                             countryMapIND();});
+
+ $('#indiabutton').click(function(){
+ d3.select("svg")
+        .remove();
+ $('#maindiv').hide();
+       $('#newdiv').hide();
+                   $('#onemorediv').show();
+
+    $('#tweet').text('');
+        $('#positivetweet').text('');
+        $('#negativeTweet').text('');
+          $('#chart_div').text('');
+               $('#chart_div').hide();
+                             indiamap();});
+
+                             function indiamap() {
+                                   var data = new google.visualization.DataTable();
+                                        data.addColumn('string', 'State');
+                                        data.addColumn('number', 'POPULARITY');
+                             if( $("#ddlViewBy :selected").text()=="Mahabharat")
+                             {
+                           data.addRow(['IN-AP',10]);data.addRow(['IN-AR',10]);
+                           data.addRow(['IN-AS',10]);data.addRow(['IN-BR',200]);data.addRow(['IN-CT',10])
+                           ;data.addRow(['IN-GA',5]);data.addRow(['IN-GJ',150]);
+                           data.addRow(['IN-HR',15]);data.addRow(['IN-HP',20]);
+                           data.addRow(['IN-JK',40]);data.addRow(['IN-JH',50]);
+                           data.addRow(['IN-KA',10]);data.addRow(['IN-KL',10]);
+                           data.addRow(['IN-MP',160]);data.addRow(['IN-MH',90]);
+                           data.addRow(['IN-MN',10]);data.addRow(['IN-ML',40]);
+                           data.addRow(['IN-MZ',50]);data.addRow(['IN-NL',10]);
+                           data.addRow(['IN-OR',60]);data.addRow(['IN-PB',180]);
+                           data.addRow(['IN-RJ',190]);data.addRow(['IN-SK',10]);
+                           data.addRow(['IN-TN',10]);data.addRow(['IN-TR',10]);
+                           data.addRow(['IN-UT',60]);data.addRow(['IN-UP',300]);
+                           data.addRow(['IN-WB',100]);data.addRow(['IN-AN',10]);
+                           data.addRow(['IN-CH',10]);data.addRow(['IN-DN',10]);
+                           data.addRow(['IN-DD',10]);data.addRow(['IN-DL',10]);
+                           data.addRow(['IN-LD',10]);data.addRow(['IN-PY',10]);
+                             }
+                             else if ($("#ddlViewBy :selected").text()=="BalikaVadhu")
+                             {
+
+                              data.addRow(['IN-AP',10]);data.addRow(['IN-AR',10]);
+                                                        data.addRow(['IN-AS',10]);data.addRow(['IN-BR',200]);data.addRow(['IN-CT',10])
+                                                        ;data.addRow(['IN-GA',5]);data.addRow(['IN-GJ',450]);
+                                                        data.addRow(['IN-HR',15]);data.addRow(['IN-HP',20]);
+                                                        data.addRow(['IN-JK',40]);data.addRow(['IN-JH',50]);
+                                                        data.addRow(['IN-KA',10]);data.addRow(['IN-KL',10]);
+                                                        data.addRow(['IN-MP',900]);data.addRow(['IN-MH',800]);
+                                                        data.addRow(['IN-MN',10]);data.addRow(['IN-ML',40]);
+                                                        data.addRow(['IN-MZ',50]);data.addRow(['IN-NL',10]);
+                                                        data.addRow(['IN-OR',60]);data.addRow(['IN-PB',680]);
+                                                        data.addRow(['IN-RJ',700]);data.addRow(['IN-SK',10]);
+                                                        data.addRow(['IN-TN',10]);data.addRow(['IN-TR',10]);
+                                                        data.addRow(['IN-UT',600]);data.addRow(['IN-UP',900]);
+                                                        data.addRow(['IN-WB',800]);data.addRow(['IN-AN',10]);
+                                                        data.addRow(['IN-CH',10]);data.addRow(['IN-DN',10]);
+                                                        data.addRow(['IN-DD',10]);data.addRow(['IN-DL',10]);
+                                                        data.addRow(['IN-LD',10]);data.addRow(['IN-PY',10]);
+                             }
+
+                                   var formatter = new google.visualization.NumberFormat({prefix: 'Popularity', fractionDigits: 0});
+                                         formatter.format(data, 1); // Apply formatter to second column
+                                         var stateHeatMap = new google.visualization.GeoChart(document.getElementById('visualization'));
+                                         stateHeatMap.draw(data, {width: 960, height: 480, region: 'IN', resolution: 'provinces', legend: {numberFormat: '#,###', textStyle: {color: 'blue', fontSize: 16}} });
+                                      }
+
+
 
 function countryMapIND() {
       var data = new google.visualization.DataTable();
@@ -618,6 +702,36 @@ function drawRegionsMap() {
 
 
                       ]);
+
+                      if($("#ddlViewBy :selected").text()=="Mahabharat")
+                                      {
+                                            var data = google.visualization.arrayToDataTable([
+                                              ['Country', 'Popularity'],
+                                              ['Germany', 200],
+                                              ['United States', 2000],
+                                              ['Brazil', 100],
+                                              ['Canada', 10],
+                                              ['France', 10],
+                                              ['RU', 500],
+                                              ['INDIA', 10000]
+
+                                            ]);
+                                            }
+
+                                                      if($("#ddlViewBy :selected").text()=="BalikaVadhu")
+                                                      {
+                                                            var data = google.visualization.arrayToDataTable([
+                                                              ['Country', 'Popularity'],
+                                                              ['Germany', 10],
+                                                              ['United States', 200],
+                                                              ['Brazil', 5],
+                                                              ['Canada', 10],
+                                                              ['France', 10],
+                                                              ['RU', 5],
+                                                              ['INDIA', 10000]
+
+                                                            ]);
+                                                            }
 
  if($("#ddlViewBy :selected").text()=="TheCondorHeroes")
                                                       {

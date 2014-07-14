@@ -11,14 +11,20 @@
         public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
         public static final String MYSQL_URL = "jdbc:mysql://localhost/social?"
                 + "user=root";
-        public static void init() throws Exception{
+        static SocialMysqlLayer socialMysqlLayer;
+        public static void initialize() throws Exception
+        {
+            TwitterDataRetriever.getTweets(5000,socialMysqlLayer);
+
+        }
+        public static void  init() throws Exception{
 
             BufferedReader br = null;
 
             try {
 
                 String sCurrentLine;
-                SocialMysqlLayer socialMysqlLayer=new SocialMysqlLayer(MYSQL_DRIVER,MYSQL_URL);
+                 socialMysqlLayer=new SocialMysqlLayer(MYSQL_DRIVER,MYSQL_URL);
 
                 br = new BufferedReader(new FileReader("/tmp/showsfinal.txt"));
                 int count=1;
@@ -45,7 +51,6 @@
                     TwitterDataRetriever.populateShowIDToShowName(buffer[0].trim() ,"@"+newbuffer[0].trim(), caste, hashtag);
                     count++;
                 }
-                TwitterDataRetriever.getTweets(5000,socialMysqlLayer);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -58,10 +63,6 @@
             }
 
         }
-        private static void populateShowIDToShowName(SocialMysqlLayer socialMysqlLayer,String showID,String showName,String twitterHandle,String casteHandle,String hashtag) throws Exception
-        {
-            socialMysqlLayer.populateShowIDToShowName(showID,showName,twitterHandle,casteHandle,hashtag);
 
-        }
     }
 

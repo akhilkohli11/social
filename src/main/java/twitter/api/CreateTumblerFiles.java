@@ -16,6 +16,22 @@ public class CreateTumblerFiles {
     public static void main(String args[]) throws Exception{
 
         BufferedReader br = null;
+        Map<String,String> lowerGraph=new HashMap<String, String>();
+        Map<String,String> upperGraph=new HashMap<String, String>();
+        lowerGraph.put("jan","2014-01-01 00:00:00");
+        lowerGraph.put("feb","2014-02-01 00:00:00");
+        lowerGraph.put("mar","2014-03-01 00:00:00");
+        lowerGraph.put("apr","2014-04-01 00:00:00");
+        lowerGraph.put("may","2014-05-01 00:00:00");
+        lowerGraph.put("jun","2014-06-01 00:00:00");
+
+        upperGraph.put("jan","2014-01-31 00:00:00");
+        upperGraph.put("feb","2014-02-31 00:00:00");
+        upperGraph.put("mar","2014-03-31 00:00:00");
+        upperGraph.put("apr","2014-04-31 00:00:00");
+        upperGraph.put("may","2014-05-31 00:00:00");
+        upperGraph.put("jun","2014-06-18 00:00:00");
+
 
         try {
 
@@ -38,11 +54,23 @@ public class CreateTumblerFiles {
                     tumblerPage = buf[0].trim();
                     map.put(showName,tumblerPage);
                 }
-                tumblrSqlLayer.loadPhotos("photo",showName);
-                tumblrSqlLayer.loadVideos("video",showName);
+                for(Map.Entry<String,String> entry :lowerGraph.entrySet()) {
+//                    tumblrSqlLayer.loadPhotos(entry.getKey()+"tumblerPhoto", showName,entry.getValue(),
+//                            upperGraph.get(entry.getKey()));
+//                    tumblrSqlLayer.loadVideos(entry.getKey()+"tumblerVideo", showName,entry.getValue(),
+//                            upperGraph.get(entry.getKey()));
+//                    tumblrSqlLayer.loadTextPosts(entry.getKey()+"tumblerText", showName,entry.getValue(),
+//                            upperGraph.get(entry.getKey()));
+//                    tumblrSqlLayer.loadAudioPosts(entry.getKey()+"tumbleraudio", showName,entry.getValue(),
+//                            upperGraph.get(entry.getKey()));
+//                    tumblrSqlLayer.loadGRaphs(entry.getKey()+"tumblergraph", showName,entry.getValue(),
+//                            upperGraph.get(entry.getKey()));
+                }
 
 
             }
+
+           // tumblrSqlLayer.loadTrending();
             // System.out.println(showName+"    "+tumblerPage);
 
         } catch (IOException e) {

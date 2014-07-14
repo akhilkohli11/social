@@ -12,12 +12,7 @@ public class Loader extends HttpServlet {
     public void init() {
         try {
             System.out.println(": initialised dsdsdsdssd");
-            NewService newService=new NewService();
-         //   newService.init();
-            FileService fileService=new FileService();
-           //fileService.init();
-           // LoadApp.init();
-            JumblrMain.init();
+            LoadApp.init();
         }
         catch (Exception e)
         {

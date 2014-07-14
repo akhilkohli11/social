@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,18 +18,19 @@ public class JumblrMain {
             + "user=root";
     public static void main(String args[]) throws Exception
     {
-            init();
+        JumblrMain.init();
     }
+     static TumblrSqlLayer tumblrSqlLayer=null;
 
-    public static void init() throws Exception
+    public  static void init() throws Exception
     {
+        tumblrSqlLayer=new TumblrSqlLayer(MYSQL_DRIVER,MYSQL_URL);;
 
         BufferedReader br = null;
 
         try {
 
             String sCurrentLine;
-            TumblrSqlLayer tumblrSqlLayer=new TumblrSqlLayer(MYSQL_DRIVER,MYSQL_URL);
             br = new BufferedReader(new FileReader("/tmp/tumblrshowminhash.txt"));
             TumblrLoader.init();
             Map<String,String> map=new HashMap<String,String>();
@@ -63,6 +65,18 @@ public class JumblrMain {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public static Map<String, Integer> getTumblrPostsForDay(Date date) throws Exception{
+        return tumblrSqlLayer.getTumblrForDayForShows(date);
+    }
+
+    public static Map<String, Integer> getPhotoTumblrForDayForShows(Date date) throws Exception{
+        return tumblrSqlLayer.getPhotoTumblrForDayForShows(date);
+    }
+
+    public static Map<String, Integer> getVideoTumblrForDayForShows(Date date) {
+        return tumblrSqlLayer.getVideoTumblrForDayForShows(date);
     }
     //schema blog name,postid/blog likes/follower/type of post/video audio or something/blog content
 }

@@ -12,12 +12,58 @@ CREATE TABLE SHOW_META_DETA(
             tweet longtext character set utf8 collate utf8_polish_ci DEFAULT NULL,
             tweetText longtext character set utf8 collate utf8_polish_ci DEFAULT NULL,
             show_name VARCHAR(100) DEFAULT NULL,
+            type  VARCHAR(60) DEFAULT NULL ,
             created_on  DATETIME NOT NULL ,
+            lastUpdated  DATETIME NOT NULL ,
             sentimentalScore INT NOT NULL,
+            embedCode VARCHAR(1500) DEFAULT NULL,
          PRIMARY KEY ( id ),
          INDEX(show_name),
-        INDEX(show_name,sentimentalScore)
+        INDEX(show_name,type),
+        INDEX(type),
+        INDEX(created_on)
 
         );
+
+
+      CREATE TABLE SHOW_COUNT   (
+            show_name VARCHAR(100) DEFAULT NULL,
+            type  VARCHAR(60) DEFAULT NULL ,
+            socialType  VARCHAR(60) DEFAULT NULL ,
+            count INTEGER DEFAULT NOT NULL,
+            created_on  DATETIME NOT NULL ,
+            lastUpdated  DATETIME NOT NULL ,
+         PRIMARY KEY ( lastUpdated),
+         INDEX(show_name),
+        INDEX(show_name,socialType,type,created_on),
+        INDEX(created_on),
+        INDEX(show_name),
+        INDEX(show_name,type,created_on)
+
+        );
+SHOW_COUNT_SOCIAL
+
+        CREATE TABLE TUMBLER_DATA(
+                    postID BIGINT  NOT NULL ,
+                    text longtext character set utf8 collate utf8_polish_ci DEFAULT NULL,
+                    blogName VARCHAR(100) DEFAULT NULL,
+                    show_name VARCHAR(100) DEFAULT NULL,
+                    title VARCHAR(100) DEFAULT NULL,
+                    official  VARCHAR(20) DEFAULT NULL ,
+                    type  VARCHAR(20) DEFAULT NULL ,
+                    sentimentalScore INT DEFAULT 1,
+                    likes INT DEFAULT 0,
+                    followers INT DEFAULT 0,
+                    width INT DEFAULT 0,
+                    embedCode VARCHAR(1500) DEFAULT NULL,
+                   created_on  DATETIME NOT NULL ,
+                       lastUpdated  DATETIME NOT NULL ,
+                   url VARCHAR(100) DEFAULT NULL,
+                 PRIMARY KEY ( postID,blogName )
+
+                );
+
+
+    //schema blog name,postid/blog likes/follower/type of post/video audio or something/blog content
 
 

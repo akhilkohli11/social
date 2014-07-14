@@ -30,13 +30,14 @@ public class TumblrLoader {
      String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
 
 
+
+
+
     public static void loadTumblr(TumblrSqlLayer tumblrSqlLayer,Map<String,List<SearchObject>> searchMap) throws Exception
     {
         Map<String, String> options = new HashMap<String, String>();
         Date date = new Date();
-        Date newdaysAgo = new DateTime(date).minusHours(14).toDate();
-        date=newdaysAgo;
-        long unixTime = (long) newdaysAgo.getTime()/1000;
+        long unixTime = (long) date.getTime()/1000;
         options.put("before", String.valueOf(unixTime));
         options.put("limit", "50");
         while(true) {
@@ -65,7 +66,6 @@ public class TumblrLoader {
 
                     }
                     else {
-                        System.out.println(searchObject.getSearchTerm().trim());
                         List<Post> posts = client.tagged(searchObject.getSearchTerm().trim(), options);
                         for (Post post : posts) {
                             persist(tumblrSqlLayer,post,showSearch.getKey(),searchObject.getIsOfficial().toString());
@@ -76,7 +76,7 @@ public class TumblrLoader {
                 Thread.sleep(1000);
             }
 
-            Date daysAgo = new DateTime(date).minusHours(3).toDate();
+            Date daysAgo = new DateTime(date).minusHours(1).toDate();
             date = daysAgo;
             unixTime = (long) daysAgo.getTime() / 1000;
             options.put("before", String.valueOf(unixTime));
