@@ -12,13 +12,15 @@ import javax.ws.rs.core.Response;
 public class JsonService {
 
 
-    @POST
+    @GET
     @Path("/ak")
     @Produces("application/json")
     @Consumes("application/json")
-    public String returnNamesList(RequestParams requestParams) {
+    public String returnNamesList(@QueryParam("maxNumberOfItems") String show,
+                                  @QueryParam("criteria") String bottomtime
+                                  ) {
         System.out.println("coming here");
-        System.out.println("coming here"+requestParams);
+        System.out.println("coming here"+show+bottomtime);
 
         return "akhilkohli";
     }
@@ -52,21 +54,6 @@ public class JsonService {
 
 
     }
-
-    @GET
-    @Path("/onemore/{name}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-
-    public Response get4TrackInJSON(@PathParam("name") String text) {
-        System.out.println(text);
-        Track track = new Track();
-        track.setTitle("Enter Sandman");
-        track.setSinger("Metallica");
-        return Response.ok("brorbororororo").build();
-
-    }
-
 
     @GET
     @Path("/newboy/{name}")
