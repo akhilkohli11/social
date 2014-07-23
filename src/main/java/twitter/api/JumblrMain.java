@@ -34,6 +34,7 @@ public class JumblrMain {
             br = new BufferedReader(new FileReader("/tmp/tumblrshowminhash.txt"));
             TumblrLoader.init();
             Map<String,String> map=new HashMap<String,String>();
+            RefactoredTumblrLoader.init();
             while ((sCurrentLine = br.readLine()) != null) {
 
                 String[] buffer = StringUtils.splitByWholeSeparator(sCurrentLine, "http");
@@ -54,7 +55,7 @@ public class JumblrMain {
 
             }
             // System.out.println(showName+"    "+tumblerPage);
-            TumblrLoader.loadTumblrData(tumblrSqlLayer,map);
+            RefactoredTumblrLoader.loadTumblrData(tumblrSqlLayer,map);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,6 +68,11 @@ public class JumblrMain {
         }
     }
 
+    public static TumblrSqlLayer getTumblrSqlLayer()
+    {
+        return tumblrSqlLayer;
+    }
+
     public static Map<String, Integer> getTumblrPostsForDay(Date date) throws Exception{
         return tumblrSqlLayer.getTumblrForDayForShows(date);
     }
@@ -77,6 +83,14 @@ public class JumblrMain {
 
     public static Map<String, Integer> getVideoTumblrForDayForShows(Date date) {
         return tumblrSqlLayer.getVideoTumblrForDayForShows(date);
+    }
+
+    public static Map<String, Integer> getAUDIOTumblrForDayForShows(Date date) {
+        return tumblrSqlLayer.getAudioTumblr(date);
+    }
+
+    public static Map<String, Integer> getTEXTTumblrForDayForShows(Date date) {
+        return tumblrSqlLayer.getTextTumblr(date);
     }
     //schema blog name,postid/blog likes/follower/type of post/video audio or something/blog content
 }

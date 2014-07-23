@@ -5,8 +5,7 @@ import twitter4j.*;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,36 +34,58 @@ public class TwitterSearchAPiTest {
         System.out.println(newdaysAgo);
         System.out.println(formatter5.format(newdaysAgo));
         date=newdaysAgo;
+        BufferedWriter output=null;
+        File file = new File("/usr/local/apache-tomcat-7.0.47/webapps/examples/movies/jun7to10APhirBhiDilHaidsdsdHindustanialltext.tsv");
+
+           file.createNewFile();
+           output = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
+        BufferedWriter newoutput=null;
+
+        File positiveFile = new File("/usr/local/apache-tomcat-7.0.47/webapps/examples/movies/jun7to10PhirBhiDilHaiHindustanipositdsdsdsivetext.tsv");
+
+        positiveFile.createNewFile();
+        newoutput = new BufferedWriter(new FileWriter(positiveFile.getAbsoluteFile()));
 //        Long unixTime =
 //        Long newUnixTime = (long) until.getTime()/1000;
         List<String> showNames= Arrays.asList("BiggBossSuvarna", "Mahaparva", "AkashaDeepa", "Mahabharat", "TaarakMehtaKaOoltahChashmah", "BalikaVadhu"
                 , "Jhalak","comedynightswithkapil");
 
         for(String showName :showNames) {
-            Query query = new Query("@mahabharatA_sp");
+            Query query = new Query("Akele Hum Akele Tum");
             //query.setUntil(formatter5.format(until).toString());
             // query.setUntil(formatter5.format(until).toString());
 
             QueryResult result = twitter.search(query);
             for (Status status1 : result.getTweets()) {
                 System.out.println("@" + status1.getUser().getScreenName() + ":" + status1.getText() + ":" + status1.getCreatedAt());
+                output.write(status1.getText());
+                output.newLine();
             }
 
-
+        int count=0;
             do {
 
                 List<Status> tweets = result.getTweets();
                 long max = 0;
                 for (Status tweet : tweets) {
-
+                    String text=tweet.getText();
                     System.out.println("Tweet: " + tweet.getText() + "    " + tweet.getCreatedAt());
+                    if(count++%2==0) {
+                        output.write(text);
+                        output.newLine();
+                    }
+                    else
+                    {
+                       newoutput.write(tweet.getText());
+                        newoutput.newLine();
+                    }
                     if (tweet.getId() > max) {
                         max = tweet.getId();
                     }
 
                 }
 
-                query = new Query("@mahabharata_sp");
+                query = new Query("Akele Hum Akele Tum");
                 //   query.setUntil(formatter5.format(until).toString());
                 if (query != null)
 
@@ -72,6 +93,8 @@ public class TwitterSearchAPiTest {
                 Thread.sleep(1000 * 60);
 
             } while (query != null);
+            output.close();
+           newoutput.close();
         }
     }
     private static void storeAccessToken(int useId, AccessToken accessToken){

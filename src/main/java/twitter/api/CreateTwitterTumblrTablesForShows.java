@@ -12,9 +12,45 @@ public class CreateTwitterTumblrTablesForShows {
 
     public static void main(String args[]) throws Exception
     {
-        createTwitterSql();
-        createTumblrSql();
-        createShowCountSql();
+      //  createTwitterSql();
+      //  createTumblrSql();
+       // createShowCountSql();
+        createLocationSql();
+    }
+
+    private static void createLocationSql() throws Exception{
+        BufferedReader br = null;
+        String sCurrentLine;
+        br = new BufferedReader(new FileReader("/tmp/showsfinal.txt"));
+        int count=1;
+        //  socialMysqlLayer.readData();
+        while ((sCurrentLine = br.readLine()) != null) {
+
+
+            String[] buffer= StringUtils.split(sCurrentLine, "@", 2);
+            String showTabe="SHOW_GEO_TWITTER_"+buffer[0].trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+            System.out.println("DROP TABLE "+showTabe+";");
+            System.out.println("CREATE TABLE "+showTabe );
+            System.out.println("(id BIGINT  NOT NULL AUTO_INCREMENT,\n" +
+                    "            tweetText longtext character set utf8 collate utf8_polish_ci DEFAULT NULL,\n" +
+                    "            city  VARCHAR(60) DEFAULT NULL ,\n" +
+                    "            country  VARCHAR(60) DEFAULT NULL ,\n" +
+                    "            state VARCHAR(60)  NOT NULL,\n" +
+                    "            show_name VARCHAR(100) DEFAULT NULL,\n" +
+                    "            type  VARCHAR(60) DEFAULT NULL ,\n" +
+                    "            created_on  DATETIME NOT NULL ,\n" +
+                    "            lastUpdated  DATETIME NOT NULL ,\n" +
+                    "            sentimentalScore INT NOT NULL,\n" +
+                    "            embedCode VARCHAR(1500) DEFAULT NULL,\n" +
+                    "         PRIMARY KEY ( id ,show_name),\n" +
+                    "         INDEX(show_name),\n" +
+                    "        INDEX(show_name,type),\n" +
+                    "        INDEX(type),\n" +
+                    "        INDEX(show_name,city,created_on),\n" +
+                    "        INDEX(created_on));");
+
+        }
+
     }
 
     private static void createShowCountSql() throws Exception{
@@ -36,7 +72,7 @@ public class CreateTwitterTumblrTablesForShows {
                     "            count INTEGER  NOT NULL,\n" +
                     "            created_on  DATETIME NOT NULL ,\n" +
                     "            lastUpdated  DATETIME NOT NULL ,\n" +
-                    "         PRIMARY KEY ( lastUpdated),\n" +
+                    "         PRIMARY KEY ( show_name,type,socialType,lastUpdated,created_on),\n" +
                     "         INDEX(show_name),\n" +
                     "        INDEX(show_name,socialType,type,created_on),\n" +
                     "        INDEX(created_on),\n" +
@@ -52,7 +88,7 @@ public class CreateTwitterTumblrTablesForShows {
                 "            count INTEGER  NOT NULL,\n" +
                 "            created_on  DATETIME NOT NULL ,\n" +
                 "            lastUpdated  DATETIME NOT NULL ,\n" +
-                "         PRIMARY KEY ( lastUpdated),\n" +
+                "         PRIMARY KEY ( show_name,type,socialType,lastUpdated,created_on),\n" +
                 "         INDEX(show_name),\n" +
                 "        INDEX(show_name,socialType,type,created_on),\n" +
                 "        INDEX(created_on),\n" +
@@ -90,7 +126,10 @@ public class CreateTwitterTumblrTablesForShows {
                     "                   created_on  DATETIME NOT NULL ,\n" +
                     "                       lastUpdated  DATETIME NOT NULL ,\n" +
                     "                   url VARCHAR(100) DEFAULT NULL,\n" +
-                    "                 PRIMARY KEY ( postID,blogName ));");
+                    "                 PRIMARY KEY ( postID,blogName,show_name))" +
+                            "        INDEX(created_on),\n" +
+                            "        INDEX(show_name),\n" +
+                            "        INDEX(show_name,type,created_on);");
         }
         br.close();
 
@@ -117,7 +156,7 @@ public class CreateTwitterTumblrTablesForShows {
                     "            lastUpdated  DATETIME NOT NULL ,\n" +
                     "            sentimentalScore INT NOT NULL,\n" +
                     "            embedCode VARCHAR(1500) DEFAULT NULL,\n" +
-                    "         PRIMARY KEY ( id ),\n" +
+                    "         PRIMARY KEY ( id ,show_name),\n" +
                     "         INDEX(show_name),\n" +
                     "        INDEX(show_name,type),\n" +
                     "        INDEX(type),\n" +

@@ -27,6 +27,7 @@ public class TwitterTumblrDaemon {
             try {
                 socialMysqlLayer.populatDayWiseStatsForShowForTwitter();
                 socialMysqlLayer.populatDayWiseStatsForShowForTumblr();
+                socialMysqlLayer.populateLocationDataForTwitter();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -42,6 +43,6 @@ public class TwitterTumblrDaemon {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 0, 3, TimeUnit.MINUTES);
+        service.scheduleAtFixedRate(command, 15, 50, TimeUnit.SECONDS);
     }
 }

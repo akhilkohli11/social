@@ -43,9 +43,17 @@ public class TwitterDataRetriever {
     static Map<String,String> tagToshowName =new HashMap<String, String>();
     static List<String> followTerms=new ArrayList<String>();
     static Set<String> shows=new HashSet<String>();
+    static Map<String,String> showToNewName=new HashMap<String, String>();
+    static Map<String,String> cityToSateListUs=new HashMap<String, String>();
+    static Set<String> cityListUs=new HashSet<String>();
+    static StanfordCoreNLP pipeline;
+
     public static void populateShowIDToShowName(String showName,String twitterHandle,String casteHandle[],String hashtag[]) throws Exception
 
     {
+        String table=new String(showName);
+        table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+        showToNewName.put(table,showName);
         System.out.println();
         System.out.print(showName+"     ");
         for(int i=0;i<hashtag.length;i++) {
@@ -76,6 +84,11 @@ public class TwitterDataRetriever {
 //        }
     }
 
+    public static  Map<String,String> getShowToTableName()
+    {
+        return showToNewName;
+    }
+
     public static Set<String> getShows()
     {
         return shows;
@@ -83,6 +96,8 @@ public class TwitterDataRetriever {
 
     public static String getTweets(int count,SocialMysqlLayer socialMysqlLayer) throws Exception {
         init();
+        cityToSateListUs = socialMysqlLayer.getCityToStateMap();
+        cityListUs = socialMysqlLayer.getCityList();
         System.out.println(followTerms);
         Authentication hosebirdAuth = new OAuth1("nDhWQNt3buDkIWNyBp9iilIXp", "OAFBjrd8mHCgMV6YXE5SgadBKP4Fl0cHBM9zU94vgn6OIDafHC",
                 "2524277576-3OyRFktWxMMB3NZw68C71Q1eZTrCc3tQQyWN8t0", "B3XQM3PM88xyZP6uiIA9RRaWkVNa4QrIaTShSJlwMZrzb");
@@ -98,6 +113,7 @@ public class TwitterDataRetriever {
         List<String> terms = Lists.newArrayList(followTerms);
         // hosebirdEndpoint.followings(followings);
         hosebirdEndpoint.trackTerms(terms);
+        System.out.println(followTerms);
         ClientBuilder builder = new ClientBuilder()
                 .name("Hosebird-Client-01")                              // optional: mainly for the logs
                 .hosts(hosebirdHosts)
@@ -114,9 +130,10 @@ public class TwitterDataRetriever {
         int tweetID = count;
         java.util.Date date = new java.util.Date();
         int failcount = 0;
-        while (!hosebirdClient.isDone()) {
 
+        while (!hosebirdClient.isDone()) {
             String msg = msgQueue.take();
+
             try {
                 msg.getBytes("UTF-8");
             } catch (UnsupportedEncodingException e) {
@@ -126,77 +143,116 @@ public class TwitterDataRetriever {
             JSONObject jsonObject = new JSONObject(msg);
             String createdAt = jsonObject.get("created_at").toString();
             String tweettext = jsonObject.get("text").toString();
-            if (isUTF8MisInterpreted(tweettext)) {
-                continue;
-            }
-            String tweet = new String(tweettext);
-            List<String> removeList = new ArrayList<String>();
-            removeList.addAll(extractor.extractURLs(tweet));
-            removeList.addAll(extractor.extractHashtags(tweet));
-            removeList.add(extractor.extractReplyScreenname(tweet));
-            removeList.addAll(Arrays.asList("http:/", "http://", "http:"));
-            removeList.addAll(extractor.extractMentionedScreennames(tweet));
-            String time = new Timestamp(date.getTime()).toString();
-            for (String remove : removeList) {
-                if (remove != null) {
-                    tweet = tweet.replace(remove, "");
+            String lang = jsonObject.get("lang").toString();
+            String newloc = jsonObject.get("user").toString();
+            String selectedCity = null;
+            String selectedCountry = null;
+
+            JSONObject user = new JSONObject(newloc);
+            if (user.has("location")) {
+
+                String location = user.get("location").toString();
+                if (location.trim().equals("")) {
+                    continue;
                 }
-            }
-            String showName = "";
-            for (Map.Entry<String, String> entry : tagToshowName.entrySet()) {
-                if (tweettext.contains(entry.getKey()) || tweettext.toLowerCase().contains(entry.getKey().toLowerCase())
-                        ) {
-                    showName = entry.getValue();
-                    break;
+                int found = 0;
+                for (String city : cityListUs) {
+                    city = city.trim();
+                    location = location.trim();
+                    if (city.contains(location)) {
+                        selectedCity = city;
+                        //output.write(location1);
+                        //output.newLine();
+                    }
                 }
-            }
-            String type = "text";
-            String embedCode = null;
-            if (jsonObject.get("text").toString().contains("http:")) {
-                if (jsonObject.has("entities")) {
-                    JSONObject entities = new JSONObject(jsonObject.get("entities").toString());
-                    if (entities.has("media")) {
-                        type = "photo";
-                        JSONArray jsonArray = entities.getJSONArray("media");
-                        for (int i = 0; i < 1; i++) {
-                            JSONObject explrObject = jsonArray.getJSONObject(i);
-                            embedCode = explrObject.get("media_url").toString();
-                        }
-
-
-                    } else if (entities.has("urls")) {
-                        JSONArray jsonArray = entities.getJSONArray("urls");
-
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            type = "links";
-                            JSONObject explrObject = jsonArray.getJSONObject(i);
-                            embedCode = explrObject.get("expanded_url").toString();
+                if (selectedCity == null) {
+                    for (String city : cityListUs) {
+                        city = city.trim();
+                        location = location.trim();
+                        if (location.contains(city)) {
+                            selectedCity = city;
                         }
 
                     }
-
                 }
             }
+                if (!lang.toLowerCase().equals("en") || !lang.toLowerCase().equals("english")) {
+                    continue;
+                }
+                if (isUTF8MisInterpreted(tweettext)) {
+                    continue;
+                }
+                String tweet = new String(tweettext);
+                List<String> removeList = new ArrayList<String>();
+                removeList.addAll(extractor.extractURLs(tweet));
+                removeList.addAll(extractor.extractHashtags(tweet));
+                removeList.add(extractor.extractReplyScreenname(tweet));
+                removeList.addAll(Arrays.asList("http:/", "http://", "http:"));
+                removeList.addAll(extractor.extractMentionedScreennames(tweet));
+                String time = new Timestamp(date.getTime()).toString();
+                for (String remove : removeList) {
+                    if (remove != null) {
+                        tweet = tweet.replace(remove, "");
+                    }
+                }
+                String showName = "";
+                for (Map.Entry<String, String> entry : tagToshowName.entrySet()) {
+                    if (tweettext.contains(entry.getKey()) || tweettext.toLowerCase().contains(entry.getKey().toLowerCase())
+                            ) {
+                        showName = entry.getValue();
+                        break;
+                    }
+                }
+                String type = "text";
+                String embedCode = null;
+                if (jsonObject.get("text").toString().contains("http:")) {
+                    if (jsonObject.has("entities")) {
+                        JSONObject entities = new JSONObject(jsonObject.get("entities").toString());
+                        if (entities.has("media")) {
+                            type = "photo";
+                            JSONArray jsonArray = entities.getJSONArray("media");
+                            for (int i = 0; i < 1; i++) {
+                                JSONObject explrObject = jsonArray.getJSONObject(i);
+                                embedCode = explrObject.get("media_url").toString();
+                            }
 
+
+                        } else if (entities.has("urls")) {
+                            JSONArray jsonArray = entities.getJSONArray("urls");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                type = "links";
+                                JSONObject explrObject = jsonArray.getJSONObject(i);
+                                embedCode = explrObject.get("expanded_url").toString();
+                            }
+
+                        }
+
+                    }
+                }
+                String selectedState = null;
                 try {
-                      socialMysqlLayer.populateTweetData( msg.trim(), tweettext.trim(), showName.trim(),
-                           createdAt, time,0,type,embedCode);
+                    if (selectedCity != null) {
+                        selectedState = cityToSateListUs.get(selectedCity);
+                        selectedCountry = "United States of America";
+                    }
+                    socialMysqlLayer.populateTweetData(msg.trim(), tweettext.trim(), showName.trim(),
+                            createdAt, time, findSentiment(tweet), type, embedCode, selectedCity, selectedCountry, selectedState);
                 } catch (Exception e) {
-                    //.printStackTrace();
-                       //  System.out.println(tweettext);
-                       // System.out.println(failcount);
+                    //e.printStackTrace();
                 }
             }
 
             hosebirdClient.stop();
             return tweetConcat;
 
-    }
+        }
 
-static StanfordCoreNLP pipeline;
+
+
 
     public static void init() {
-      //  pipeline = new StanfordCoreNLP("MyPropFile.properties");
+       pipeline = new StanfordCoreNLP("MyPropFile.properties");
     }
 
     public static int findSentiment(String tweet) {

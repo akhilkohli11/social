@@ -19,6 +19,7 @@ public class TwitterTweetDaeomon {
             BufferedReader br = null;
             try {
 
+                LoadApp.init();
                 LoadApp.initialize();
             } catch (Exception e) {
                 e.printStackTrace();

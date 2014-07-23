@@ -1,5 +1,8 @@
 package twitter.api;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -10,7 +13,7 @@ import java.util.Date;
  * Created by akohli on 6/23/14.
  */
 public class TumblrSqlLayer {
-
+    int count=0;
     private final String jdbcDriverStr;
     private final String jdbcURL;
 
@@ -48,6 +51,28 @@ public class TumblrSqlLayer {
         return showNameToCount;
     }
 
+    public Map<String, Integer> getAudioTumblr(Date date) {
+        Map<String,Integer> showNameToCount=new HashMap<String, Integer>();
+        Set<String> shows=TwitterDataRetriever.getShows();
+        for(String show : shows)
+        {
+            int count=getCountForType(show, date, "audio");
+            showNameToCount.put(show,count);
+        }
+        return showNameToCount;    }
+
+    public Map<String, Integer> getTextTumblr(Date date) {
+        Map<String,Integer> showNameToCount=new HashMap<String, Integer>();
+        Set<String> shows=TwitterDataRetriever.getShows();
+        for(String show : shows)
+        {
+            int count=getCountForType(show, date, "text");
+            int quotecount=getCountForType(show, date, "quote");
+            count+=quotecount;
+            showNameToCount.put(show,count);
+        }
+        return showNameToCount;    }
+
     public Map<String,Integer> getTumblrForDayForShows(java.util.Date date) throws Exception{
         Map<String,Integer> showNameToCount=new HashMap<String, Integer>();
         Set<String> shows=TwitterDataRetriever.getShows();
@@ -77,7 +102,6 @@ public class TumblrSqlLayer {
             preparedStatement.setDate(1,new java.sql.Date(date.getTime()));
             preparedStatement.setString(2,type);
             rs = preparedStatement.executeQuery();
-            System.out.println("result   "+rs);
             while (rs.next()) {
                 String daycount = rs.getString("count");
                 count=Integer.parseInt(daycount);
@@ -242,13 +266,12 @@ public class TumblrSqlLayer {
         Statement statement = null;
         ResultSet rs;
         PreparedStatement preparedStatement;
-        System.out.println(time);
         try {
 
             Class.forName(jdbcDriverStr);
             connection = DriverManager.getConnection(jdbcURL);
-            System.out.println(showName);
             String table=new String(showName);
+            System.out.println("tumblr "+showName);
             table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
             preparedStatement = connection.prepareStatement("insert into SHOW_TUMBLR_"+table+"(postID," +
                     "blogName,text,title,official,type,sentimentalScore,likes,followers,width,embedCode," +
@@ -292,6 +315,7 @@ public class TumblrSqlLayer {
 
         }
     }
+
 
 
 
@@ -354,330 +378,349 @@ public class TumblrSqlLayer {
 //        }
 //    }
 
-//    public  void loadPhotos(String fileName,String showName,String bottomtime,String uppertime) throws Exception{
-//
-//        BufferedWriter output=null;
-//        Connection connection=null;
-//        Statement statement=null;
-//        ResultSet rs;
-//        PreparedStatement preparedStatement;
-//        try {
-//            String newshow=new String(showName);
-//            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv");
-//            file.createNewFile();
-//            output = new BufferedWriter(new FileWriter(file));
-//            Class.forName(jdbcDriverStr);
-//            connection = DriverManager.getConnection(jdbcURL);
-//            statement = connection.createStatement();
-//            String query = "select distinct embedCode  from TUMBLER_DATA where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 20";
-//            preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1,showName);
-//            preparedStatement.setString(2,"photo");
-//            preparedStatement.setString(3,bottomtime);
-//            preparedStatement.setString(4,uppertime);
-//
-//
-//            rs = preparedStatement.executeQuery();
-//            int count=1;
-//            //STEP 5: Extract data from result set
-//            while (rs.next()) {
-//                output.write(rs.getString("embedCode"));
-//                output.newLine();
-//            }
-//            output.close();
-//
-//            //  getResultSet(resultSet);
-//
-//        } catch (SQLException se) {
-//            //Handle errors for JDBC
-//            se.printStackTrace();
-//        } catch (Exception e) {
-//            //Handle errors for Class.forName
-//            e.printStackTrace();
-//        } finally {
-//            //finally block used to close resources
-//            try {
-//                if (statement != null)
-//                    connection.close();
-//            } catch (SQLException se) {
-//            }// do nothing
-//            try {
-//                if (connection != null)
-//                    connection.close();
-//            } catch (SQLException se) {
-//                se.printStackTrace();
-//            }//end finally try
-//
-//        }
-//
-//    }
-//
-//
-//    public  void loadVideos(String fileName,String showName,String bottomtime,String uppertime) throws Exception{
-//
-//        BufferedWriter output=null;
-//        Connection connection=null;
-//        Statement statement=null;
-//        ResultSet rs;
-//        PreparedStatement preparedStatement;
-//        try {
-//            String newshow=new String(showName);
-//            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv");
-//            file.createNewFile();
-//            output = new BufferedWriter(new FileWriter(file));
-//            Class.forName(jdbcDriverStr);
-//            connection = DriverManager.getConnection(jdbcURL);
-//            statement = connection.createStatement();
-//            String query = "select distinct embedCode  from TUMBLER_DATA where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 10";
-//            preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1,showName);
-//            preparedStatement.setString(2,"video");
-//            preparedStatement.setString(3,bottomtime);
-//            preparedStatement.setString(4,uppertime);
-//
-//            rs = preparedStatement.executeQuery();
-//            int count=1;
-//            //STEP 5: Extract data from result set
-//            while (rs.next()) {
-//                output.write(rs.getString("embedCode"));
-//                output.newLine();
-//            }
-//            output.close();
-//
-//            //  getResultSet(resultSet);
-//
-//        } catch (SQLException se) {
-//            //Handle errors for JDBC
-//            se.printStackTrace();
-//        } catch (Exception e) {
-//            //Handle errors for Class.forName
-//            e.printStackTrace();
-//        } finally {
-//            //finally block used to close resources
-//            try {
-//                if (statement != null)
-//                    connection.close();
-//            } catch (SQLException se) {
-//            }// do nothing
-//            try {
-//                if (connection != null)
-//                    connection.close();
-//            } catch (SQLException se) {
-//                se.printStackTrace();
-//            }//end finally try
-//
-//        }
-//
-//    }
-//
-//    public void loadTextPosts(String fileName,String showName,String bottomtime,String uppertime) throws Exception{
-//
-//        BufferedWriter output=null;
-//        Connection connection=null;
-//        Statement statement=null;
-//        ResultSet rs;
-//        PreparedStatement preparedStatement;
-//        try {
-//            String newshow=new String(showName);
-//            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv");
-//            file.createNewFile();
-//            output = new BufferedWriter(new FileWriter(file));
-//            Class.forName(jdbcDriverStr);
-//            connection = DriverManager.getConnection(jdbcURL);
-//            statement = connection.createStatement();
-//            String query = "select distinct text  from TUMBLER_DATA where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 5";
-//            preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1,showName);
-//            preparedStatement.setString(2,"text");
-//            preparedStatement.setString(3,bottomtime);
-//            preparedStatement.setString(4,uppertime);
-//
-//
-//            rs = preparedStatement.executeQuery();
-//            int count=1;
-//            //STEP 5: Extract data from result set
-//            while (rs.next()) {
-//                output.write(rs.getString("text"));
-//                output.newLine();
-//            }
-//            output.close();
-//
-//            //  getResultSet(resultSet);
-//
-//        } catch (SQLException se) {
-//            //Handle errors for JDBC
-//            se.printStackTrace();
-//        } catch (Exception e) {
-//            //Handle errors for Class.forName
-//            e.printStackTrace();
-//        } finally {
-//            //finally block used to close resources
-//            try {
-//                if (statement != null)
-//                    connection.close();
-//            } catch (SQLException se) {
-//            }// do nothing
-//            try {
-//                if (connection != null)
-//                    connection.close();
-//            } catch (SQLException se) {
-//                se.printStackTrace();
-//            }//end finally try
-//
-//        }
-//
-//    }
-//
-//    public void loadAudioPosts(String fileName,String showName,String bottomtime,String uppertime) throws Exception{
-//
-//
-//        BufferedWriter output=null;
-//        Connection connection=null;
-//        Statement statement=null;
-//        ResultSet rs;
-//        PreparedStatement preparedStatement;
-//        try {
-//            String newshow=new String(showName);
-//            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv");
-//            file.createNewFile();
-//            output = new BufferedWriter(new FileWriter(file));
-//            Class.forName(jdbcDriverStr);
-//            connection = DriverManager.getConnection(jdbcURL);
-//            statement = connection.createStatement();
-//            String query = "select distinct embedCode  from TUMBLER_DATA where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 10";
-//            preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1,showName);
-//            preparedStatement.setString(2,"audio");
-//            preparedStatement.setString(3,bottomtime);
-//            preparedStatement.setString(4,uppertime);
-//
-//            rs = preparedStatement.executeQuery();
-//            int count=1;
-//            //STEP 5: Extract data from result set
-//            while (rs.next()) {
-//                output.write(rs.getString("embedCode"));
-//                output.newLine();
-//            }
-//            output.close();
-//
-//            //  getResultSet(resultSet);
-//
-//        } catch (SQLException se) {
-//            //Handle errors for JDBC
-//            se.printStackTrace();
-//        } catch (Exception e) {
-//            //Handle errors for Class.forName
-//            e.printStackTrace();
-//        } finally {
-//            //finally block used to close resources
-//            try {
-//                if (statement != null)
-//                    connection.close();
-//            } catch (SQLException se) {
-//            }// do nothing
-//            try {
-//                if (connection != null)
-//                    connection.close();
-//            } catch (SQLException se) {
-//                se.printStackTrace();
-//            }//end finally try
-//
-//        }
-//
-//    }
-//
-//
-//    public void loadGRaphs(String fileName, String showName,String bottomtime,String uppertime) throws Exception{
-//
-//        BufferedWriter output=null;
-//        Connection connection=null;
-//        Statement statement=null;
-//        ResultSet rs;
-//        PreparedStatement preparedStatement;
-//        try {
-//            String newshow=new String(showName);
-//            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv");
-//            file.createNewFile();
-//            output = new BufferedWriter(new FileWriter(file));
-//            Class.forName(jdbcDriverStr);
-//            connection = DriverManager.getConnection(jdbcURL);
-//            statement = connection.createStatement();
-//            String query = "select distinct created_on  from TUMBLER_DATA where show_name=? and   created_on >=? and created_on<=? order by created_on asc";
-//            preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1,showName);
-//            preparedStatement.setString(2,bottomtime);
-//            preparedStatement.setString(3,uppertime);
-//            rs = preparedStatement.executeQuery();
-//            int count=1;
-//            //STEP 5: Extract data from result set
-//            output.write("date"+"\t"+"TO"+"\t"+"V"+"\t"+"A"+"\t"+"TE"+"\t"+"P");
-//            int newcount=0;
-//            while (rs.next()) {
-//                output.newLine();
-//                String create = rs.getString("created_on");
-//                query = "select type from TUMBLER_DATA where created_on=? and show_name=?";
-//                preparedStatement = connection.prepareStatement(query);
-//                preparedStatement.setString(1,create);
-//                preparedStatement.setString(2,showName);
-//                ResultSet resultSet1=preparedStatement.executeQuery();
-//                int videCount=0;
-//                int audioCount=0;
-//                int textCount=0;
-//                int photoCount=0;
-//                int totalCount=0;
-//                while (resultSet1.next())
-//                {
-//                    String type = resultSet1.getString("type");
-//                    if(type.equals("video"))
-//                    {
-//                        videCount++;
-//                    }
-//                    if(type.equals("audio"))
-//                    {
-//                        audioCount++;
-//                    }
-//                    if(type.equals("photo"))
-//                    {
-//                        photoCount++;
-//                    }
-//                    if(type.equals("text") || type.equals("quote"))
-//                    {
-//                        textCount++;
-//                    }
-//                    totalCount++;
-//                }
-//                if(newcount>30 && textCount!=videCount && videCount!=photoCount && photoCount!=audioCount && textCount>0&&
-//                        photoCount>0 && videCount>0)
-//                    break;
-//
-//                    output.write(create.replaceAll("00:00:00.0","").replaceAll(" ","").replaceAll("-","")+"\t"+totalCount+"\t"+videCount+"\t"+audioCount+"\t"+textCount+"\t"+
-//                        photoCount);
-//                newcount++;
-//            }
-//            //  getResultSet(resultSet);
-//
-//        } catch (SQLException se) {
-//            //Handle errors for JDBC
-//            se.printStackTrace();
-//        } catch (Exception e) {
-//            //Handle errors for Class.forName
-//            e.printStackTrace();
-//        } finally {
-//            //finally block used to close resources
-//            try {
-//                if (statement != null)
-//                    connection.close();
-//            } catch (SQLException se) {
-//            }// do nothing
-//            try {
-//                if (connection != null)
-//                    connection.close();
-//            } catch (SQLException se) {
-//                se.printStackTrace();
-//            }//end finally try
-//            output.close();
-//
-//        }
+    public  String loadPhotos(String showName,String bottomtime,String uppertime) throws Exception{
 
-//    }
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newshow=new String(showName);
+        count++;
+        String fileName="phototumblr"+count+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
+        try {
+            File file = new File(fileDirectory+fileName);
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String table=new String(showName);
+             table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+            String query = "select distinct embedCode  from SHOW_TUMBLR_"+table+" where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 15";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,showName);
+            preparedStatement.setString(2,"photo");
+            preparedStatement.setString(3, bottomtime);
+            preparedStatement.setString(4, uppertime);
+
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            //STEP 5: Extract data from result set
+            while (rs.next()) {
+                output.write(rs.getString("embedCode"));
+                output.newLine();
+            }
+            output.close();
+
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+
+        }
+        return fileName;
+    }
+
+
+    public  String loadVideos(String showName,String bottomtime,String uppertime) throws Exception{
+
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newshow=new String(showName);
+        count++;
+        String fileName="videotumblr"+count+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
+        try {
+            File file = new File(fileDirectory+fileName);
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String table=new String(showName);
+            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+            String query = "select distinct embedCode  from SHOW_TUMBLR_"+table+" where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 15";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,showName);
+            preparedStatement.setString(2,"video");
+            preparedStatement.setString(3, bottomtime);
+            preparedStatement.setString(4, uppertime);
+
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            //STEP 5: Extract data from result set
+            while (rs.next()) {
+                output.write(rs.getString("embedCode"));
+                output.newLine();
+            }
+            output.close();
+
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+
+        }
+        return fileName;
+    }
+
+    public String loadTextPosts(String showName,String bottomtime,String uppertime) throws Exception{
+
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newshow=new String(showName);
+        count++;
+        String fileName="texttumblr"+count+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
+        try {
+            File file = new File(fileDirectory+fileName);
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String table=new String(showName);
+            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'", "");
+            String query = "select distinct text  from SHOW_TUMBLR_"+table+"  where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 20";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,showName);
+            preparedStatement.setString(2,"text");
+            preparedStatement.setString(3, bottomtime);
+            preparedStatement.setString(4, uppertime);
+
+
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            //STEP 5: Extract data from result set
+            while (rs.next()) {
+                output.write(rs.getString("text"));
+                output.newLine();
+            }
+            output.close();
+
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+
+        }
+        return fileName;
+    }
+
+    public String loadAudioPosts(String showName,String bottomtime,String uppertime) throws Exception{
+
+
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newshow=new String(showName);
+        count++;
+        String fileName="audiotumblr"+count+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
+        try {
+            File file = new File(fileDirectory+fileName);
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String table=new String(showName);
+            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'", "");
+            String query = "select distinct embedCode  from SHOW_TUMBLR_"+table+" where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 15";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,showName);
+            preparedStatement.setString(2,"audio");
+            preparedStatement.setString(3, bottomtime);
+            preparedStatement.setString(4, uppertime);
+
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            //STEP 5: Extract data from result set
+            while (rs.next()) {
+                output.write(rs.getString("embedCode"));
+                output.newLine();
+            }
+            output.close();
+
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+
+        }
+        return fileName;
+    }
+
+
+    public String loadGRaphs( String showName,String bottomtime,String uppertime) throws Exception{
+
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newshow=new String(showName);
+        count++;
+        String fileName="graphtumblr"+count+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
+        try {
+            File file = new File(fileDirectory+fileName);
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String table=new String(showName);
+            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'", "");
+            String query = "select distinct created_on  from SHOW_COUNT_"+table+" where show_name=? and   created_on >=? and created_on<=? order by created_on asc";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,showName);
+            preparedStatement.setString(2,bottomtime);
+            preparedStatement.setString(3,uppertime);
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            //STEP 5: Extract data from result set
+            output.write("date"+"\t"+"TO"+"\t"+"V"+"\t"+"A"+"\t"+"TE"+"\t"+"P");
+            int newcount=0;
+            while (rs.next()) {
+                output.newLine();
+                String create = rs.getString("created_on");
+                query = "select type from TUMBLER_DATA where created_on=? and show_name=?";
+                preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1,create);
+                preparedStatement.setString(2,showName);
+                ResultSet resultSet1=preparedStatement.executeQuery();
+                int videCount=0;
+                int audioCount=0;
+                int textCount=0;
+                int photoCount=0;
+                int totalCount=0;
+                while (resultSet1.next())
+                {
+                    String type = resultSet1.getString("type");
+                    if(type.equals("video"))
+                    {
+                        videCount++;
+                    }
+                    if(type.equals("audio"))
+                    {
+                        audioCount++;
+                    }
+                    if(type.equals("photo"))
+                    {
+                        photoCount++;
+                    }
+                    if(type.equals("text") || type.equals("quote"))
+                    {
+                        textCount++;
+                    }
+                    totalCount++;
+                }
+                if(newcount>30 && textCount!=videCount && videCount!=photoCount && photoCount!=audioCount && textCount>0&&
+                        photoCount>0 && videCount>0)
+                    break;
+
+                    output.write(create.replaceAll("00:00:00.0","").replaceAll(" ","").replaceAll("-","")+"\t"+totalCount+"\t"+videCount+"\t"+audioCount+"\t"+textCount+"\t"+
+                        photoCount);
+                newcount++;
+            }
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            output.close();
+
+        }
+        return fileName;
+    }
 }

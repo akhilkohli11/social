@@ -11,8 +11,13 @@ public class Loader extends HttpServlet {
 
     public void init() {
         try {
-            System.out.println(": initialised dsdsdsdssd");
-            LoadApp.init();
+//            System.out.println(": initialised dsdsdsdssd");
+//          TumblrDaemon tumblrDaemon=new TumblrDaemon();
+//            tumblrDaemon.init();
+//            TwitterTweetDaeomon twitterTweetDaeomon=new TwitterTweetDaeomon();
+//            twitterTweetDaeomon.init();
+//            TwitterTumblrDaemon twitterTumblrDaemon=new TwitterTumblrDaemon();
+//            twitterTumblrDaemon.init();
         }
         catch (Exception e)
         {
