@@ -21,7 +21,6 @@ public class CreateFiles {
 
             String sCurrentLine;
             List<String> showNames = new ArrayList<String>();
-           socialMysqlLayer.getLocation();
 
         }
 
