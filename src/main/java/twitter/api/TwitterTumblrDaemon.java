@@ -27,7 +27,7 @@ public class TwitterTumblrDaemon {
             try {
                 socialMysqlLayer.populatDayWiseStatsForShowForTwitter();
                 socialMysqlLayer.populatDayWiseStatsForShowForTumblr();
-                socialMysqlLayer.populateLocationDataForTwitter();
+              // socialMysqlLayer.populateLocationDataForTwitter();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
