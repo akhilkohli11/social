@@ -244,7 +244,7 @@ d3.select("svg")
        upperTime:$("#enddatepicker").val(),
        id:totalCount};
 
-                   $.ajax('http://localhost:9999/rest/test/tumblr/photo', {
+                   $.ajax('http://localhost:9199/rest/test/tumblr/photo', {
                                                type: 'POST',
                                                headers: {
                                                               Accept : "application/json; charset=utf-8",
