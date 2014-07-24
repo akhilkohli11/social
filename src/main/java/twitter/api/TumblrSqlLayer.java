@@ -21,7 +21,7 @@ public class TumblrSqlLayer {
     private Statement statement;
     private ResultSet resultSet;
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    String fileDirectory="/Users/akohli/akhilsocial/newtiwtterui/tumblerfile/";
+    String fileDirectory="/Library/Tomcat/webapps/examples/";
 
     private PreparedStatement preparedStatement;
     public TumblrSqlLayer(String jdbcDriverStr, String jdbcURL) {
@@ -261,7 +261,7 @@ public class TumblrSqlLayer {
     public  void populateTumblrData(long postID,String blogName,String text,String showName,
                                    String title,String official,String type,int sentimentalScore,
                                    int likes,int followes,int width,String embed,
-                                   String time,String url) throws Exception {
+                                   String time,String url,String postURL) throws Exception {
         Connection connection = null;
         Statement statement = null;
         ResultSet rs;
@@ -275,7 +275,7 @@ public class TumblrSqlLayer {
             table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
             preparedStatement = connection.prepareStatement("insert into SHOW_TUMBLR_"+table+"(postID," +
                     "blogName,text,title,official,type,sentimentalScore,likes,followers,width,embedCode," +
-                    "created_on,lastUpdated,url,show_name) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    "created_on,lastUpdated,url,show_name,posturl) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             preparedStatement.setLong(1, postID);
             preparedStatement.setString(2, blogName);
             preparedStatement.setString(3, text);
@@ -291,6 +291,7 @@ public class TumblrSqlLayer {
             preparedStatement.setTimestamp(13, new Timestamp(df.parse(time).getTime()));
             preparedStatement.setString(14, url);
             preparedStatement.setString(15, showName);
+            preparedStatement.setString(16, postURL);
 
             preparedStatement.executeUpdate();
         } catch (SQLException se) {
@@ -378,7 +379,7 @@ public class TumblrSqlLayer {
 //        }
 //    }
 
-    public  String loadPhotos(String showName,String bottomtime,String uppertime) throws Exception{
+    public  String loadPhotos(String showName,String bottomtime,String uppertime,String id) throws Exception{
 
         BufferedWriter output=null;
         Connection connection=null;
@@ -386,8 +387,7 @@ public class TumblrSqlLayer {
         ResultSet rs;
         PreparedStatement preparedStatement;
         String newshow=new String(showName);
-        count++;
-        String fileName="phototumblr"+count+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
+        String fileName=id+"phototumblr"+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
         try {
             File file = new File(fileDirectory+fileName);
             file.createNewFile();

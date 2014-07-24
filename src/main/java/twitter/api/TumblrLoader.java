@@ -130,7 +130,7 @@ public class TumblrLoader {
             int likes=blog.getFollowersCount();
             int followers=blog.getLikeCount();
             tumblrSqlLayer.populateTumblrData(id,name,videoPostNEw.getText(),showName,videoPostNEw.getSourceTitle(),official,"quote",0,likes,followers,0,
-                    "",time,url);
+                    "",time,url,post.getPostUrl());
 
         }
     }
@@ -154,7 +154,7 @@ public class TumblrLoader {
                 int likes=blog.getFollowersCount();
                 int followers=blog.getLikeCount();
                 tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"video",0,likes,followers,width,
-                        embedCode,time,url);
+                        embedCode,time,url,post.getPostUrl());
             }
         }
     }
@@ -176,7 +176,7 @@ public class TumblrLoader {
                 int likes=blog.getFollowersCount();
                 int followers=blog.getLikeCount();
                 tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"photo",0,likes,followers,photo.getOriginalSize().getWidth(),
-                        embedCode,time,url);
+                        embedCode,time,url,post.getPostUrl());
             }
         }
     }
@@ -196,7 +196,7 @@ public class TumblrLoader {
                 int likes=blog.getFollowersCount();
                 int followers=blog.getLikeCount();
                 tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"audio",0,likes,followers,0,
-                        embedCode,time,url);
+                        embedCode,time,url,post.getPostUrl());
 
         }
     }
@@ -215,7 +215,7 @@ public class TumblrLoader {
                 int likes=blog.getFollowersCount();
                 int followers=blog.getLikeCount();
                 tumblrSqlLayer.populateTumblrData(id,name,videoPostNEw.getBody(),showName,videoPostNEw.getTitle(),official,"text",0,likes,followers,0,
-                        "",time,url);
+                        "",time,url,post.getPostUrl());
 
         }
     }

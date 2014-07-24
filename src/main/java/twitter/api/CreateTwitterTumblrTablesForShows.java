@@ -12,9 +12,9 @@ public class CreateTwitterTumblrTablesForShows {
 
     public static void main(String args[]) throws Exception
     {
-      //  createTwitterSql();
-      //  createTumblrSql();
-       // createShowCountSql();
+        createTwitterSql();
+        createTumblrSql();
+       createShowCountSql();
         createLocationSql();
     }
 
@@ -35,7 +35,7 @@ public class CreateTwitterTumblrTablesForShows {
                     "            tweetText longtext character set utf8 collate utf8_polish_ci DEFAULT NULL,\n" +
                     "            city  VARCHAR(60) DEFAULT NULL ,\n" +
                     "            country  VARCHAR(60) DEFAULT NULL ,\n" +
-                    "            state VARCHAR(60)  NOT NULL,\n" +
+                    "            state VARCHAR(60)  DEFAULT NULL,\n" +
                     "            show_name VARCHAR(100) DEFAULT NULL,\n" +
                     "            type  VARCHAR(60) DEFAULT NULL ,\n" +
                     "            created_on  DATETIME NOT NULL ,\n" +
@@ -46,8 +46,8 @@ public class CreateTwitterTumblrTablesForShows {
                     "         INDEX(show_name),\n" +
                     "        INDEX(show_name,type),\n" +
                     "        INDEX(type),\n" +
-                    "        INDEX(show_name,city,created_on),\n" +
-                    "        INDEX(created_on));");
+                    "        INDEX(show_name,created_on),\n" +
+                    "        INDEX(created_on))ENGINE=InnoDB AUTO_INCREMENT=576642 DEFAULT CHARSET=latin1;");
 
         }
 
@@ -126,10 +126,12 @@ public class CreateTwitterTumblrTablesForShows {
                     "                   created_on  DATETIME NOT NULL ,\n" +
                     "                       lastUpdated  DATETIME NOT NULL ,\n" +
                     "                   url VARCHAR(100) DEFAULT NULL,\n" +
-                    "                 PRIMARY KEY ( postID,blogName,show_name))" +
+                    "                   posturl VARCHAR(100) DEFAULT NULL,\n" +
+
+                    "                 PRIMARY KEY ( postID,blogName,show_name)," +
                             "        INDEX(created_on),\n" +
                             "        INDEX(show_name),\n" +
-                            "        INDEX(show_name,type,created_on);");
+                            "        INDEX(show_name,type,created_on));");
         }
         br.close();
 
@@ -160,7 +162,7 @@ public class CreateTwitterTumblrTablesForShows {
                     "         INDEX(show_name),\n" +
                     "        INDEX(show_name,type),\n" +
                     "        INDEX(type),\n" +
-                    "        INDEX(created_on));");
+                    "        INDEX(created_on))ENGINE=InnoDB AUTO_INCREMENT=576642 DEFAULT CHARSET=latin1;");
         }
         br.close();
 

@@ -389,6 +389,7 @@ public class SocialMysqlLayer {
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
             String table=new String(showName);
+            tweetText  = tweetText.replaceAll("[^\\u0000-\\uFFFF]", "");
             System.out.println("Twitrer "+showName);
             table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
             preparedStatement = connection.prepareStatement("insert into SHOW_TWITTER_"+table+"(tweet," +
@@ -420,9 +421,15 @@ public class SocialMysqlLayer {
 
             return preparedStatement.executeUpdate();
 
-        } finally {
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
             close();
         }
+        return 0;
     }
 
     public List<String> showPositiveTweetText(String showName,String fileName,String bottomtime,String uppertime) throws Exception {

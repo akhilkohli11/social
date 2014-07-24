@@ -75,11 +75,16 @@ public class JsonService {
 
     public String getTumblerFile(@QueryParam("show") String show,
                                  @QueryParam("bottomTime") String bottomtime,
-                                 @QueryParam("upperTime") String upperTime) throws Exception
+                                 @QueryParam("upperTime") String upperTime,
+                                 @QueryParam("id") String id) throws Exception
     {
-        System.out.println(show+bottomtime+upperTime);
+        System.out.println("sssss"+show);
+        System.out.println("bottom"+bottomtime);
+        System.out.println("upper"+upperTime);
+        System.out.println("id"+id);
+
         String showName=TwitterDataRetriever.getShowToTableName().get(show);
-        return JumblrMain.getTumblrSqlLayer().loadPhotos(showName,bottomtime+" 00:00:00",upperTime+" 00:00:00");
+        return JumblrMain.getTumblrSqlLayer().loadPhotos(showName,bottomtime+" 00:00:00",upperTime+" 00:00:00",id);
     }
 
     @GET

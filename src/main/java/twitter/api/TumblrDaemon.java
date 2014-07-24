@@ -2,6 +2,9 @@ package twitter.api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by akohli on 7/7/14.
@@ -33,7 +36,7 @@ public class TumblrDaemon {
     };
     public  void init()
     {
-        Thread thread = new Thread(command);
-        thread.start();
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+        service.scheduleAtFixedRate(command, 0, 5, TimeUnit.HOURS);
     }
 }

@@ -30,21 +30,31 @@ public class RefactoredTumblrLoader {
     String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
 
 
-
+    static int initalCount=0;
 
 
     public static void loadTumblr(TumblrSqlLayer tumblrSqlLayer,Map<String,List<SearchObject>> searchMap) throws Exception
     {
+        int limit =0;
+        if(initalCount==0)
+        {
+            limit=700;
+        }
+        else
+        {
+            limit=24;
+        }
         Map<String, String> options = new HashMap<String, String>();
         Date date = new Date();
         long unixTime = (long) date.getTime()/1000;
-        options.put("before", String.valueOf(unixTime));
-        options.put("limit", "100");
-        int count=0;
-        while(count++<24) {
-            for(Map.Entry<String,List<SearchObject>> showSearch : searchMap.entrySet()) {
-                for(SearchObject searchObject : showSearch.getValue()) {
-                    if(searchObject.isBlog()) {
+
+            options.put("before", String.valueOf(unixTime));
+            options.put("limit", "100");
+            int count = 0;
+            while (count++ < limit) {
+                for (Map.Entry<String, List<SearchObject>> showSearch : searchMap.entrySet()) {
+                    for (SearchObject searchObject : showSearch.getValue()) {
+                        if (searchObject.isBlog()) {
 //
 //                        Map<String, String> newoptions = new HashMap<String, String>();
 //                        newoptions.put("type", "video");
@@ -64,25 +74,22 @@ public class RefactoredTumblrLoader {
 //
 
 
+                        } else {
+                            List<Post> posts = client.tagged(searchObject.getSearchTerm().trim(), options);
+                            for (Post post : posts) {
+                                persist(tumblrSqlLayer, post, showSearch.getKey(), searchObject.getIsOfficial().toString());
 
-                    }
-                    else {
-                        List<Post> posts = client.tagged(searchObject.getSearchTerm().trim(), options);
-                        for (Post post : posts) {
-                            persist(tumblrSqlLayer,post,showSearch.getKey(),searchObject.getIsOfficial().toString());
-
+                            }
                         }
                     }
+                    Thread.sleep(1000);
                 }
-                Thread.sleep(1000);
+
+                Date daysAgo = new DateTime(date).minusHours(1).toDate();
+                date = daysAgo;
+                unixTime = (long) daysAgo.getTime() / 1000;
+                options.put("before", String.valueOf(unixTime));
             }
-
-            Date daysAgo = new DateTime(date).minusHours(1).toDate();
-            date = daysAgo;
-            unixTime = (long) daysAgo.getTime() / 1000;
-            options.put("before", String.valueOf(unixTime));
-        }
-
 
     }
 
@@ -131,7 +138,7 @@ public class RefactoredTumblrLoader {
             int likes=blog.getFollowersCount();
             int followers=blog.getLikeCount();
             tumblrSqlLayer.populateTumblrData(id,name,videoPostNEw.getText(),showName,videoPostNEw.getSourceTitle(),official,"quote",0,likes,followers,0,
-                    "",time,url);
+                    "",time,url,post.getPostUrl());
 
         }
     }
@@ -155,7 +162,7 @@ public class RefactoredTumblrLoader {
                 int likes=blog.getFollowersCount();
                 int followers=blog.getLikeCount();
                 tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"video",0,likes,followers,width,
-                        embedCode,time,url);
+                        embedCode,time,url,post.getPostUrl());
             }
         }
     }
@@ -177,7 +184,7 @@ public class RefactoredTumblrLoader {
                 int likes=blog.getFollowersCount();
                 int followers=blog.getLikeCount();
                 tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"photo",0,likes,followers,photo.getOriginalSize().getWidth(),
-                        embedCode,time,url);
+                        embedCode,time,url,post.getPostUrl());
             }
         }
     }
@@ -197,7 +204,7 @@ public class RefactoredTumblrLoader {
             int likes=blog.getFollowersCount();
             int followers=blog.getLikeCount();
             tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"audio",0,likes,followers,0,
-                    embedCode,time,url);
+                    embedCode,time,url,post.getPostUrl());
 
         }
     }
@@ -216,7 +223,7 @@ public class RefactoredTumblrLoader {
             int likes=blog.getFollowersCount();
             int followers=blog.getLikeCount();
             tumblrSqlLayer.populateTumblrData(id,name,videoPostNEw.getBody(),showName,videoPostNEw.getTitle(),official,"text",0,likes,followers,0,
-                    "",time,url);
+                    "",time,url,post.getPostUrl());
 
         }
     }

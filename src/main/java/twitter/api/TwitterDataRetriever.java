@@ -149,11 +149,11 @@ public class TwitterDataRetriever {
             String selectedCountry = null;
 
             JSONObject user = new JSONObject(newloc);
-            if (user.has("location")) {
+           A: if (user.has("location")) {
 
                 String location = user.get("location").toString();
                 if (location.trim().equals("")) {
-                    continue;
+                    break A;
                 }
                 int found = 0;
                 for (String city : cityListUs) {
@@ -176,7 +176,7 @@ public class TwitterDataRetriever {
                     }
                 }
             }
-                if (!lang.toLowerCase().equals("en") || !lang.toLowerCase().equals("english")) {
+                if (!lang.toLowerCase().equals("en")) {
                     continue;
                 }
                 if (isUTF8MisInterpreted(tweettext)) {
@@ -237,9 +237,9 @@ public class TwitterDataRetriever {
                         selectedCountry = "United States of America";
                     }
                     socialMysqlLayer.populateTweetData(msg.trim(), tweettext.trim(), showName.trim(),
-                            createdAt, time, findSentiment(tweet), type, embedCode, selectedCity, selectedCountry, selectedState);
+                            createdAt, time, 0, type, embedCode, selectedCity, selectedCountry, selectedState);
                 } catch (Exception e) {
-                    //e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
 
@@ -252,7 +252,7 @@ public class TwitterDataRetriever {
 
 
     public static void init() {
-       pipeline = new StanfordCoreNLP("MyPropFile.properties");
+      // pipeline = new StanfordCoreNLP("MyPropFile.properties");
     }
 
     public static int findSentiment(String tweet) {
