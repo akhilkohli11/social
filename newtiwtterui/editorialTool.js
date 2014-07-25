@@ -1,6 +1,7 @@
 var negative=0;
 var postive=0;
 var neutral=0;
+       var url='http://localhost:9199/rest/test/';
 function foobar_cont(){
     console.log("finished.");
 };
@@ -229,6 +230,7 @@ d3.select("svg")
 
 
 $('#photo').click(function(){
+      $('#img').show();
         $('#legend').hide();
 d3.select("svg")
        .remove();
@@ -243,8 +245,8 @@ d3.select("svg")
        requestData={show:$("#ddlViewBy :selected").text(), bottomTime:$("#datepicker").val(),
        upperTime:$("#enddatepicker").val(),
        id:totalCount};
-
-                   $.ajax('http://localhost:9199/rest/test/tumblr/photo', {
+    var finalUrl=url+'tumblr/photo';
+                   $.ajax(finalUrl, {
                                                type: 'POST',
                                                headers: {
                                                               Accept : "application/json; charset=utf-8",
@@ -261,7 +263,53 @@ d3.select("svg")
                                     }).done(function(data) {console.log(data);
                                                             });;
 
-sleep(3000, foobar_cont);
+setTimeout(function(){
+           $('#img').hide();
+var file=totalCount+"phototumblr"+$("#ddlViewBy :selected").text()+".tsv";
+
+        $('#multimedia').append("<h3> <p class=\"text-primary\">Tabular Photo Post Data</p></h3>");
+  $.get(file, function(data) {
+      var lines = data.split("\n");
+      var image=-1;
+//                                      $('#multimedia').append("<tr><th class=\"active\">"+res[0]+"</td><tdclass=\"success\">"+res[1]+
+//                                                                "</td><tdclass=\"warning\">"+res[2]+"</td><tdclass=\"danger\">"+res[3]+"</td>");
+
+                $.each(lines, function(n, item) {
+                if(image==-1)
+                {
+                                             $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
+                                                "<th class=\"success\">Followers</th>"+
+                                                "<th class=\"warning\">Post URL</th>"+
+                                                "<th class=\"danger\">Photo Link</th></tr>");
+
+                    image=0;
+                }
+                if(item=="photos")
+                                {
+                                          $('#multimedia').append('</table>');
+                                     $('#multimedia').append("<h3> <p class=\"text-primary\">Photo Posts</p></h3>");
+                                     image=1;
+                                }
+                if(image==0)
+                {
+                            var res = item.split("break");
+                          $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+
+                          "<td class=\"warning\"><a href=\""+res[2]+"\">"+res[2]+"</a></td><td class=\"danger\"><a href=\""+res[3]+"\">"+res[3]+"</a></td></tr>");
+                }
+
+                if(image==1)
+                {
+                 $('#multimedia').append('<div><div class="image"><a href="#"><p><img    src="'+item+'"</p></a></div></div>');
+                 }
+              //   $('#slideshow_1').append("<div class=\"slideshow_item\"><div class=\"image\"><a href=\"#\"><img  alt=\"photo 1\" width=\"900\" height=\"400\" src=\""+item+"\""
+               //   +"/></a></div></div>");
+
+          });
+      }, "text")
+        $('#multimedia').append("</div>");
+        },
+ 2000);
 
 
 
@@ -284,19 +332,142 @@ sleep(3000, foobar_cont);
 //                                                            });;
 
 
+});
 
 
+$('#usbutton').click(function(){
+      $('#img').show();
+d3.select("svg")
+       .remove();
+$('#maindiv').hide();
+      $('#newdiv').hide();
+         $('#onemorediv').show();
+
+   $('#tweet').text('');
+       $('#positivetweet').text('');
+       $('#negativeTweet').text('');
+         $('#chart_div').text('');
+              $('#chart_div').hide();
+               var bottom=1000;
+                   var top=10000;
+                   var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+                   var totalCount = count.toString();
+                    //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+                     requestData={show:$("#ddlViewBy :selected").text(), bottomTime:$("#datepicker").val(),
+                     upperTime:$("#enddatepicker").val(),
+                     id:totalCount};
+                  var finalUrl=url+'twitter/geo';
+                                 $.ajax(finalUrl, {
+                                                             type: 'POST',
+                                                             headers: {
+                                                                            Accept : "application/json; charset=utf-8",
+                                                                            "Content-Type": "application/json; charset=utf-8"
+
+                                                                 },
+                                                             dataType:"jsonp",
+                                                                             jsonCallback: "jsonp",
+                                                                             data:requestData,
+                                                                 async:false,
+                                                                 success: AjaxSucceeded,
+                                                                  error: AjaxFailed,
+
+                                                  }).done(function(data) {console.log(data);
+                                                                          });;
+
+setTimeout(function(){
+           $('#img').hide();
+var file="geotwitter"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
 
 
-alert("does it finish");
+  $.get(file, function(data) {
+   var newdata = new google.visualization.DataTable();
+                                            newdata.addColumn('string', 'State');
+                                            newdata.addColumn('number', 'Popularity');
+      var lines = data.split("\n");
+                $.each(lines, function(n, item) {
+                  var res = item.split("newvalue");
+                  newdata.addRow([res[0],parseInt(res[1])]);
+          });
+                              countryMapUS(newdata);
+      }, "text")
+        },
+ 3000);
 
 });
 
-function sleep(millis, callback) {
-    setTimeout(function()
-            { callback(); }
-    , millis);
-}
+
+
+
+
+function countryMapUS(data) {
+//      var data = new google.visualization.DataTable();
+//           data.addColumn('string', 'State');
+//           data.addColumn('number', 'Popularity');
+//            data.addRow(['US-AL',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-AK',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-AZ',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-AR',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-CA',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-CO',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-CT',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-DE',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-DC',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-FL',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-GA',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-HI',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-ID',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-IL',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-IN',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-IA',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-KS',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-KY',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-LA',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-ME',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-MD',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-MA',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-MI',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-MN',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-MS',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-MO',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-MT',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-NE',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-NV',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-NH',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-NJ',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-NM',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-NY',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-NC',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-ND',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-OH',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-OK',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-OR',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-PA',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-RI',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-SC',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-SD',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-TN',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-TX',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-UT',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-VT',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-VA',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-WA',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-WV',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-WI',Math.floor(Math.random() * 100)]);
+//           data.addRow(['US-WY',200]);
+//           data.addRow(['US-AS',440]);
+//           data.addRow(['US-GU',330]);
+//           data.addRow(['US-MP',880]);
+//           data.addRow(['US-PR',900]);
+//           data.addRow(['US-VI',100]);
+
+          var formatter = new google.visualization.NumberFormat({prefix: 'Popularity', fractionDigits: 0});
+                      formatter.format(data, 1); // Apply formatter to second column
+                      var stateHeatMap = new google.visualization.GeoChart(document.getElementById('visualization'));
+                      stateHeatMap.draw(data, {width: 1260, height: 500, region: 'US', resolution: 'provinces', legend: {numberFormat: '#,###', textStyle: {color: 'blue', fontSize: 16}} });
+                    }
+
+
+
 function jsonp(result)
 {
  console.log(result);
@@ -556,256 +727,6 @@ d3.select("svg")
             }
 });
 
-
-$('#usbutton').click(function(){
-d3.select("svg")
-       .remove();
-$('#maindiv').hide();
-      $('#newdiv').hide();
-         $('#onemorediv').show();
-
-   $('#tweet').text('');
-       $('#positivetweet').text('');
-       $('#negativeTweet').text('');
-         $('#chart_div').text('');
-              $('#chart_div').hide();
-    countryMapUS();});
-
-$('#geo').click(function(){
-d3.select("svg")
-       .remove();
-$('#maindiv').hide();
-      $('#newdiv').hide();
-                  $('#onemorediv').show();
-
-   $('#tweet').text('');
-       $('#positivetweet').text('');
-       $('#negativeTweet').text('');
-         $('#chart_div').text('');
-              $('#chart_div').show();
-              drawRegionsMap();
-
-});
-
-
-$('#chinabutton').click(function(){
-d3.select("svg")
-       .remove();
-$('#maindiv').hide();
-      $('#newdiv').hide();
-                  $('#onemorediv').show();
-
-   $('#tweet').text('');
-       $('#positivetweet').text('');
-       $('#negativeTweet').text('');
-         $('#chart_div').text('');
-              $('#chart_div').hide();
-                            countryMapIND();});
-
- $('#indiabutton').click(function(){
- d3.select("svg")
-        .remove();
- $('#maindiv').hide();
-       $('#newdiv').hide();
-                   $('#onemorediv').show();
-
-    $('#tweet').text('');
-        $('#positivetweet').text('');
-        $('#negativeTweet').text('');
-          $('#chart_div').text('');
-               $('#chart_div').hide();
-                             indiamap();});
-
-                             function indiamap() {
-                                   var data = new google.visualization.DataTable();
-                                        data.addColumn('string', 'State');
-                                        data.addColumn('number', 'POPULARITY');
-                             if( $("#ddlViewBy :selected").text()=="Mahabharat")
-                             {
-                           data.addRow(['IN-AP',10]);data.addRow(['IN-AR',10]);
-                           data.addRow(['IN-AS',10]);data.addRow(['IN-BR',200]);data.addRow(['IN-CT',10])
-                           ;data.addRow(['IN-GA',5]);data.addRow(['IN-GJ',150]);
-                           data.addRow(['IN-HR',15]);data.addRow(['IN-HP',20]);
-                           data.addRow(['IN-JK',40]);data.addRow(['IN-JH',50]);
-                           data.addRow(['IN-KA',10]);data.addRow(['IN-KL',10]);
-                           data.addRow(['IN-MP',160]);data.addRow(['IN-MH',90]);
-                           data.addRow(['IN-MN',10]);data.addRow(['IN-ML',40]);
-                           data.addRow(['IN-MZ',50]);data.addRow(['IN-NL',10]);
-                           data.addRow(['IN-OR',60]);data.addRow(['IN-PB',180]);
-                           data.addRow(['IN-RJ',190]);data.addRow(['IN-SK',10]);
-                           data.addRow(['IN-TN',10]);data.addRow(['IN-TR',10]);
-                           data.addRow(['IN-UT',60]);data.addRow(['IN-UP',300]);
-                           data.addRow(['IN-WB',100]);data.addRow(['IN-AN',10]);
-                           data.addRow(['IN-CH',10]);data.addRow(['IN-DN',10]);
-                           data.addRow(['IN-DD',10]);data.addRow(['IN-DL',10]);
-                           data.addRow(['IN-LD',10]);data.addRow(['IN-PY',10]);
-                             }
-                             else if ($("#ddlViewBy :selected").text()=="BalikaVadhu")
-                             {
-
-                              data.addRow(['IN-AP',10]);data.addRow(['IN-AR',10]);
-                                                        data.addRow(['IN-AS',10]);data.addRow(['IN-BR',200]);data.addRow(['IN-CT',10])
-                                                        ;data.addRow(['IN-GA',5]);data.addRow(['IN-GJ',450]);
-                                                        data.addRow(['IN-HR',15]);data.addRow(['IN-HP',20]);
-                                                        data.addRow(['IN-JK',40]);data.addRow(['IN-JH',50]);
-                                                        data.addRow(['IN-KA',10]);data.addRow(['IN-KL',10]);
-                                                        data.addRow(['IN-MP',900]);data.addRow(['IN-MH',800]);
-                                                        data.addRow(['IN-MN',10]);data.addRow(['IN-ML',40]);
-                                                        data.addRow(['IN-MZ',50]);data.addRow(['IN-NL',10]);
-                                                        data.addRow(['IN-OR',60]);data.addRow(['IN-PB',680]);
-                                                        data.addRow(['IN-RJ',700]);data.addRow(['IN-SK',10]);
-                                                        data.addRow(['IN-TN',10]);data.addRow(['IN-TR',10]);
-                                                        data.addRow(['IN-UT',600]);data.addRow(['IN-UP',900]);
-                                                        data.addRow(['IN-WB',800]);data.addRow(['IN-AN',10]);
-                                                        data.addRow(['IN-CH',10]);data.addRow(['IN-DN',10]);
-                                                        data.addRow(['IN-DD',10]);data.addRow(['IN-DL',10]);
-                                                        data.addRow(['IN-LD',10]);data.addRow(['IN-PY',10]);
-                             }
-
-                                   var formatter = new google.visualization.NumberFormat({prefix: 'Popularity', fractionDigits: 0});
-                                         formatter.format(data, 1); // Apply formatter to second column
-                                         var stateHeatMap = new google.visualization.GeoChart(document.getElementById('visualization'));
-                                         stateHeatMap.draw(data, {width: 960, height: 480, region: 'IN', resolution: 'provinces', legend: {numberFormat: '#,###', textStyle: {color: 'blue', fontSize: 16}} });
-                                      }
-
-
-
-function countryMapIND() {
-      var data = new google.visualization.DataTable();
-           data.addColumn('string', 'State');
-           data.addColumn('number', 'POPULARITY');
-if( $("#ddlViewBy :selected").text()=="BuBuJingQing")
-{
-data.addRow(['CN-31',19000]);data.addRow(['CN-12',6000]);
-data.addRow(['CN-34',7000]);data.addRow(['CN-35',4000]);
-data.addRow(['CN-62',1000]);data.addRow(['CN-44',3000]);
-data.addRow(['CN-52',1000]);data.addRow(['CN-46',2000]);
-data.addRow(['CN-13',3000]);data.addRow(['CN-23',1000]);
-data.addRow(['CN-41',2000]);data.addRow(['CN-42',1000]);
-data.addRow(['CN-43',1000]);data.addRow(['CN-32',200]);
-data.addRow(['CN-36',1000]);data.addRow(['CN-22',1000]);
-data.addRow(['CN-21',5000]);data.addRow(['CN-63',7000]);
-data.addRow(['CN-61',1000]);
-data.addRow(['CN-37',1000]);data.addRow(['CN-14',1000]);data.addRow(['CN-51',1000]);data.addRow(['CN-71',1000]);
-data.addRow(['CN-53',8000]);data.addRow(['CN-33',1000]);
-data.addRow(['CN-45',1000]);data.addRow(['CN-15',2000]);data.addRow(['CN-64',1000]);data.addRow(['CN-65',1000]);
-data.addRow(['CN-54',1000]);data.addRow(['CN-91',1000]);data.addRow(['CN-92',1000]);
- data.addRow(['CN-71',1000]);data.addRow(['CN-91',1000]);
-data.addRow(['CN-92',1000]);
-}
-else if ($("#ddlViewBy :selected").text()=="TheLegendofZhenHuan")
-{
-data.addRow(['CN-31',10000]);data.addRow(['CN-12',6000]);
-data.addRow(['CN-34',3000]);data.addRow(['CN-35',4000]);
-data.addRow(['CN-62',1000]);data.addRow(['CN-44',3000]);
-data.addRow(['CN-52',5000]);data.addRow(['CN-46',2000]);
-data.addRow(['CN-13',3000]);data.addRow(['CN-23',1000]);
-data.addRow(['CN-41',2000]);data.addRow(['CN-42',1000]);
-data.addRow(['CN-43',100]);data.addRow(['CN-32',200]);
-data.addRow(['CN-36',1000]);data.addRow(['CN-22',1000]);
-data.addRow(['CN-21',600]);data.addRow(['CN-63',7000]);
-data.addRow(['CN-61',1000]);
-data.addRow(['CN-37',1000]);data.addRow(['CN-14',1000]);data.addRow(['CN-51',1000]);data.addRow(['CN-71',1000]);
-data.addRow(['CN-53',700]);data.addRow(['CN-33',1000]);
-data.addRow(['CN-45',1000]);data.addRow(['CN-15',800]);data.addRow(['CN-64',1000]);data.addRow(['CN-65',1000]);
-data.addRow(['CN-54',1000]);data.addRow(['CN-91',1000]);data.addRow(['CN-92',1000]);
- data.addRow(['CN-71',1000]);data.addRow(['CN-91',1000]);
-data.addRow(['CN-92',1000]);
-
-}
-else if ($("#ddlViewBy :selected").text()=="LeJunKai")
-{
-data.addRow(['CN-31',7000]);data.addRow(['CN-12',6000]);
-data.addRow(['CN-34',7000]);data.addRow(['CN-35',4000]);
-data.addRow(['CN-62',1000]);data.addRow(['CN-44',400]);
-data.addRow(['CN-52',1000]);data.addRow(['CN-46',2000]);
-data.addRow(['CN-13',3000]);data.addRow(['CN-23',1000]);
-data.addRow(['CN-41',2000]);data.addRow(['CN-42',1000]);
-data.addRow(['CN-43',1000]);data.addRow(['CN-32',200]);
-data.addRow(['CN-36',1000]);data.addRow(['CN-22',1000]);
-data.addRow(['CN-21',5000]);data.addRow(['CN-63',7000]);
-data.addRow(['CN-61',1000]);
-data.addRow(['CN-37',1000]);data.addRow(['CN-14',1000]);data.addRow(['CN-51',1000]);data.addRow(['CN-71',1000]);
-data.addRow(['CN-53',8000]);data.addRow(['CN-33',1000]);
-data.addRow(['CN-45',1000]);data.addRow(['CN-15',600]);data.addRow(['CN-64',1000]);data.addRow(['CN-65',1000]);
-data.addRow(['CN-54',1000]);data.addRow(['CN-91',1000]);data.addRow(['CN-92',1000]);
- data.addRow(['CN-71',1000]);data.addRow(['CN-91',1000]);
-data.addRow(['CN-92',1000]);
-}
-      var formatter = new google.visualization.NumberFormat({prefix: 'Popularity', fractionDigits: 0});
-            formatter.format(data, 1); // Apply formatter to second column
-            var stateHeatMap = new google.visualization.GeoChart(document.getElementById('visualization'));
-            stateHeatMap.draw(data, {width: 960, height: 480, region: 'CN', resolution: 'provinces', legend: {numberFormat: '#,###', textStyle: {color: 'blue', fontSize: 16}} });
-         }
-
-
-
-function countryMapUS() {
-      var data = new google.visualization.DataTable();
-           data.addColumn('string', 'State');
-           data.addColumn('number', 'Popularity');
-            data.addRow(['US-AL',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-AK',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-AZ',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-AR',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-CA',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-CO',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-CT',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-DE',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-DC',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-FL',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-GA',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-HI',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-ID',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-IL',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-IN',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-IA',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-KS',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-KY',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-LA',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-ME',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-MD',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-MA',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-MI',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-MN',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-MS',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-MO',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-MT',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-NE',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-NV',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-NH',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-NJ',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-NM',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-NY',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-NC',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-ND',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-OH',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-OK',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-OR',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-PA',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-RI',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-SC',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-SD',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-TN',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-TX',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-UT',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-VT',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-VA',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-WA',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-WV',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-WI',Math.floor(Math.random() * 100)]);
-           data.addRow(['US-WY',200]);
-           data.addRow(['US-AS',440]);
-           data.addRow(['US-GU',330]);
-           data.addRow(['US-MP',880]);
-           data.addRow(['US-PR',900]);
-           data.addRow(['US-VI',100]);
-
-            var formatter = new google.visualization.NumberFormat({prefix: 'Popularity', fractionDigits: 0});
-            formatter.format(data, 1); // Apply formatter to second column
-            var stateHeatMap = new google.visualization.GeoChart(document.getElementById('visualization'));
-            stateHeatMap.draw(data, {width: 960, height: 500, region: 'US', resolution: 'provinces', legend: {numberFormat: '#,###', textStyle: {color: 'blue', fontSize: 16}} });
-         }
 
 
 

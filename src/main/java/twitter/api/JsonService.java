@@ -78,13 +78,50 @@ public class JsonService {
                                  @QueryParam("upperTime") String upperTime,
                                  @QueryParam("id") String id) throws Exception
     {
-        System.out.println("sssss"+show);
-        System.out.println("bottom"+bottomtime);
-        System.out.println("upper"+upperTime);
-        System.out.println("id"+id);
+        String bTime[]=bottomtime.split("/");
+         String btime=bTime[2]+"-"+bTime[0]+"-"+bTime[1];
+        String uperTime[]=upperTime.split("/");
+        String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
+        String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+        return JumblrMain.getTumblrSqlLayer().loadPhotos(showName,btime+" 00:00:00",utime+" 00:00:00",id);
+    }
 
-        String showName=TwitterDataRetriever.getShowToTableName().get(show);
-        return JumblrMain.getTumblrSqlLayer().loadPhotos(showName,bottomtime+" 00:00:00",upperTime+" 00:00:00",id);
+
+//    @GET
+//    @Path("/tumblr/photo/tabular")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//
+//    public String getTabularPhotoTumblerFile(@QueryParam("show") String show,
+//                                 @QueryParam("bottomTime") String bottomtime,
+//                                 @QueryParam("upperTime") String upperTime,
+//                                 @QueryParam("id") String id) throws Exception
+//    {
+//        String bTime[]=bottomtime.split("/");
+//        String btime=bTime[2]+"-"+bTime[0]+"-"+bTime[1];
+//        String uperTime[]=upperTime.split("/");
+//        String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
+//        String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+//        return JumblrMain.getTumblrSqlLayer().(showName,btime+" 00:00:00",utime+" 00:00:00",id);
+//    }
+
+    @GET
+    @Path("/twitter/geo")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+
+    public String getUSGeoMap(@QueryParam("show") String show,
+                                 @QueryParam("bottomTime") String bottomtime,
+                                 @QueryParam("upperTime") String upperTime,
+                                 @QueryParam("id") String id) throws Exception
+    {
+        String bTime[]=bottomtime.split("/");
+        String btime=bTime[2]+"-"+bTime[0]+"-"+bTime[1];
+        String uperTime[]=upperTime.split("/");
+        String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
+        String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+        System.out.println(btime+" "+utime+" "+show+" "+showName);
+        return LoadApp.getSocialMysqlLayer().loadUSGeography(showName,btime+" 00:00:00",utime+" 00:00:00",id);
     }
 
     @GET

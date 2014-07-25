@@ -20,7 +20,7 @@ public class SocialMysqlLayer {
 
     Map<String,List> timeMap=new HashMap<String, List>();
     DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-    String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
+    String fileDirectory="/Library/Tomcat/webapps/examples/";
     private int tweetsForDayForShows;
 
 
@@ -431,6 +431,84 @@ public class SocialMysqlLayer {
         }
         return 0;
     }
+
+    public  String loadUSGeography(String showName,String bottomtime,String uppertime,String id) throws Exception{
+
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newshow=new String(showName);
+        String fileName="geotwitter"+id+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
+        try {
+            File file = new File(fileDirectory+fileName);
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String table=new String(showName);
+            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+            String query = "select state  from SHOW_GEO_TWITTER_"+table+" where  created_on >=? and created_on<=?";
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, bottomtime);
+            preparedStatement.setString(2, uppertime);
+
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            //STEP 5: Extract data from result set
+            Map<String,Integer> countMap=new HashMap<String, Integer>();
+            while (rs.next()) {
+                String state=rs.getString("state");
+                if(state==null)
+                    continue;;
+               if(countMap.get(state)!=null)
+               {
+                   int newcount=countMap.get(state);
+                   newcount++;
+                   countMap.put(state,newcount);
+
+               }
+                else
+               {
+                   countMap.put(state,1);
+               }
+            }
+            for(Map.Entry<String,Integer> entry :countMap.entrySet())
+            {
+                output.write("US-"+entry.getKey()+"newvalue"+entry.getValue());
+                output.newLine();
+            }
+            output.close();
+
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+
+        }
+        return fileName;
+    }
+
 
     public List<String> showPositiveTweetText(String showName,String fileName,String bottomtime,String uppertime) throws Exception {
 

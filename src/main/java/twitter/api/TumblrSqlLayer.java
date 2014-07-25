@@ -397,7 +397,7 @@ public class TumblrSqlLayer {
             statement = connection.createStatement();
             String table=new String(showName);
              table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
-            String query = "select distinct embedCode  from SHOW_TUMBLR_"+table+" where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 15";
+            String query = "select distinct embedCode, blogName,followers,posturl from SHOW_TUMBLR_"+table+" where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 15";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1,showName);
             preparedStatement.setString(2,"photo");
@@ -406,10 +406,22 @@ public class TumblrSqlLayer {
 
             rs = preparedStatement.executeQuery();
             int count=1;
+            List<String> embedCodeList=new ArrayList<String>();
             //STEP 5: Extract data from result set
             while (rs.next()) {
-                output.write(rs.getString("embedCode"));
+                embedCodeList.add(rs.getString("embedCode"));
+                output.write(rs.getString("blogName")+"break"+rs.getString("followers")+"break"+rs.getString("posturl")+"break"+rs.getString("embedCode"));
                 output.newLine();
+            }
+            if(!embedCodeList.isEmpty())
+            {
+                output.write("photos");
+                output.newLine();
+                for(String code : embedCodeList)
+                {
+                    output.write(code);
+                    output.newLine();
+                }
             }
             output.close();
 
@@ -723,4 +735,6 @@ public class TumblrSqlLayer {
         }
         return fileName;
     }
+
+
 }

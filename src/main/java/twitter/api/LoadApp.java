@@ -11,7 +11,7 @@
         public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
         public static final String MYSQL_URL = "jdbc:mysql://localhost/social?"
                 + "user=root";
-        static SocialMysqlLayer socialMysqlLayer;
+       public static SocialMysqlLayer socialMysqlLayer;
         public static void initialize() throws Exception
         {
             TwitterDataRetriever.getTweets(5000,socialMysqlLayer);
@@ -62,6 +62,11 @@
                 }
             }
 
+        }
+
+        public static SocialMysqlLayer getSocialMysqlLayer()
+        {
+            return socialMysqlLayer;
         }
 
     }
