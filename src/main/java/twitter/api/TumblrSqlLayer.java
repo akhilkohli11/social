@@ -20,8 +20,8 @@ public class TumblrSqlLayer {
     private Statement statement;
     private ResultSet resultSet;
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  //  String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
-    String fileDirectory="/Library/Tomcat/webapps/examples/";
+    String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
+  //  String fileDirectory="/Library/Tomcat/webapps/examples/";
 
 
     private PreparedStatement preparedStatement;
