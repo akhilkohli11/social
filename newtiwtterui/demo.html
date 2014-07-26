@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Create beautiful slideshows with jQuery Cycle - Backslash</title>
+
+<link href="css/demo.css" rel="stylesheet" type="text/css" />
+<!--[if lt IE 9]>
+<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+
+<!-- required for this demo -->
+<link rel="stylesheet" href="css/slideshows.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script src="js/jquery.cycle.all.js"></script>
+
+<script src="js/jquery.easing.1.3.js"></script>
+
+<script>
+$(function() {
+	
+
+
+// ---------------------------------------------------
+// Slideshow 1
+
+    $('#slideshow_1').cycle({
+        fx: 'scrollHorz',		
+		easing: 'easeInOutCirc',
+		speed:  700, 
+		timeout: 5000, 
+		pager: '.ss1_wrapper .slideshow_paging', 
+        prev: '.ss1_wrapper .slideshow_prev',
+        next: '.ss1_wrapper .slideshow_next',
+		before: function(currSlideElement, nextSlideElement) {
+			var data = $('.data', $(nextSlideElement)).html();
+			$('.ss1_wrapper .slideshow_box .data').fadeOut(300, function(){
+				$('.ss1_wrapper .slideshow_box .data').remove();
+				$('<div class="data">'+data+'</div>').hide().appendTo('.ss1_wrapper .slideshow_box').fadeIn(600);
+			});
+		}
+    });
+	
+	// not using the 'pause' option. instead make the slideshow pause when the mouse is over the whole wrapper
+	$('.ss1_wrapper').mouseenter(function(){
+		$('#slideshow_1').cycle('pause');
+    }).mouseleave(function(){
+		$('#slideshow_1').cycle('resume');
+    });
+	
+
+
+// ---------------------------------------------------
+// Slideshow 2
+
+    $('#slideshow_2').cycle({
+        fx: 'fade',		
+		speed:  900, 
+		timeout: 5000, 
+		pager: '.ss2_wrapper .slideshow_paging', 
+        prev: '.ss2_wrapper .slideshow_prev',
+        next: '.ss2_wrapper .slideshow_next',
+		before: function(currSlideElement, nextSlideElement) {
+			var data = $('.data', $(nextSlideElement)).html();
+			$('.ss2_wrapper .slideshow_box').stop(true, true).animate({ bottom:'-110px'}, 400, function(){
+				$('.ss2_wrapper .slideshow_box .data').html(data);
+			});
+			$('.ss2_wrapper .slideshow_box').delay(100).animate({ bottom:'0'}, 400);
+		}
+    });
+
+	$('.ss2_wrapper').mouseenter(function(){
+		$('#slideshow_2').cycle('pause');
+		$('.ss2_wrapper .slideshow_prev').stop(true, true).animate({ left:'20px'}, 200);
+		$('.ss2_wrapper .slideshow_next').stop(true, true).animate({ right:'20px'}, 200);
+    }).mouseleave(function(){
+		$('#slideshow_2').cycle('resume');
+		$('.ss2_wrapper .slideshow_prev').stop(true, true).animate({ left:'-40px'}, 200);
+		$('.ss2_wrapper .slideshow_next').stop(true, true).animate({ right:'-40px'}, 200);
+    });
+	
+
+
+// ---------------------------------------------------
+// Slideshow 3
+
+    $('#slideshow_3').cycle({
+        fx: 'uncover',		
+		speed:  700, 
+		timeout: 5000, 
+		pager: '.ss3_wrapper .slideshow_paging', 
+		pagerAnchorBuilder: pager_create,
+        prev: '.ss3_wrapper .slideshow_prev',
+        next: '.ss3_wrapper .slideshow_next',
+		before: function(currSlideElement, nextSlideElement) {
+			var data = $('.data', $(nextSlideElement)).html();
+			$('.ss3_wrapper .slideshow_box .data').fadeOut(300, function(){
+				$('.ss3_wrapper .slideshow_box .data').remove();
+				$('<div class="data">'+data+'</div>').hide().appendTo('.ss3_wrapper .slideshow_box').fadeIn(600);
+			});
+		}
+    });
+	
+	function pager_create(id, slide) {
+		var thumb = $('.thumb', $(slide)).html();
+		var title = $('h4 a', $(slide)).html();
+		var add_first = (id==0)?' class="first"':'';
+		return '<li><a href="#" title="'+title+'"'+add_first+'>'+thumb+'</a></li>';
+    };
+	
+	// not using the 'pause' option. instead make the slideshow pause when the mouse is over the whole wrapper
+	$('.ss3_wrapper').mouseenter(function(){
+		$('#slideshow_3').cycle('pause');
+    }).mouseleave(function(){
+		$('#slideshow_3').cycle('resume');
+    });
+	
+	
+	
+	
+// ---------------------------------------------------
+	
+	$('a[href="#"]').click(function(event){ 
+		event.preventDefault(); // for this demo disable all links that point to "#"
+	});
+	
+});
+</script>
+
+
+</head>
+<body>
+<div id="wrapper">
+
+<section id="main">
+
+	<div id="content">
+	
+		<h1>Create beautiful slideshows with jQuery Cycle</h1>
+		<p>by <a href="http://www.backslash.gr/">Nikos Tsaganos</a></p>
+		<p>for more demos like this visit <a href="http://www.backslash.gr/">Backslash.gr</a></p>
+
+	
+		<h2>Slideshow #1</h2>
+		
+		<div class="ss1_wrapper">
+		
+			<a href="#" class="slideshow_prev"><span>Previous</span></a>
+			<a href="#" class="slideshow_next"><span>Next</span></a>
+				
+			<div class="slideshow_paging"></div>
+			
+			<div class="slideshow_box">
+				<div class="data"></div>
+
+			</div>
+			
+			<div id="slideshow_1" class="slideshow">
+				
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="http://38.media.tumblr.com/1b53108b67f5636086993e4801d9493a/tumblr_n6z3akWJVj1qfjoh2o1_1280.jpg"  width="900" height="400" /></a></div>
+					<div class="data">
+						<h4><a href="#">Donec sollicitudin enim sit</a></h4>
+						<p>Sed mollis tristique lectus vitae aliquet. Quisque vitae metus ut velit varius feugiat. Maecenas luctus pulvinar elit et viverra. Aenean vel est nulla. </p>
+					</div>
+
+				</div>
+								
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="http://38.media.tumblr.com/1b53108b67f5636086993e4801d9493a/tumblr_n6z3akWJVj1qfjoh2o1_1280.jpg"  width="900" height="400" /></a></div>
+					<div class="data">
+						<h4><a href="#">Pellentesque lacinia metus</a></h4>
+						<p>Integer pretium volutpat ligula sit amet pretium. Morbi nisi dui, rutrum ut bibendum sit amet, gravida eget dui. </p>
+					</div>
+				</div>
+
+				
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="photos/1.jpg" alt="photo 1" width="900" height="400" /></a></div>
+					<div class="data">
+						<h4><a href="#">Lorem ipsum dolor sit amet</a></h4>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin enim sit amet dolor posuere dictum. Pellentesque lacinia metus non erat auctor vehicula.</p>
+					</div>
+				</div>
+				
+				<div class="slideshow_item">
+
+					<div class="image"><a href="#"><img src="photos/4.jpg" alt="photo 4" width="900" height="400" /></a></div>
+					<div class="data">
+						<h4><a href="#">Morbi nisi dui bibendum sit amet</a></h4>
+						<p>Aliquam feugiat lorem at massa pulvinar interdum. Ut nulla est, vulputate eget facilisis vel, cursus nec sapien. Quisque tincidunt adipiscing lorem, tincidunt sodales lorem imperdiet quis.</p>
+					</div>
+				</div>
+				
+			</div>
+
+		</div><!-- .ss1_wrapper -->
+		
+		
+		
+		<h2>Slideshow #2</h2>
+		
+		<div class="ss2_wrapper">
+		
+			<a href="#" class="slideshow_prev"><span>Previous</span></a>
+			<a href="#" class="slideshow_next"><span>Next</span></a>
+				
+			<div class="slideshow_paging"></div>
+			
+			<div class="slideshow_box">
+
+				<div class="data"></div>
+			</div>
+			
+			<div id="slideshow_2" class="slideshow">
+				
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="photos/2.jpg" alt="photo 2" width="900" height="400" /></a></div>
+					<div class="data">
+						<h4><a href="#">Donec sollicitudin enim sit</a></h4>
+						<p>Sed mollis tristique lectus vitae aliquet. Quisque vitae metus ut velit varius feugiat. Maecenas luctus pulvinar elit et viverra. Aenean vel est nulla. </p>
+
+					</div>
+				</div>
+								
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="photos/3.jpg" alt="photo 3" width="900" height="400" /></a></div>
+					<div class="data">
+						<h4><a href="#">Pellentesque lacinia metus</a></h4>
+						<p>Integer pretium volutpat ligula sit amet pretium. Morbi nisi dui, rutrum ut bibendum sit amet, gravida eget dui. </p>
+					</div>
+
+				</div>
+				
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="photos/1.jpg" alt="photo 1" width="900" height="400" /></a></div>
+					<div class="data">
+						<h4><a href="#">Lorem ipsum dolor sit amet</a></h4>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sollicitudin enim sit amet dolor posuere dictum. Pellentesque lacinia metus non erat auctor vehicula.</p>
+					</div>
+				</div>
+
+				
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="photos/4.jpg" alt="photo 4" width="900" height="400" /></a></div>
+					<div class="data">
+						<h4><a href="#">Morbi nisi dui bibendum sit amet</a></h4>
+						<p>Aliquam feugiat lorem at massa pulvinar interdum. Ut nulla est, vulputate eget facilisis vel, cursus nec sapien. Quisque tincidunt adipiscing lorem, tincidunt sodales lorem imperdiet quis.</p>
+					</div>
+				</div>
+				
+			</div>
+
+		</div><!-- .ss2_wrapper -->
+		
+		
+		
+		<h2>Slideshow #3</h2>
+		
+		<div class="ss3_wrapper">
+		
+			<a href="#" class="slideshow_prev"><span>Previous</span></a>
+			<a href="#" class="slideshow_next"><span>Next</span></a>
+				
+			<ul class="slideshow_paging"></ul>
+			
+			<div class="slideshow_box">
+
+				<div class="data"></div>
+			</div>
+			
+			<div id="slideshow_3" class="slideshow">
+				
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="photos/2.jpg" alt="photo 2" width="900" height="400" /></a></div>
+					<div class="thumb"><img src="photos/2_thumb.jpg" alt="photo 2" width="140" height="63" /></div>
+					<div class="data">
+						<h4><a href="#">Donec sollicitudin enim sit</a></h4>
+
+					</div>
+				</div>
+								
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="photos/3.jpg" alt="photo 3" width="900" height="400" /></a></div>
+					<div class="thumb"><img src="photos/3_thumb.jpg" alt="photo 3" width="140" height="63" /></div>
+					<div class="data">
+						<h4><a href="#">Pellentesque lacinia metus</a></h4>
+					</div>
+
+				</div>
+				
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="photos/1.jpg" alt="photo 1" width="900" height="400" /></a></div>
+					<div class="thumb"><img src="photos/1_thumb.jpg" alt="photo 1" width="140" height="63" /></div>
+					<div class="data">
+						<h4><a href="#">Lorem ipsum dolor sit amet</a></h4>
+					</div>
+				</div>
+
+				
+				<div class="slideshow_item">
+					<div class="image"><a href="#"><img src="photos/4.jpg" alt="photo 4" width="900" height="400" /></a></div>
+					<div class="thumb"><img src="photos/4_thumb.jpg" alt="photo 4" width="140" height="63" /></div>
+					<div class="data">
+						<h4><a href="#">Morbi nisi dui bibendum sit amet</a></h4>
+					</div>
+				</div>
+						
+				<div class="slideshow_item">
+
+					<div class="image"><a href="#"><img src="photos/3.jpg" alt="photo 3" width="900" height="400" /></a></div>
+					<div class="thumb"><img src="photos/3_thumb.jpg" alt="photo 3" width="140" height="63" /></div>
+					<div class="data">
+						<h4><a href="#">Pellentesque lacinia metus</a></h4>
+					</div>
+				</div>
+				
+			</div>
+		</div><!-- .ss3_wrapper -->
+
+		
+	
+	</div>
+	
+</section><!-- #main -->
+
+<footer>
+	<p>Copyright © 2011 Backslash • Created by <a href="http://www.backslash.gr">Nikos Tsaganos</a></p>
+</footer>
+</div><!-- #wrapper -->
+</body>
+</html>

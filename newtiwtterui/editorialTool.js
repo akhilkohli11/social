@@ -1,10 +1,17 @@
 var negative=0;
 var postive=0;
 var neutral=0;
-       var url='http://ec2-54-187-52-149.us-west-2.compute.amazonaws.com:9199/rest/test/';
+   //    var url='http://ec2-54-187-52-149.us-west-2.compute.amazonaws.com:9199/rest/test/';
+              var url='http://localhost:9999/rest/test/';
+
 function foobar_cont(){
     console.log("finished.");
 };
+
+function ak()
+{
+   // alert($("#multiple :selected").text());
+}
 function changeFunction()
 {
                 $('#tumblrButton').hide();
@@ -25,6 +32,7 @@ function changeFunction()
     }
      if($("#socialType :selected").text()=="TWITTER")
         {
+                        $("#multiple").show();
                     $('#twitterButton').show();
                      if($("#ddlViewBy :selected").text()=="TheCondorHeroes" || $("#ddlViewBy :selected").text()=="BuBuJingQing"
                      ||$("#ddlViewBy :selected").text()=="LeJunKai"||$("#ddlViewBy :selected").text()=="TheLegendofZhenHuan")
@@ -76,20 +84,88 @@ function changeFunction()
 
 $(document).ready(function(){
 $('#videos').click(function(){
-        $('#legend').hide();
-d3.select("svg")
-       .remove();
-        $('#multimedia').text('');
-        $('#onemorediv').hide();
-            $('#multimedia').show();
-  var file="jun"+"tumblerVideo"+$("#ddlViewBy :selected").text()+".tsv";
-        $('#multimedia').append("<h3> <p class=\"text-primary\">Video Posts</p></h3>");
-  $.get(file, function(data) {
-      var lines = data.split("\n");
-                $.each(lines, function(n, item) {
-                  $('#multimedia').append('<div> <p class=\"text-primary\">'+item+'</p></div>');
-          });
-      }, "text")
+        $('#img').show();
+              $('#legend').hide();
+      d3.select("svg")
+             .remove();
+          $('#multimedia').text('');
+                      $('#onemorediv').hide();
+          $('#multimedia').show();
+           var bottom=1000;
+           var top=10000;
+           var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+           var totalCount = count.toString();
+            //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+             requestData={show:$("#ddlViewBy :selected").text(), bottomTime:$("#datepicker").val(),
+             upperTime:$("#enddatepicker").val(),
+             id:totalCount};
+          var finalUrl=url+'tumblr/video';
+                         $.ajax(finalUrl, {
+                                                     type: 'POST',
+                                                     headers: {
+                                                                    Accept : "application/json; charset=utf-8",
+                                                                    "Content-Type": "application/json; charset=utf-8"
+
+                                                         },
+                                                     dataType:"jsonp",
+                                                                     jsonCallback: "jsonp",
+                                                                     data:requestData,
+                                                         async:false,
+                                                         success: AjaxSucceeded,
+                                                          error: AjaxFailed,
+
+                                          }).done(function(data) {console.log(data);
+                                                                  });;
+
+      setTimeout(function(){
+                 $('#img').hide();
+      var file="videotumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
+
+              $('#multimedia').append("<h3> <p class=\"text-primary\">Tabular Video Post Data</p></h3>");
+        $.get(file, function(data) {
+            var lines = data.split("\n");
+            var image=-1;
+      //                                      $('#multimedia').append("<tr><th class=\"active\">"+res[0]+"</td><tdclass=\"success\">"+res[1]+
+      //                                                                "</td><tdclass=\"warning\">"+res[2]+"</td><tdclass=\"danger\">"+res[3]+"</td>");
+
+                      $.each(lines, function(n, item) {
+                      if(image==-1)
+                      {
+                                                   $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                      $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
+                                                      "<th class=\"success\">Followers</th>"+
+                                                      "<th class=\"warning\">Post URL</th>"+
+                                                      "</tr>");
+
+                          image=0;
+                      }
+                      if(item=="photos")
+                                      {
+                                                $('#multimedia').append('</table>');
+                                           $('#multimedia').append("<h3> <p class=\"text-primary\">Video Posts</p></h3>");
+                                           image=1;
+                                      }
+                      if(image==0)
+                      {
+                                  var res = item.split("break");
+                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+
+                                "<td class=\"warning\"><a href=\""+res[2]+"\">"+res[2]+"</a></td></tr>");
+                      }
+
+                      if(image==1)
+                      {
+                            $('#multimedia').append('<div> <p class=\"text-primary\">'+item+'</p></div>');
+                       }
+                    //   $('#slideshow_1').append("<div class=\"slideshow_item\"><div class=\"image\"><a href=\"#\"><img  alt=\"photo 1\" width=\"900\" height=\"400\" src=\""+item+"\""
+                     //   +"/></a></div></div>");
+
+                });
+            }, "text")
+              $('#multimedia').append("</div>");
+              },
+       2000);
+
+
 
 });
 
@@ -151,82 +227,6 @@ d3.select("svg")
 
 });
 
-$('#info').click(function(){
-        $('#legend').hide();
-d3.select("svg")
-       .remove();
-    $('#multimedia').text('');
-                $('#onemorediv').hide();
-    $('#multimedia').show();
-             $('#multimedia').append("<br/><br/><p class=\"text-center\"><h4> <p class=\"text-primary\">TMS INFO</p></h4></p><br/>");
-
-  var file="tmstitle"+$("#ddlViewBy :selected").text()+".tsv";
-             $.get(file, function(data) {
-                 var lines = data.split("\n");
-                          $('#multimedia').append("<h6> <p class=\"text-info\">TITLE</p></h6>");
-                           $.each(lines, function(n, item) {
-                             $('#multimedia').append('<div class=\"bg-warning\"><p>' + item.linkify() + '</p></div><br/>');
-                     });
-                 }, "text")
-
- var file="tmsdesc"+$("#ddlViewBy :selected").text()+".tsv";
-         $.get(file, function(data) {
-             var lines = data.split("\n");
-                                       $('#multimedia').append("<h6> <p class=\"text-info\">DESCRIPTION</p></h6>");
-                       $.each(lines, function(n, item) {
-                         $('#multimedia').append('<div class=\"bg-warning\"><p>' + item.linkify() + '</p></div><br/>');
-                 });
-             }, "text")
-   var file="tmsgenre"+$("#ddlViewBy :selected").text()+".tsv";
-           $.get(file, function(data) {
-               var lines = data.split("\n");
-                                         $('#multimedia').append("<h6> <p class=\"text-info\">GENRE</p></h6>");
-                         $.each(lines, function(n, item) {
-                           $('#multimedia').append('<div class=\"bg-warning\"><p>' + item.linkify() + '</p></div>');
-                   });
-               }, "text")
-
-
-});
-
-
-$('#watson').click(function(){
-        $('#legend').hide();
-d3.select("svg")
-       .remove();
-    $('#multimedia').text('');
-                $('#onemorediv').hide();
-    $('#multimedia').show();
-             $('#multimedia').append("<br/><br/><p class=\"text-center\"><h4> <p class=\"text-primary\">WhatsON INFO</p></h4></p><br/>");
-
-  var file=$("#ddlViewBy :selected").text()+".tsv";
-             $.get(file, function(data) {
-                              var lines = data.split("\n");
-                           $.each(lines, function(n, item) {
-                            var jsonText=$.parseJSON(item);
-                                $('#multimedia').append("<h6> <p class=\"text-info\">TITLE</p></h6>");
-                             $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.title.linkify() + '</p></div><br/>');
-                              $('#multimedia').append("<h6> <p class=\"text-info\">WhatsON ID</p></h6>");
-                               $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.id.linkify() + '</p></div><br/>');
-                                $('#multimedia').append("<h6> <p class=\"text-info\">TMS ID</p></h6>");
-                                 $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.tms_id.linkify() + '</p></div><br/>');
-                                   $('#multimedia').append("<h6> <p class=\"text-info\">Summary</p></h6>");
-                                    $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.desc.linkify() + '</p></div><br/>');
-                                      $('#multimedia').append("<h6> <p class=\"text-info\">Description</p></h6>");
-                                  $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.long_desc.linkify() + '</p></div><br/>');
-                                         $('#multimedia').append("<h6> <p class=\"text-info\">RELEASE YEAR</p></h6>");
-                                    $('#multimedia').append('<div class=\"bg-warning\"><p>' + jsonText.prod_year.linkify() + '</p></div><br/>');
-                                         $('#multimedia').append("<h6> <p class=\"text-info\">LANGUAGE</p></h6>");
-                                         if(jsonText.lang=="hi")
-                                              $('#multimedia').append('<div class=\"bg-warning\"><p>Hindi</p></div><br/>');
-
-
-
-                     });
-                 }, "text")
-
-
-});
 
 
 $('#photo').click(function(){
@@ -342,7 +342,8 @@ d3.select("svg")
 $('#maindiv').hide();
       $('#newdiv').hide();
          $('#onemorediv').show();
-
+    $('#multimedia').text('');
+        $('#multimedia').show();
    $('#tweet').text('');
        $('#positivetweet').text('');
        $('#negativeTweet').text('');
@@ -377,6 +378,31 @@ $('#maindiv').hide();
 setTimeout(function(){
            $('#img').hide();
 var file="geotwitter"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
+
+  $('#multimedia').append("<h3> <p class=\"text-primary\">US GEO Data</p></h3>");
+   $.get(file, function(data) {
+       var lines = data.split("\n");
+       var image=-1;
+
+                 $.each(lines, function(n, item) {
+                 if(image==-1)
+                 {
+                                              $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                 $('#one').append("<tr><th class=\"active\">US State</th>"+
+                                                 "<th class=\"success\">Count</th></tr>");
+
+                     image=0;
+                 }
+                 if(image==0)
+                 {
+                             var res = item.split("newvalue");
+                           $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+"</td></tr>");
+                 }
+
+
+           });
+           }, "text")
+
 
 
   $.get(file, function(data) {
@@ -494,9 +520,80 @@ function jsonp(result)
     }
 
 $('#graph').click(function(){
-$('#multimedia').hide();
-        $('#legend').show();
-showGraph("jun"+"tumblergraph"+$("#ddlViewBy :selected").text()+".tsv");
+ $('#multimedia').text('');
+    $('#multimedia').show();
+ $('#img').show();
+
+      var bottom=1000;
+      var top=10000;
+      var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+      var totalCount = count.toString();
+       //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+        requestData={show:$("#ddlViewBy :selected").text(), bottomTime:$("#datepicker").val(),
+        upperTime:$("#enddatepicker").val(),
+        id:totalCount};
+     var finalUrl=url+'tumblr/graphs';
+                    $.ajax(finalUrl, {
+                                                type: 'POST',
+                                                headers: {
+                                                               Accept : "application/json; charset=utf-8",
+                                                               "Content-Type": "application/json; charset=utf-8"
+
+                                                    },
+                                                dataType:"jsonp",
+                                                                jsonCallback: "jsonp",
+                                                                data:requestData,
+                                                    async:false,
+                                                    success: AjaxSucceeded,
+                                                     error: AjaxFailed,
+
+                                     }).done(function(data) {console.log(data);
+                                                             });;
+
+ setTimeout(function(){
+            $('#img').hide();
+var file="statstumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
+
+         $('#multimedia').append("<h3> <p class=\"text-primary\">Tabular Graph Post Data</p></h3>");
+   $.get(file, function(data) {
+       var lines = data.split("\n");
+       var image=-1;
+
+                 $.each(lines, function(n, item) {
+                 if(image==-1)
+                 {
+                                              $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                 $('#one').append("<tr><th class=\"active\">Date</th>"+
+                                                 "<th class=\"success\">Total</th>"+
+                                                 "<th class=\"warning\">Video</th>"+
+                                                  "<th class=\"info\">Audio</th>"+
+                                                    "<th class=\"active\">Text</th>"+
+                                                 "<th class=\"danger\">Photo</th></tr>");
+
+                     image=0;
+                 }
+                 if(image==0)
+                 {
+                             var res = item.split("break");
+                           $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+"</td>"+
+                           "<td class=\"warning\">"+res[2]+"</td><td class=\"info\">"+res[3]+"</td>"+
+                           "<td class=\"active\">"+res[4]+"</td><td class=\"danger\">"+res[5]+"</td>");
+                 }
+
+
+
+           });
+            $('#multimedia').append("<br/><br/></div>");
+                   $('#multimedia').append('<div id="newboy" ><div class="foo" style="background-color:#82CAFA;">Total</div><br>'+
+                    '<div class="foo" style="background-color:#B19CD9;">Photo</div><br><div class="foo" style="background-color:#DC143C;">Text</div><br>'+
+                     '<div class="foo" style="background-color:#7FE817;">Audio</div><br><div class="foo" style="background-color:#FF8C00;">Video</div><br>');
+       }, "text")
+
+var file="graphtumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv"
+alert(file);
+         showGraph(file);
+         },
+  3000);
 });
 
 
@@ -648,16 +745,77 @@ d3.select("svg")
 });
 
 $('#sentiment').click(function(){
-$('#maindiv').hide();
-      $('#newdiv').hide();
-            $('#onemorediv').hide();
+$('#multimedia').text('');
+     $('#multimedia').show();
+  $('#img').show();
+
+       var bottom=1000;
+       var top=10000;
+       var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+       var totalCount = count.toString();
+        //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+         requestData={show:$("#ddlViewBy :selected").text(), bottomTime:$("#datepicker").val(),
+         upperTime:$("#enddatepicker").val(),
+         id:totalCount};
+      var finalUrl=url+'twitter/graphs';
+                     $.ajax(finalUrl, {
+                                                 type: 'POST',
+                                                 headers: {
+                                                                Accept : "application/json; charset=utf-8",
+                                                                "Content-Type": "application/json; charset=utf-8"
+
+                                                     },
+                                                 dataType:"jsonp",
+                                                                 jsonCallback: "jsonp",
+                                                                 data:requestData,
+                                                     async:false,
+                                                     success: AjaxSucceeded,
+                                                      error: AjaxFailed,
+
+                                      }).done(function(data) {console.log(data);
+                                                              });;
+
+  setTimeout(function(){
+             $('#img').hide();
+ var file="statstwitter"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
+
+          $('#multimedia').append("<h3> <p class=\"text-primary\">Tabular Graph Post Data</p></h3>");
+    $.get(file, function(data) {
+        var lines = data.split("\n");
+        var image=-1;
+
+                  $.each(lines, function(n, item) {
+                  if(image==-1)
+                  {
+                                               $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                  $('#one').append("<tr><th class=\"active\">Date</th>"+
+                                                  "<th class=\"success\">Total</th>"+
+                                                  "<th class=\"warning\">Photo</th>"+
+                                                   "<th class=\"info\">Text</th>"+
+                                                     "<th class=\"active\">Link</th></tr>");
+
+                      image=0;
+                  }
+                  if(image==0)
+                  {
+                              var res = item.split("break");
+                            $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+"</td>"+
+                            "<td class=\"warning\">"+res[2]+"</td><td class=\"info\">"+res[3]+"</td>"+
+                            "<td class=\"active\">"+res[4]+"</td></tr>");
+                  }
 
 
-   $('#tweet').text('');
-       $('#positivetweet').text('');
-              $('#negativeTweet').text('');
+            });
+             $('#multimedia').append("<br/><br/></div>");
+                    $('#multimedia').append('<div id="newboy" ><div class="foo" style="background-color:#82CAFA;">Total</div><br>'+
+                     '<div class="foo" style="background-color:#DC143C;">Link</div><br>'+
+                      '<div class="foo" style="background-color:#7FE817;">Text</div><br><div class="foo" style="background-color:#FF8C00;">Photo</div><br>');
+        }, "text")
 
-showGraph("jun7to10"+$("#ddlViewBy :selected").text()+"all.tsv");
+ var file="graphtwitter"+totalCount+$("#ddlViewBy :selected").text()+".tsv"
+          showGraph(file);
+          },
+   3000);
 });
 
 $('#all').click(function(){
