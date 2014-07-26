@@ -150,7 +150,6 @@ public class TumblrSqlLayer {
             java.sql.Date queryDate=new java.sql.Date(date.getTime());
             preparedStatement.setDate(1, queryDate);
             rs = preparedStatement.executeQuery();
-            System.out.println("result   "+rs);
             while (rs.next()) {
                 String daycount = rs.getString("count");
                 count=Integer.parseInt(daycount);
@@ -336,7 +335,7 @@ public class TumblrSqlLayer {
 //            connection = DriverManager.getConnection(jdbcURL);
 //            System.out.println(showName);
 //            String table=new String(showName);
-//            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+//              table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","").replaceAll("?","").replaceAll(".","").replaceAll("-","").replaceAll(":","").replaceAll(",","");
 //            preparedStatement = connection.prepareStatement("insert into SHOW_TUMBLR_"+table+"(postID," +
 //                    "blogName,text,title,official,type,sentimentalScore,likes,followers,width,embedCode," +
 //                    "created_on,lastUpdated,url,show_name) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");

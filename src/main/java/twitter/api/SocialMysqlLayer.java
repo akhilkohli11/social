@@ -73,11 +73,11 @@ public class SocialMysqlLayer {
         Date date = new Date();
         int count=0;
         while (count++<7) {
-            Map<String,Integer> showNameToTweet=JumblrMain.getTumblrPostsForDay(date);
-            Map<String,Integer> showNameToPhotoTweet= JumblrMain.getPhotoTumblrForDayForShows(date);
-            Map<String,Integer> showNameToLinkTweet= JumblrMain.getVideoTumblrForDayForShows(date);
-            Map<String,Integer> showNameAUDIOTweet= JumblrMain.getAUDIOTumblrForDayForShows(date);
-            Map<String,Integer> showNameTEXTTweet= JumblrMain.getTEXTTumblrForDayForShows(date);
+            Map<String,Integer> showNameToTweet=NewJumblrMain.getTumblrPostsForDay(date);
+            Map<String,Integer> showNameToPhotoTweet= NewJumblrMain.getPhotoTumblrForDayForShows(date);
+            Map<String,Integer> showNameToLinkTweet= NewJumblrMain.getVideoTumblrForDayForShows(date);
+            Map<String,Integer> showNameAUDIOTweet= NewJumblrMain.getAUDIOTumblrForDayForShows(date);
+            Map<String,Integer> showNameTEXTTweet= NewJumblrMain.getTEXTTumblrForDayForShows(date);
 
             for(Map.Entry<String,Integer> entry : showNameToTweet.entrySet())
             {
@@ -124,7 +124,7 @@ public class SocialMysqlLayer {
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
             String table=new String(showName);
-            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+              table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
             preparedStatement = connection.prepareStatement("delete from SHOW_COUNT_"+table+" where created_on=?");
             preparedStatement.setDate(1, new java.sql.Date(date.getTime()));
 
@@ -227,7 +227,6 @@ public class SocialMysqlLayer {
             preparedStatement.setDate(1,new java.sql.Date(date.getTime()));
             preparedStatement.setString(2,type);
             rs = preparedStatement.executeQuery();
-            System.out.println("result   "+rs);
             while (rs.next()) {
                 String daycount = rs.getString("count");
                 count=Integer.parseInt(daycount);
@@ -352,7 +351,6 @@ public class SocialMysqlLayer {
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1,showName);
             rs = preparedStatement.executeQuery();
-            System.out.println("result   "+rs);
             String tweet=null;
             while (rs.next()) {
                 tweet = rs.getString("tweet");
@@ -606,7 +604,7 @@ public class SocialMysqlLayer {
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
             String table=new String(showName);
-            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'", "");
+            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
             String query = "select type,count,created_on  from SHOW_COUNT_"+table+" where   socialType=? and created_on >=? and created_on<=? order by created_on asc";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1,"twitter");

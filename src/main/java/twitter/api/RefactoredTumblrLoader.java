@@ -42,7 +42,7 @@ public class RefactoredTumblrLoader {
         }
         else
         {
-            limit=24;
+            limit=30;
         }
         Map<String, String> options = new HashMap<String, String>();
         Date date = new Date();
@@ -76,6 +76,7 @@ public class RefactoredTumblrLoader {
 
                         } else {
                             List<Post> posts = client.tagged(searchObject.getSearchTerm().trim(), options);
+
                             for (Post post : posts) {
                                 persist(tumblrSqlLayer, post, showSearch.getKey(), searchObject.getIsOfficial().toString());
 
@@ -240,6 +241,25 @@ public class RefactoredTumblrLoader {
                 searchObjectList.add(new SearchObject(entry.getValue(), "true", true));
             }
             searchList.put(entry.getKey(), searchObjectList);
+        }
+        loadTumblr(tumblrSqlLayer,searchList);
+
+    }
+
+
+    public static void loadNewTumblrData(TumblrSqlLayer tumblrSqlLayer,Map<String,List<String>> map) throws Exception{
+        Map<String,List<SearchObject>> searchList=new HashMap<String, List<SearchObject>>();
+        for(Map.Entry<String,List<String>> entry : map.entrySet()) {
+            for(String value : entry.getValue()) {
+                List<SearchObject> searchObjectList = searchList.get(entry.getKey());
+                if (searchObjectList==null) {
+                    searchObjectList = new ArrayList<SearchObject>();
+                }
+
+                searchObjectList.add(new SearchObject(value, "false", false));
+
+                searchList.put(entry.getKey(), searchObjectList);
+            }
         }
         loadTumblr(tumblrSqlLayer,searchList);
 

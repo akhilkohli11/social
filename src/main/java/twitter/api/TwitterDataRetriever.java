@@ -54,13 +54,11 @@ public class TwitterDataRetriever {
         String table=new String(showName);
         table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
         showToNewName.put(table,showName);
-        System.out.println();
-        System.out.print(showName+"     ");
+
         for(int i=0;i<hashtag.length;i++) {
-            System.out.print(hashtag[i]+",");
             if (!StringUtils.isNullOrEmpty(hashtag[i]) && !StringUtils.isNullOrEmpty(showName)) {
-                tagToshowName.put(hashtag[i].trim(), showName);
-                followTerms.add(hashtag[i].trim());
+                tagToshowName.put(hashtag[i].trim().replaceAll(",",""), showName);
+                followTerms.add(hashtag[i].trim().replaceAll(",",""));
             }
         }
         shows.add(showName.trim());
@@ -70,9 +68,8 @@ public class TwitterDataRetriever {
         }
 
             if(!StringUtils.isNullOrEmpty(twitterHandle) && !StringUtils.isNullOrEmpty(showName)) {
-                System.out.print("  "+twitterHandle+"     ");
                 tagToshowName.put(twitterHandle.trim(), showName);
-                followTerms.add(twitterHandle.trim());
+               // followTerms.add(twitterHandle.trim());
             }
 //        for(int i=0;i<casteHandle.length;i++) {
 //            System.out.print("  "+casteHandle[i]+",");
@@ -98,7 +95,7 @@ public class TwitterDataRetriever {
         init();
         cityToSateListUs = socialMysqlLayer.getCityToStateMap();
         cityListUs = socialMysqlLayer.getCityList();
-        System.out.println(followTerms);
+        System.out.println("twiiter"+followTerms);
         Authentication hosebirdAuth = new OAuth1("nDhWQNt3buDkIWNyBp9iilIXp", "OAFBjrd8mHCgMV6YXE5SgadBKP4Fl0cHBM9zU94vgn6OIDafHC",
                 "2524277576-3OyRFktWxMMB3NZw68C71Q1eZTrCc3tQQyWN8t0", "B3XQM3PM88xyZP6uiIA9RRaWkVNa4QrIaTShSJlwMZrzb");
 
@@ -113,7 +110,7 @@ public class TwitterDataRetriever {
         List<String> terms = Lists.newArrayList(followTerms);
         // hosebirdEndpoint.followings(followings);
         hosebirdEndpoint.trackTerms(terms);
-        System.out.println(followTerms);
+        System.out.println("follow"+followTerms);
         ClientBuilder builder = new ClientBuilder()
                 .name("Hosebird-Client-01")                              // optional: mainly for the logs
                 .hosts(hosebirdHosts)

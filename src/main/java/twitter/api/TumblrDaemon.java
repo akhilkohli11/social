@@ -20,10 +20,10 @@ public class TumblrDaemon {
 
             try {
 
-                JumblrMain.init();
+                NewJumblrMain.init();
 
             } catch (Exception e) {
-               // e.printStackTrace();
+               e.printStackTrace();
             } finally {
                 try {
                     if (br != null) br.close();

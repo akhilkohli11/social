@@ -84,7 +84,7 @@ public class JsonService {
         String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
         String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
         System.out.println(btime+" "+utime+" "+show+" "+showName);
-        return JumblrMain.getTumblrSqlLayer().loadPhotos(showName,btime+" 00:00:00",utime+" 00:00:00",id);
+        return NewJumblrMain.getTumblrSqlLayer().loadPhotos(showName,btime+" 00:00:00",utime+" 00:00:00",id);
     }
 
 
@@ -141,7 +141,7 @@ public class JsonService {
         String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
         String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
         System.out.println("video"+btime+" "+utime+" "+show+" "+showName);
-        return JumblrMain.getTumblrSqlLayer().loadVideos(showName,btime+" 00:00:00",utime+" 00:00:00",id);
+        return NewJumblrMain.getTumblrSqlLayer().loadVideos(showName,btime+" 00:00:00",utime+" 00:00:00",id);
            }
 
 
@@ -161,7 +161,7 @@ public class JsonService {
         String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
         String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
         System.out.println(btime+" "+utime+" "+show+" "+showName);
-        return JumblrMain.getTumblrSqlLayer().loadTextPost(showName,bottomtime+" 00:00:00",upperTime+" 00:00:00",id);
+        return NewJumblrMain.getTumblrSqlLayer().loadTextPost(showName,bottomtime+" 00:00:00",upperTime+" 00:00:00",id);
     }
 
     @GET
@@ -180,7 +180,7 @@ public class JsonService {
         String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
         String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
         System.out.println(btime+" "+utime+" "+show+" "+showName);
-        return JumblrMain.getTumblrSqlLayer().loadAudioPosts(showName,bottomtime+" 00:00:00",upperTime+" 00:00:00",id);
+        return NewJumblrMain.getTumblrSqlLayer().loadAudioPosts(showName,bottomtime+" 00:00:00",upperTime+" 00:00:00",id);
     }
 
     @GET
@@ -199,7 +199,7 @@ public class JsonService {
         String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
         String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
         System.out.println("graphs"+btime+" "+utime+" "+show+" "+showName);
-        return JumblrMain.getTumblrSqlLayer().loadGRaphs(showName,btime+" 00:00:00",utime+" 00:00:00",id);
+        return NewJumblrMain.getTumblrSqlLayer().loadGRaphs(showName,btime+" 00:00:00",utime+" 00:00:00",id);
     }
 
 

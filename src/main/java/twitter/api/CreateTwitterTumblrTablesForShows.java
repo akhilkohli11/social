@@ -29,7 +29,7 @@ public class CreateTwitterTumblrTablesForShows {
 
             String[] buffer= StringUtils.split(sCurrentLine, "@", 2);
             String showTabe="SHOW_GEO_TWITTER_"+buffer[0].trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
-            System.out.println("DROP TABLE "+showTabe+";");
+          //  System.out.println("DROP TABLE "+showTabe+";");
             System.out.println("CREATE TABLE "+showTabe );
             System.out.println("(id BIGINT  NOT NULL AUTO_INCREMENT,\n" +
                     "            tweetText longtext character set utf8 collate utf8_polish_ci DEFAULT NULL,\n" +
@@ -64,7 +64,7 @@ public class CreateTwitterTumblrTablesForShows {
 
             String[] buffer= StringUtils.split(sCurrentLine, "@", 2);
             String showTabe="SHOW_COUNT_"+buffer[0].trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
-            System.out.println("DROP TABLE "+showTabe+";");
+          //  System.out.println("DROP TABLE "+showTabe+";");
             System.out.println("CREATE TABLE "+showTabe );
             System.out.println("(show_name VARCHAR(100) DEFAULT NULL,\n" +
                     "            type  VARCHAR(60) DEFAULT NULL ,\n" +
@@ -80,7 +80,7 @@ public class CreateTwitterTumblrTablesForShows {
                     "        INDEX(show_name,type,created_on)); ");
         }
         String showTabe="SHOW_COUNT_SOCIAL";
-        System.out.println("DROP TABLE "+showTabe+";");
+      //  System.out.println("DROP TABLE "+showTabe+";");
         System.out.println("CREATE TABLE "+showTabe );
         System.out.println("(show_name VARCHAR(100) DEFAULT NULL,\n" +
                 "            type  VARCHAR(60) DEFAULT NULL ,\n" +
@@ -109,7 +109,7 @@ public class CreateTwitterTumblrTablesForShows {
 
             String[] buffer= StringUtils.split(sCurrentLine, "@", 2);
             String showTabe="SHOW_TUMBLR_"+buffer[0].trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
-            System.out.println("DROP TABLE "+showTabe+";");
+         //   System.out.println("DROP TABLE "+showTabe+";");
             System.out.println("CREATE TABLE "+showTabe );
             System.out.println("  (postID BIGINT  NOT NULL ,\n" +
                     "                    text longtext character set utf8 collate utf8_polish_ci DEFAULT NULL,\n" +
@@ -147,7 +147,7 @@ public class CreateTwitterTumblrTablesForShows {
 
             String[] buffer= StringUtils.split(sCurrentLine, "@", 2);
             String showTabe="SHOW_TWITTER_"+buffer[0].trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
-            System.out.println("DROP TABLE "+showTabe+";");
+          //  System.out.println("DROP TABLE "+showTabe+";");
             System.out.println("CREATE TABLE "+showTabe );
             System.out.println("(id BIGINT  NOT NULL AUTO_INCREMENT,\n" +
                     "            tweet longtext character set utf8 collate utf8_polish_ci DEFAULT NULL,\n" +

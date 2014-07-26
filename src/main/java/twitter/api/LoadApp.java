@@ -42,11 +42,11 @@
                     if(finalbuffer.length>1)
                     {
                         caste=("@"+finalbuffer[1].trim()).split(",");
-                        hashtag=("#"+finalbuffer[0].trim()).split(",");
+                        hashtag=("#"+finalbuffer[0].trim()).split("#");
                     }
                     else
                     {
-                        hashtag=("#"+finalbuffer[0].trim()).split(",");
+                        hashtag=("#"+finalbuffer[0].trim()).split("#");
                     }
                     TwitterDataRetriever.populateShowIDToShowName(buffer[0].trim() ,"@"+newbuffer[0].trim(), caste, hashtag);
                     count++;
