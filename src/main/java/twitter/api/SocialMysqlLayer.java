@@ -20,34 +20,38 @@ public class SocialMysqlLayer {
 
     Map<String,List> timeMap=new HashMap<String, List>();
     DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-    String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
+    //  String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
+    String fileDirectory="/Library/Tomcat/webapps/examples/";
     private int tweetsForDayForShows;
 
 
-     DateFormat newformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    DateFormat newformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Object location;
 
     public void populatDayWiseStatsForShowForTwitter() throws Exception {
+
         Date date = new Date();
+        int count=0;
+        while (count++<7) {
+            Map<String, Integer> showNameToTweet = getTweetsForDayForShows(date);
+            Map<String, Integer> showNameToPhotoTweet = getPhotoTweetsForDayForShows(date);
+            Map<String, Integer> showNameToLinkTweet = getLinkTweetsForDayForShows(date);
+            Map<String, Integer> showNameToTextTweet = getTextTweetsForDayForShows(date);
 
-        Map<String,Integer> showNameToTweet=getTweetsForDayForShows(date);
-        Map<String,Integer> showNameToPhotoTweet= getPhotoTweetsForDayForShows(date);
-        Map<String,Integer> showNameToLinkTweet= getLinkTweetsForDayForShows(date);
-        Map<String,Integer> showNameToTextTweet= getTextTweetsForDayForShows(date);
+            deleteMainTable(date);
+            for (Map.Entry<String, Integer> entry : showNameToTweet.entrySet()) {
+                deleteShowWiseTable(entry.getKey(), date);
+                populateShowWiseTable(entry.getKey(), "twitter", "total", entry.getValue(), date);
+                populateMainTable(entry.getKey(), "twitter", "total", entry.getValue(), date);
+                populateShowWiseTable(entry.getKey(), "twitter", "photo", showNameToPhotoTweet.get(entry.getKey()), date);
+                populateMainTable(entry.getKey(), "twitter", "photo", showNameToPhotoTweet.get(entry.getKey()), date);
+                populateShowWiseTable(entry.getKey(), "twitter", "links", showNameToLinkTweet.get(entry.getKey()), date);
+                populateMainTable(entry.getKey(), "twitter", "links", showNameToLinkTweet.get(entry.getKey()), date);
+                populateShowWiseTable(entry.getKey(), "twitter", "text", showNameToTextTweet.get(entry.getKey()), date);
+                populateMainTable(entry.getKey(), "twitter", "text", showNameToTextTweet.get(entry.getKey()), date);
 
-        deleteMainTable(date);
-        for(Map.Entry<String,Integer> entry : showNameToTweet.entrySet())
-        {
-            deleteShowWiseTable(entry.getKey(),date);
-            populateShowWiseTable(entry.getKey(),"twitter","total",entry.getValue(),date);
-            populateMainTable(entry.getKey(),"twitter","total",entry.getValue(),date);
-            populateShowWiseTable(entry.getKey(),"twitter","photo",showNameToPhotoTweet.get(entry.getKey()),date);
-            populateMainTable(entry.getKey(),"twitter","photo",showNameToPhotoTweet.get(entry.getKey()),date);
-            populateShowWiseTable(entry.getKey(),"twitter","links",showNameToLinkTweet.get(entry.getKey()),date);
-            populateMainTable(entry.getKey(),"twitter","links",showNameToLinkTweet.get(entry.getKey()),date);
-            populateShowWiseTable(entry.getKey(),"twitter","text",showNameToTextTweet.get(entry.getKey()),date);
-            populateMainTable(entry.getKey(),"twitter","text",showNameToTextTweet.get(entry.getKey()),date);
-
+            }
+            date = new DateTime(date).minusDays(1).toDate();
         }
 
 
@@ -67,26 +71,29 @@ public class SocialMysqlLayer {
 
     public void populatDayWiseStatsForShowForTumblr() throws Exception {
         Date date = new Date();
+        int count=0;
+        while (count++<7) {
+            Map<String,Integer> showNameToTweet=JumblrMain.getTumblrPostsForDay(date);
+            Map<String,Integer> showNameToPhotoTweet= JumblrMain.getPhotoTumblrForDayForShows(date);
+            Map<String,Integer> showNameToLinkTweet= JumblrMain.getVideoTumblrForDayForShows(date);
+            Map<String,Integer> showNameAUDIOTweet= JumblrMain.getAUDIOTumblrForDayForShows(date);
+            Map<String,Integer> showNameTEXTTweet= JumblrMain.getTEXTTumblrForDayForShows(date);
 
-        Map<String,Integer> showNameToTweet=JumblrMain.getTumblrPostsForDay(date);
-        Map<String,Integer> showNameToPhotoTweet= JumblrMain.getPhotoTumblrForDayForShows(date);
-        Map<String,Integer> showNameToLinkTweet= JumblrMain.getVideoTumblrForDayForShows(date);
-        Map<String,Integer> showNameAUDIOTweet= JumblrMain.getAUDIOTumblrForDayForShows(date);
-        Map<String,Integer> showNameTEXTTweet= JumblrMain.getTEXTTumblrForDayForShows(date);
+            for(Map.Entry<String,Integer> entry : showNameToTweet.entrySet())
+            {
+                populateShowWiseTable(entry.getKey(),"tumblr","total",entry.getValue(),date);
+                populateMainTable(entry.getKey(),"tumblr","total",entry.getValue(),date);
+                populateShowWiseTable(entry.getKey(),"tumblr","photo",showNameToPhotoTweet.get(entry.getKey()),date);
+                populateMainTable(entry.getKey(),"tumblr","photo",showNameToPhotoTweet.get(entry.getKey()),date);
+                populateShowWiseTable(entry.getKey(),"tumblr","video",showNameToLinkTweet.get(entry.getKey()),date);
+                populateMainTable(entry.getKey(),"tumblr","video",showNameToLinkTweet.get(entry.getKey()),date);
+                populateShowWiseTable(entry.getKey(),"tumblr","text",showNameTEXTTweet.get(entry.getKey()),date);
+                populateMainTable(entry.getKey(),"tumblr","text",showNameTEXTTweet.get(entry.getKey()),date);
+                populateShowWiseTable(entry.getKey(),"tumblr","audio",showNameToLinkTweet.get(entry.getKey()),date);
+                populateMainTable(entry.getKey(),"tumblr","audio",showNameAUDIOTweet.get(entry.getKey()),date);
 
-        for(Map.Entry<String,Integer> entry : showNameToTweet.entrySet())
-        {
-            populateShowWiseTable(entry.getKey(),"tumblr","total",entry.getValue(),date);
-            populateMainTable(entry.getKey(),"tumblr","total",entry.getValue(),date);
-            populateShowWiseTable(entry.getKey(),"tumblr","photo",showNameToPhotoTweet.get(entry.getKey()),date);
-            populateMainTable(entry.getKey(),"tumblr","photo",showNameToPhotoTweet.get(entry.getKey()),date);
-            populateShowWiseTable(entry.getKey(),"tumblr","video",showNameToLinkTweet.get(entry.getKey()),date);
-            populateMainTable(entry.getKey(),"tumblr","video",showNameToLinkTweet.get(entry.getKey()),date);
-            populateShowWiseTable(entry.getKey(),"tumblr","text",showNameTEXTTweet.get(entry.getKey()),date);
-            populateMainTable(entry.getKey(),"tumblr","text",showNameTEXTTweet.get(entry.getKey()),date);
-            populateShowWiseTable(entry.getKey(),"tumblr","audio",showNameToLinkTweet.get(entry.getKey()),date);
-            populateMainTable(entry.getKey(),"tumblr","audio",showNameAUDIOTweet.get(entry.getKey()),date);
-
+            }
+            date = new DateTime(date).minusDays(1).toDate();
         }
 
 
@@ -252,7 +259,7 @@ public class SocialMysqlLayer {
     }
 
     public Map<String,Integer> getTweetsForDayForShows(Date date) throws Exception{
-       Map<String,Integer> showNameToCount=new HashMap<String, Integer>();
+        Map<String,Integer> showNameToCount=new HashMap<String, Integer>();
         Set<String> shows=TwitterDataRetriever.getShows();
         for(String show : shows)
         {
@@ -282,10 +289,10 @@ public class SocialMysqlLayer {
 
     public Integer getCount(String showName,Date date) throws Exception {
         Integer count=0;
-         Connection connection=null;
-         Statement statement=null;
-         ResultSet rs;
-         PreparedStatement preparedStatement;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
         try {
             String table=new String(showName);
             table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
@@ -403,7 +410,7 @@ public class SocialMysqlLayer {
             preparedStatement.setString(7, type);
             preparedStatement.setTimestamp(8, new Timestamp(df.parse(createdOn).getTime()));
 
-             preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
 
 
             preparedStatement = connection.prepareStatement("insert into SHOW_GEO_TWITTER_"+table+"(city," +
@@ -464,22 +471,26 @@ public class SocialMysqlLayer {
                 String state=rs.getString("state");
                 if(state==null)
                     continue;;
-               if(countMap.get(state)!=null)
-               {
-                   int newcount=countMap.get(state);
-                   newcount++;
-                   countMap.put(state,newcount);
+                if(countMap.get(state)!=null)
+                {
+                    int newcount=countMap.get(state);
+                    newcount++;
+                    countMap.put(state,newcount);
 
-               }
+                }
                 else
-               {
-                   countMap.put(state,1);
-               }
+                {
+                    countMap.put(state,1);
+                }
             }
+            int newcount=0;
             for(Map.Entry<String,Integer> entry :countMap.entrySet())
             {
                 output.write("US-"+entry.getKey()+"newvalue"+entry.getValue());
-                output.newLine();
+                newcount++;
+                if(newcount<countMap.size()) {
+                    output.newLine();
+                }
             }
             output.close();
 
@@ -566,119 +577,98 @@ public class SocialMysqlLayer {
         return null;
     }
 
-    public List<String> showAllTweetText(String showName,String fileName,String bottomtime,String uppertime) throws Exception {
+
+    public String loadGRaphs(String showName,String bottomtime,String uppertime,String id) throws Exception{
 
         BufferedWriter output=null;
+        BufferedWriter statsOutput=null;
+
         Connection connection=null;
         Statement statement=null;
         ResultSet rs;
         PreparedStatement preparedStatement;
+        String newshow=new String(showName);
+        String fileName="graphtwitter"+id+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
+        String newFileName="statstwitter"+id+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
         try {
-            String newshow=new String(showName);
-            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+"alltext.tsv");
+            File file = new File(fileDirectory+fileName);
             file.createNewFile();
+
+            File newFile = new File(fileDirectory+newFileName);
+            newFile.createNewFile();
+
             output = new BufferedWriter(new FileWriter(file));
+
+            statsOutput = new BufferedWriter(new FileWriter(newFile));
+
+
             Class.forName(jdbcDriverStr);
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
-            String query = "select distinct tweet  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=? order by created_on desc limit 100";
+            String table=new String(showName);
+            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'", "");
+            String query = "select type,count,created_on  from SHOW_COUNT_"+table+" where   socialType=? and created_on >=? and created_on<=? order by created_on asc";
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1,bottomtime);
-            preparedStatement.setString(2,uppertime);
-            preparedStatement.setString(3,showName);
-
-
+            preparedStatement.setString(1,"twitter");
+            preparedStatement.setString(2,bottomtime);
+            preparedStatement.setString(3,uppertime);
             rs = preparedStatement.executeQuery();
             int count=1;
             //STEP 5: Extract data from result set
+            output.write("date"+"\t"+"TO"+"\t"+"P"+"\t"+"TE"+"\t"+"L");
+            int newcount=0;
+            String oldCreate="";
+            int linkCount=0;
+            int textCount=0;
+            int photoCount=0;
+            int totalCount=0;
+            int rowCount=0;
+            int inlopp=0;
             while (rs.next()) {
-                output.write(rs.getString("tweet"));
-                output.newLine();
-            }
-            //  getResultSet(resultSet);
-
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } catch (Exception e) {
-            //Handle errors for Class.forName
-            e.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (statement != null)
-                    connection.close();
-            } catch (SQLException se) {
-            }// do nothing
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }//end finally try
-            output.close();
-
-        }
-        return null;
-    }
-
-    public List<String> negativepositiveneutralAll(String showName,String fileName,String bottomtime,String uppertime) throws Exception {
-
-        BufferedWriter output=null;
-        Connection connection=null;
-        Statement statement=null;
-        ResultSet rs;
-        PreparedStatement preparedStatement;
-        try {
-            String newshow=new String(showName);
-            File file = new File(fileDirectory+fileName+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv");
-            file.createNewFile();
-            output = new BufferedWriter(new FileWriter(file));
-            Class.forName(jdbcDriverStr);
-            connection = DriverManager.getConnection(jdbcURL);
-            statement = connection.createStatement();
-            String query = "select distinct created_on  from SHOW_TWEET where created_on >=? and created_on<=? and show_name=?";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1,bottomtime);
-            preparedStatement.setString(2,uppertime);
-            preparedStatement.setString(3,showName);
-            rs = preparedStatement.executeQuery();
-            int count=1;
-            //STEP 5: Extract data from result set
-            output.write("date"+"\t"+"totalTweet"+"\t"+"positive"+"\t"+"negative"+"\t"+"neutral"+"\t"+"time");
-            while (rs.next()) {
-                output.newLine();
+                inlopp=1;
                 String create = rs.getString("created_on");
-                query = "select sentimentalScore from SHOW_TWEET where created_on=? and show_name=?";
-                preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setString(1,create);
-                preparedStatement.setString(2,showName);
-                ResultSet resultSet1=preparedStatement.executeQuery();
-                int finalcount=0;
-                int negCount=0;
-                int poscount=0;
-                int neutralcount=0;
-                while (resultSet1.next())
-                {
-                    String score = resultSet1.getString("sentimentalScore");
-                    if(Integer.parseInt(score)==1)
-                    {
-                        neutralcount++;
+                if(!oldCreate.equals(create)) {
+                    if(!oldCreate.equals("")) {
+                        output.write(oldCreate.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "") + "\t" + totalCount + "\t" + photoCount + "\t" + textCount + "\t" + linkCount);
+                        statsOutput.write(oldCreate.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "") + "break" + totalCount + "break" + photoCount + "break" + textCount + "break" + linkCount);
+                        statsOutput.newLine();
+                        linkCount = 0;
+                        textCount = 0;
+                        photoCount = 0;
+                        totalCount = 0;
                     }
-                    if(Integer.parseInt(score)>1)
-                    {
-                        poscount++;
-                    }
-                    if(Integer.parseInt(score)<1)
-                    {
-                        negCount++;
-                    }
-                    finalcount++;
+                    oldCreate=create;
+                    output.newLine();
                 }
-                output.write(create.replaceAll("00:00:00.0","").replaceAll(" ","").replaceAll("-","")+"\t"+finalcount+"\t"+poscount+"\t"+negCount+"\t"+neutralcount+"\t"+0);
-                System.out.println(showName + create + "    " + finalcount);
+
+                String type = rs.getString("type");
+                if(type.equals("link"))
+                {
+                    linkCount=Integer.parseInt(rs.getString("count"));
+                    totalCount+=linkCount;
+                }
+
+                if(type.equals("photo"))
+                {
+                    photoCount=Integer.parseInt(rs.getString("count"));
+                    totalCount+=photoCount;
+                }
+                if(type.equals("text") || type.equals("quote"))
+                {
+                    textCount=Integer.parseInt(rs.getString("count"));
+                    totalCount+=textCount;
+                }
+                //                if(newcount>30 && textCount!=videCount && videCount!=photoCount && photoCount!=audioCount && textCount>0&&
+//                        photoCount>0 && videCount>0)
+//                    break;
+
             }
-            //  getResultSet(resultSet);
+            if(inlopp==1)
+            {
+                output.write(oldCreate.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "") + "\t" + totalCount + "\t" + photoCount + "\t" + textCount + "\t" + linkCount);
+                statsOutput.write( oldCreate.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "")+"break"+totalCount + "break" + photoCount + "break" + textCount + "break" + linkCount);
+            }
+
 
         } catch (SQLException se) {
             //Handle errors for JDBC
@@ -700,9 +690,10 @@ public class SocialMysqlLayer {
                 se.printStackTrace();
             }//end finally try
             output.close();
+            statsOutput.close();
 
         }
-        return null;
+        return fileName;
     }
 
 
@@ -758,113 +749,7 @@ public class SocialMysqlLayer {
 
 
 
-    Map<String,Integer> trends=new HashMap<String, Integer>();
 
-        public void showTrends(String bottomtime,String uppertime) throws Exception{
-
-        BufferedWriter output=null;
-        try {
-            File file = new File(fileDirectory+"trends.tsv");
-            file.createNewFile();
-            output = new BufferedWriter(new FileWriter(file));
-            Class.forName(jdbcDriverStr);
-            connection = DriverManager.getConnection(jdbcURL);
-            statement = connection.createStatement();
-//            String query ="select show_name from SHOW_TWEET where created_on >=? and created_on<=?";
-//            preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1,bottomtime);
-//            preparedStatement.setString(2,uppertime);
-//            ResultSet rs=preparedStatement.executeQuery();
-//            int count=1;
-//            int postiveCount=0;
-//            int neutralcount=0;
-//            int negativecount=0;
-//            Map<String,Integer> trends=new HashMap<String, Integer>();
-//            //STEP 5: Extract data from result set
-//            while (rs.next()) {
-//                String show = rs.getString("show_name");
-//                Integer number=trends.get(show);
-//                if(number!=null)
-//                {
-//                    number++;
-//                    trends.put(show,number);
-//                }
-//                else
-//                {
-//                    trends.put(show,1);
-//                }
-//                // System.out.println(show+"      "+showName);
-//
-//
-//            }
-            int count1=0;
-            int numbers[]=new int[10000];
-            Map<Integer,String> trends1=new HashMap<Integer, String>();
-
-            for(Map.Entry<String,Integer> entry : trends.entrySet())
-            {
-                trends1.put(entry.getValue(),entry.getKey());
-            }
-            for(Map.Entry<String,Integer> entry : trends.entrySet())
-            {
-               numbers[count1++] =entry.getValue();
-            }
-
-
-            int temp;
-
-            for(int i = 0; i < numbers.length; i++)
-            {
-                for(int j = 1; j < (numbers.length-i); j++)
-                {
-                    //if numbers[j-1] < numbers[j], swap the elements
-                    if(numbers[j-1] < numbers[j])
-                    {
-                        temp = numbers[j-1];
-                        numbers[j-1]=numbers[j];
-                        numbers[j]=temp;
-                    }
-                }
-            }
-            List<String> persisted=new ArrayList<String>();
-            for(int i = 0; i < numbers.length; i++)
-            {
-                if(!persisted.contains(trends1.get(numbers[i])) && trends1.get(numbers[i])!=null)
-                {
-                    persisted.add(trends1.get(numbers[i]));
-                output.write(String.valueOf(trends1.get(numbers[i])+"\t"+numbers[i]));
-                output.newLine();
-                }
-            }
-
-
-
-            //  getResultSet(resultSet);
-
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } catch (Exception e) {
-            //Handle errors for Class.forName
-            e.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (statement != null)
-                    connection.close();
-            } catch (SQLException se) {
-            }// do nothing
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }//end finally try
-            output.close();
-
-        }
-
-    }
 
     public Map<String,String> getCityToStateMap() throws Exception{
         BufferedWriter output=null;
