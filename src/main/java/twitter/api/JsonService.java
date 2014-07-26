@@ -121,6 +121,7 @@ public class JsonService {
         String uperTime[]=upperTime.split("/");
         String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
         String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+        System.out.println(btime+" "+utime+" "+show+" "+showName);
         return LoadApp.getSocialMysqlLayer().loadUSGeography(showName,btime+" 00:00:00",utime+" 00:00:00",id);
     }
 
