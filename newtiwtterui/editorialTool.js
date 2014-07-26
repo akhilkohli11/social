@@ -1,9 +1,9 @@
 var negative=0;
 var postive=0;
 var neutral=0;
-     //  var url='http://ec2-54-187-52-149.us-west-2.compute.amazonaws.com:9199/rest/test/';
+       var url='http://ec2-54-187-52-149.us-west-2.compute.amazonaws.com:8080/rest/test/';
         //      var url='http://localhost:9999/rest/test/';
-        var url='http://localhost:9199/rest/test/';
+     //   var url='http://localhost:9199/rest/test/';
 
 function foobar_cont(){
     console.log("finished.");
