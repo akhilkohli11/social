@@ -20,8 +20,8 @@ public class SocialMysqlLayer {
 
     Map<String,List> timeMap=new HashMap<String, List>();
     DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-   //   String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
-    String fileDirectory="/Library/Tomcat/webapps/examples/";
+      String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
+    //String fileDirectory="/Library/Tomcat/webapps/examples/";
     private int tweetsForDayForShows;
 
 
