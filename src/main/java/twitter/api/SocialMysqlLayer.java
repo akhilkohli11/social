@@ -20,8 +20,8 @@ public class SocialMysqlLayer {
 
     Map<String,List> timeMap=new HashMap<String, List>();
     DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-      String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
-  //  String fileDirectory="/Library/Tomcat/webapps/examples/";
+   //   String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
+    String fileDirectory="/Library/Tomcat/webapps/examples/";
     private int tweetsForDayForShows;
 
 
@@ -267,6 +267,350 @@ public class SocialMysqlLayer {
         }
         return showNameToCount;
     }
+
+    public void loadComparision(String[] showNames,  String bottomtime,String uppertime, String id) throws Exception{
+        BufferedWriter statsOutput=null;
+
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newFileName="comparetwitter"+id+".tsv";
+        try {
+            File newFile = new File(fileDirectory+newFileName);
+            newFile.createNewFile();
+
+            statsOutput = new BufferedWriter(new FileWriter(newFile));
+
+
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            int loopcount=0;
+            for(String show : showNames) {
+                String showName = TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+                loopcount++;
+
+                String table = new String(showName);
+                table = table.trim().toLowerCase().replaceAll(" ", "").replaceAll("\"", "").replaceAll("'", "");
+                String query = "select type,count,created_on  from SHOW_COUNT_" + table + " where   socialType=? and created_on >=? and created_on<=? order by created_on asc";
+                preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, "twitter");
+                preparedStatement.setString(2, bottomtime);
+                preparedStatement.setString(3, uppertime);
+                rs = preparedStatement.executeQuery();
+                int count = 1;
+                //STEP 5: Extract data from result set
+                int newcount = 0;
+                String oldCreate = "";
+                int linkCount = 0;
+                int textCount = 0;
+                int photoCount = 0;
+                int totalCount = 0;
+                int rowCount = 0;
+                int inlopp = 0;
+                statsOutput.write("newline");
+                statsOutput.newLine();
+                statsOutput.write(showName);
+                statsOutput.newLine();
+                while (rs.next()) {
+                    inlopp = 1;
+                    String create = rs.getString("created_on");
+                    if (!oldCreate.equals(create)) {
+                        if (!oldCreate.equals("")) {
+                            statsOutput.write(oldCreate.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "") + "break" + totalCount + "break" + photoCount + "break" + textCount + "break" + linkCount);
+                            statsOutput.newLine();
+                            linkCount = 0;
+                            textCount = 0;
+                            photoCount = 0;
+                            totalCount = 0;
+                        }
+                        oldCreate = create;
+                    }
+
+                    String type = rs.getString("type");
+                    if (type.equals("link")) {
+                        linkCount = Integer.parseInt(rs.getString("count"));
+                        totalCount += linkCount;
+                    }
+
+                    if (type.equals("photo")) {
+                        photoCount = Integer.parseInt(rs.getString("count"));
+                        totalCount += photoCount;
+                    }
+                    if (type.equals("text") || type.equals("quote")) {
+                        textCount = Integer.parseInt(rs.getString("count"));
+                        totalCount += textCount;
+                    }
+                    //                if(newcount>30 && textCount!=videCount && videCount!=photoCount && photoCount!=audioCount && textCount>0&&
+//                        photoCount>0 && videCount>0)
+//                    break;
+
+                }
+                if (inlopp == 1) {
+                    statsOutput.write(oldCreate.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "") + "break" + totalCount + "break" + photoCount + "break" + textCount + "break" + linkCount);
+                    if(loopcount<showNames.length) {
+                        statsOutput.newLine();
+                    }
+                }
+            }
+
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            statsOutput.close();
+
+        }
+
+    }
+
+
+    public void loadTrendsTwitter( String bottomtime,String uppertime, String id) throws Exception{
+        BufferedWriter statsOutput=null;
+
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newFileName="trendstwitter"+id+".tsv";
+        try {
+            File newFile = new File(fileDirectory+newFileName);
+            newFile.createNewFile();
+
+            statsOutput = new BufferedWriter(new FileWriter(newFile));
+
+
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+             String query = "select count,show_name  from SHOW_COUNT_SOCIAL where   socialType=? and created_on >=? and created_on<=? and type=?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,"twitter");
+            preparedStatement.setString(2,bottomtime);
+            preparedStatement.setString(3,uppertime);
+            preparedStatement.setString(4,"total");
+
+            rs = preparedStatement.executeQuery();
+            Map<String,Integer> trends=new HashMap<String, Integer>();
+
+            while (rs.next()) {
+                String show = rs.getString("show_name");
+                int totalCount=Integer.parseInt(rs.getString("count"));
+                if(trends.containsKey(show))
+                {
+                    int count=trends.get(show);
+                    count+=totalCount;
+                    trends.put(show,count);
+                }
+                else
+                {
+                    trends.put(show,totalCount);
+                }
+
+
+            }
+            int count1=0;
+            int numbers[]=new int[10000];
+            Map<Integer,String> trends1=new HashMap<Integer, String>();
+
+            for(Map.Entry<String,Integer> entry : trends.entrySet())
+            {
+                trends1.put(entry.getValue(),entry.getKey());
+            }
+            for(Map.Entry<String,Integer> entry : trends.entrySet())
+            {
+                numbers[count1++] =entry.getValue();
+            }
+
+
+            int temp;
+
+            for(int i = 0; i < numbers.length; i++)
+            {
+                for(int j = 1; j < (numbers.length-i); j++)
+                {
+                    //if numbers[j-1] < numbers[j], swap the elements
+                    if(numbers[j-1] < numbers[j])
+                    {
+                        temp = numbers[j-1];
+                        numbers[j-1]=numbers[j];
+                        numbers[j]=temp;
+                    }
+                }
+            }
+            List<String> persisted=new ArrayList<String>();
+            int count=0;
+            for(int i = 0; i < numbers.length; i++)
+            {
+                count++;
+                if(!persisted.contains(trends1.get(numbers[i])) && trends1.get(numbers[i])!=null)
+                {
+                    persisted.add(trends1.get(numbers[i]));
+                    statsOutput.write(String.valueOf(trends1.get(numbers[i])+"newvalue"+numbers[i]));
+                    if(count<numbers.length-1) {
+                        statsOutput.newLine();
+                    }
+                }
+            }
+
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            statsOutput.close();
+
+        }
+
+    }
+
+
+
+    public void loadTrendsTumblr(  String bottomtime,String uppertime, String id) throws Exception{
+        BufferedWriter statsOutput=null;
+
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newFileName="trendstumblr"+id+".tsv";
+        try {
+            File newFile = new File(fileDirectory+newFileName);
+            newFile.createNewFile();
+
+            statsOutput = new BufferedWriter(new FileWriter(newFile));
+
+
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String query = "select count,show_name  from SHOW_COUNT_SOCIAL where   socialType=? and created_on >=? and created_on<=? and type=?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,"tumblr");
+            preparedStatement.setString(2,bottomtime);
+            preparedStatement.setString(3,uppertime);
+            preparedStatement.setString(4,"total");
+
+            rs = preparedStatement.executeQuery();
+            Map<String,Integer> trends=new HashMap<String, Integer>();
+
+            while (rs.next()) {
+                String show = rs.getString("show_name");
+                int totalCount=Integer.parseInt(rs.getString("count"));
+                if(trends.containsKey(show))
+                {
+                    int count=trends.get(show);
+                    count+=totalCount;
+                    trends.put(show,count);
+                }
+                else
+                {
+                    trends.put(show,totalCount);
+                }
+
+
+            }
+            int count1=0;
+            int numbers[]=new int[10000];
+            Map<Integer,String> trends1=new HashMap<Integer, String>();
+
+            for(Map.Entry<String,Integer> entry : trends.entrySet())
+            {
+                trends1.put(entry.getValue(),entry.getKey());
+            }
+            for(Map.Entry<String,Integer> entry : trends.entrySet())
+            {
+                numbers[count1++] =entry.getValue();
+            }
+
+
+            int temp;
+
+            for(int i = 0; i < numbers.length; i++)
+            {
+                for(int j = 1; j < (numbers.length-i); j++)
+                {
+                    //if numbers[j-1] < numbers[j], swap the elements
+                    if(numbers[j-1] < numbers[j])
+                    {
+                        temp = numbers[j-1];
+                        numbers[j-1]=numbers[j];
+                        numbers[j]=temp;
+                    }
+                }
+            }
+            List<String> persisted=new ArrayList<String>();
+            int count=0;
+            for(int i = 0; i < numbers.length; i++)
+            {
+                if(!persisted.contains(trends1.get(numbers[i])) && trends1.get(numbers[i])!=null)
+                {
+                    persisted.add(trends1.get(numbers[i]));
+                    statsOutput.write(String.valueOf(trends1.get(numbers[i])+"newvalue"+numbers[i]));
+                    if(count<numbers.length-1) {
+                        statsOutput.newLine();
+                    }
+                }
+            }
+
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            statsOutput.close();
+
+        }
+
+    }
+
 
 
     enum TestTableColumns {

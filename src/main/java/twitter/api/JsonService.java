@@ -4,9 +4,12 @@ package twitter.api;
  * Created by akohli on 5/30/14.
  */
 
+import org.apache.commons.lang.StringUtils;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayDeque;
 
 @Path("/test")
 public class JsonService {
@@ -87,6 +90,88 @@ public class JsonService {
         return NewJumblrMain.getTumblrSqlLayer().loadPhotos(showName,btime+" 00:00:00",utime+" 00:00:00",id);
     }
 
+    @GET
+    @Path("/compare")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+
+    public String getCompareFile(@QueryParam("show") String showList,
+                                 @QueryParam("bottomTime") String bottomtime,
+                                 @QueryParam("upperTime") String upperTime,
+                                 @QueryParam("id") String id) throws Exception
+    {
+        String bTime[]=bottomtime.split("/");
+        String btime=bTime[2]+"-"+bTime[0]+"-"+bTime[1];
+        String uperTime[]=upperTime.split("/");
+        String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
+        String[] showNames= showList.split("split");
+       NewJumblrMain.getTumblrSqlLayer().loadComparision(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+
+        return null;
+    }
+
+
+    @GET
+    @Path("/compare/twitter")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+
+    public String getTwitterCompareFile(@QueryParam("show") String showList,
+                                 @QueryParam("bottomTime") String bottomtime,
+                                 @QueryParam("upperTime") String upperTime,
+                                 @QueryParam("id") String id) throws Exception
+    {
+        String bTime[]=bottomtime.split("/");
+        String btime=bTime[2]+"-"+bTime[0]+"-"+bTime[1];
+        String uperTime[]=upperTime.split("/");
+        String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
+        String[] showNames= showList.split("split");
+        System.out.println(btime + " " + utime + " " + showNames );
+         LoadApp.getSocialMysqlLayer().loadComparision(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+
+        return null;
+    }
+
+
+    @GET
+    @Path("/tumblr/trends")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+
+    public String getTumblrTrendsFile(
+                                 @QueryParam("bottomTime") String bottomtime,
+                                 @QueryParam("upperTime") String upperTime,
+                                 @QueryParam("id") String id) throws Exception
+    {
+        String bTime[]=bottomtime.split("/");
+        String btime=bTime[2]+"-"+bTime[0]+"-"+bTime[1];
+        String uperTime[]=upperTime.split("/");
+        String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
+        LoadApp.getSocialMysqlLayer().loadTrendsTumblr(btime+" 00:00:00",utime+" 00:00:00",id);
+
+        return null;
+    }
+
+
+    @GET
+    @Path("/twitter/trends")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+
+    public String getTwitterTrendsFile(
+                                 @QueryParam("bottomTime") String bottomtime,
+                                 @QueryParam("upperTime") String upperTime,
+                                 @QueryParam("id") String id) throws Exception
+    {
+        String bTime[]=bottomtime.split("/");
+        String btime=bTime[2]+"-"+bTime[0]+"-"+bTime[1];
+        String uperTime[]=upperTime.split("/");
+        String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
+        LoadApp.getSocialMysqlLayer().loadTrendsTwitter(btime+" 00:00:00",utime+" 00:00:00",id);
+        return null;
+    }
+
+
 
 //    @GET
 //    @Path("/tumblr/photo/tabular")
@@ -160,8 +245,8 @@ public class JsonService {
         String uperTime[]=upperTime.split("/");
         String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
         String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
-        System.out.println(btime+" "+utime+" "+show+" "+showName);
-        return NewJumblrMain.getTumblrSqlLayer().loadTextPost(showName,bottomtime+" 00:00:00",upperTime+" 00:00:00",id);
+        System.out.println("text"+btime+" "+utime+" "+show+" "+showName);
+        return NewJumblrMain.getTumblrSqlLayer().loadTextPost(showName,btime+" 00:00:00",utime+" 00:00:00",id);
     }
 
     @GET
@@ -179,8 +264,8 @@ public class JsonService {
         String uperTime[]=upperTime.split("/");
         String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
         String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
-        System.out.println(btime+" "+utime+" "+show+" "+showName);
-        return NewJumblrMain.getTumblrSqlLayer().loadAudioPosts(showName,bottomtime+" 00:00:00",upperTime+" 00:00:00",id);
+        System.out.println("text"+btime+" "+utime+" "+show+" "+showName);
+        return NewJumblrMain.getTumblrSqlLayer().loadAudioPosts(showName,btime+" 00:00:00",utime+" 00:00:00",id);
     }
 
     @GET

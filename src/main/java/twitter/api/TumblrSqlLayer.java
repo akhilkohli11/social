@@ -20,8 +20,8 @@ public class TumblrSqlLayer {
     private Statement statement;
     private ResultSet resultSet;
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
-  //  String fileDirectory="/Library/Tomcat/webapps/examples/";
+  //  String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
+    String fileDirectory="/Library/Tomcat/webapps/examples/";
 
 
     private PreparedStatement preparedStatement;
@@ -541,19 +541,20 @@ public class TumblrSqlLayer {
             statement = connection.createStatement();
             String table=new String(showName);
             table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'", "");
-            String query = "select distinct text, blogName,followers,posturl  from SHOW_TUMBLR_"+table+"  where show_name=? and type=? and  created_on >=? and created_on<=? order by followers desc limit 20";
+            String query = "select distinct text, blogName,followers,posturl from SHOW_TUMBLR_"+table+" where   type=? and  created_on >=? and created_on<=? order by followers desc limit 15";
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1,showName);
-            preparedStatement.setString(2,"text");
-            preparedStatement.setString(3, bottomtime);
-            preparedStatement.setString(4, uppertime);
+           preparedStatement.setString(1,"text");
+            preparedStatement.setString(2, bottomtime);
+            preparedStatement.setString(3, uppertime);
 
 
             rs = preparedStatement.executeQuery();
 
             List<String> embedCodeList=new ArrayList<String>();
             //STEP 5: Extract data from result set
+            System.out.println("here"+query);
             while (rs.next()) {
+                System.out.println("also");
                 embedCodeList.add(rs.getString("text"));
                 output.write(rs.getString("blogName")+"break"+rs.getString("followers")+"break"+rs.getString("posturl"));
                 output.newLine();
@@ -623,12 +624,11 @@ public class TumblrSqlLayer {
 
             rs = preparedStatement.executeQuery();
             int count=1;
-            //STEP 5: Extract data from result set
             List<String> embedCodeList=new ArrayList<String>();
             //STEP 5: Extract data from result set
             while (rs.next()) {
                 embedCodeList.add(rs.getString("embedCode"));
-                output.write(rs.getString("blogName")+"break"+rs.getString("followers")+"break"+rs.getString("posturl"));
+                output.write(rs.getString("blogName")+"break"+rs.getString("followers")+"break"+rs.getString("posturl")+"break"+rs.getString("embedCode"));
                 output.newLine();
             }
             if(!embedCodeList.isEmpty())
@@ -803,4 +803,125 @@ public class TumblrSqlLayer {
 }
 
 
+    public void loadComparision(String[] showNames,  String bottomtime,String uppertime, String id) throws Exception{
+
+
+        BufferedWriter statsOutput=null;
+
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newFileName="comparetumblr"+id+".tsv";
+        try {
+            File newFile = new File(fileDirectory+newFileName);
+            newFile.createNewFile();
+
+            statsOutput = new BufferedWriter(new FileWriter(newFile));
+
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            int loopcount=0;
+            for(String show : showNames) {
+                String showName = TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+                loopcount++;
+                String table = new String(showName);
+                table = table.trim().toLowerCase().replaceAll(" ", "").replaceAll("\"", "").replaceAll("'", "");
+                String query = "select type,count,created_on  from SHOW_COUNT_" + table + " where   socialType=? and created_on >=? and created_on<=? order by created_on asc";
+                preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, "tumblr");
+                preparedStatement.setString(2, bottomtime);
+                preparedStatement.setString(3, uppertime);
+                rs = preparedStatement.executeQuery();
+                int count = 1;
+                //STEP 5: Extract data from result set
+                int newcount = 0;
+                String oldCreate = "";
+                int videCount = 0;
+                int audioCount = 0;
+                int textCount = 0;
+                int photoCount = 0;
+                int totalCount = 0;
+                int rowCount = 0;
+                int inlopp = 0;
+                statsOutput.write("newline");
+                statsOutput.newLine();
+                statsOutput.write(showName);
+                statsOutput.newLine();
+                while (rs.next()) {
+                    inlopp = 1;
+                    String create = rs.getString("created_on");
+                    if (!oldCreate.equals(create)) {
+                        if (!oldCreate.equals("")) {
+                            statsOutput.write(oldCreate.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "") + "break" + totalCount + "break" + videCount + "break" + audioCount + "break" + textCount + "break" +
+                                    photoCount);
+                            statsOutput.newLine();
+
+                            videCount = 0;
+                            audioCount = 0;
+                            textCount = 0;
+                            photoCount = 0;
+                            totalCount = 0;
+                        }
+                        oldCreate = create;
+                    }
+
+                    String type = rs.getString("type");
+                    if (type.equals("video")) {
+                        videCount = Integer.parseInt(rs.getString("count"));
+                        totalCount += videCount;
+                    }
+                    if (type.equals("audio")) {
+                        audioCount = Integer.parseInt(rs.getString("count"));
+                        totalCount += audioCount;
+                    }
+                    if (type.equals("photo")) {
+                        photoCount = Integer.parseInt(rs.getString("count"));
+                        totalCount += photoCount;
+                    }
+                    if (type.equals("text") || type.equals("quote")) {
+                        textCount = Integer.parseInt(rs.getString("count"));
+                        totalCount += textCount;
+                    }
+                    //                if(newcount>30 && textCount!=videCount && videCount!=photoCount && photoCount!=audioCount && textCount>0&&
+//                        photoCount>0 && videCount>0)
+//                    break;
+
+                }
+                if (inlopp == 1) {
+
+                    statsOutput.write(oldCreate.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "") + "break" + totalCount + "break" + videCount + "break" + audioCount + "break" + textCount + "break" +
+                            photoCount);
+                    if(loopcount<showNames.length) {
+                        statsOutput.newLine();
+                    }
+
+                }
+            }
+
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            statsOutput.close();
+
+        }
+    }
 }
