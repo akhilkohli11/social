@@ -1,18 +1,15 @@
 var negative=0;
 var postive=0;
 var neutral=0;
-       var url='http://ec2-54-187-52-149.us-west-2.compute.amazonaws.com:8080/rest/test/';
+      // var url='http://ec2-54-187-52-149.us-west-2.compute.amazonaws.com:8080/rest/test/';
         //      var url='http://localhost:9999/rest/test/';
-     //   var url='http://localhost:9199/rest/test/';
+        var url='http://localhost:9199/rest/test/';
 
 function foobar_cont(){
     console.log("finished.");
 };
 
-function ak()
-{
-   // alert($("#multiple :selected").text());
-}
+
 function changeFunction()
 {
                 $('#tumblrButton').hide();
@@ -23,61 +20,29 @@ function changeFunction()
                                 $('#newdiv').hide();
                                       $('#onemorediv').hide();
                  $('#legend').hide();
+                                                $("#multiple").hide();
                  d3.select("svg")
                         .remove();
 
 
     if($("#socialType :selected").text()=="TUMBLR")
     {
+    $("#multiple").hide();
+       $("#ddlViewBy").show();
                 $('#tumblrButton').show();
     }
      if($("#socialType :selected").text()=="TWITTER")
         {
-                        $("#multiple").show();
-                    $('#twitterButton').show();
-                     if($("#ddlViewBy :selected").text()=="TheCondorHeroes" || $("#ddlViewBy :selected").text()=="BuBuJingQing"
-                     ||$("#ddlViewBy :selected").text()=="LeJunKai"||$("#ddlViewBy :selected").text()=="TheLegendofZhenHuan")
-                        {
-                $('#chinad').show();
-                $('#usd').hide();
-                $('#indiad').hide();
+        $("#multiple").hide();
+                              $("#ddlViewBy").show();
+                $('#twitterButton').show();
 
-
-
-
-                        }
-                        else if ($("#ddlViewBy :selected").text()=="Mahabharat" ||
-                        $("#ddlViewBy :selected").text()=="BalikaVadhu")
-                        {
-                            $('#usd').hide();
-                              $('#chinad').hide();
-                                $('#indiad').show();
-
-                        }
-                        else
-                        {
-                $('#usd').show();
-                $('#chinad').hide();
-                 $('#indiad').hide();
-
-
-
-                        }
         }
-    if($("#socialType :selected").text()=="TMS")
+    if($("#socialType :selected").text()=="COMPARE")
             {
-                        $('#tmsbutton').show();
-                         if($("#ddlViewBy :selected").text()=="PhirBhiDilHaiHindustani" || $("#ddlViewBy :selected").text()=="AkeleHumAkeleTum"
-                                             )
-                                                {
-                                                                                                                        $('#watsond').show();
-
-                                                }
-                                                else
-                                                {
-                                                                    $('#watsond').hide();
-
-                                                }
+                      $("#multiple").show();
+                      $("#ddlViewBy").hide();
+                         $('#tmsbutton').show();
             }
 
 }
@@ -140,6 +105,11 @@ $('#videos').click(function(){
 
                           image=0;
                       }
+
+                      if(image==1)
+                      {
+                            $('#multimedia').append('<div> <p class=\"text-primary\">'+item+'</p></div>');
+                       }
                       if(item=="photos")
                                       {
                                                 $('#multimedia').append('</table>');
@@ -153,10 +123,6 @@ $('#videos').click(function(){
                                 "<td class=\"warning\"><a href=\""+res[2]+"\">"+res[2]+"</a></td></tr>");
                       }
 
-                      if(image==1)
-                      {
-                            $('#multimedia').append('<div> <p class=\"text-primary\">'+item+'</p></div>');
-                       }
                     //   $('#slideshow_1').append("<div class=\"slideshow_item\"><div class=\"image\"><a href=\"#\"><img  alt=\"photo 1\" width=\"900\" height=\"400\" src=\""+item+"\""
                      //   +"/></a></div></div>");
 
@@ -171,40 +137,177 @@ $('#videos').click(function(){
 });
 
 $('#audio').click(function(){
-        $('#legend').hide();
-d3.select("svg")
-       .remove();
-        $('#multimedia').text('');
-        $('#onemorediv').hide();
-            $('#multimedia').show();
-  var file="jun"+"tumbleraudio"+$("#ddlViewBy :selected").text()+".tsv";
-        $('#multimedia').append("<h3> <p class=\"text-primary\">Audio Posts</p></h3>");
-  $.get(file, function(data) {
-      var lines = data.split("\n");
-                $.each(lines, function(n, item) {
-                  $('#multimedia').append('<div><p>'+item+'</p></div>');
-          });
-      }, "text")
+$('#img').show();
+              $('#legend').hide();
+      d3.select("svg")
+             .remove();
+          $('#multimedia').text('');
+                      $('#onemorediv').hide();
+          $('#multimedia').show();
+           var bottom=1000;
+           var top=10000;
+           var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+           var totalCount = count.toString();
+            //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+             requestData={show:$("#ddlViewBy :selected").text(), bottomTime:$("#datepicker").val(),
+             upperTime:$("#enddatepicker").val(),
+             id:totalCount};
+          var finalUrl=url+'tumblr/audio';
+                         $.ajax(finalUrl, {
+                                                     type: 'POST',
+                                                     headers: {
+                                                                    Accept : "application/json; charset=utf-8",
+                                                                    "Content-Type": "application/json; charset=utf-8"
+
+                                                         },
+                                                     dataType:"jsonp",
+                                                                     jsonCallback: "jsonp",
+                                                                     data:requestData,
+                                                         async:false,
+                                                         success: AjaxSucceeded,
+                                                          error: AjaxFailed,
+
+                                          }).done(function(data) {console.log(data);
+                                                                  });;
+
+      setTimeout(function(){
+                 $('#img').hide();
+      var file="audiotumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
+
+              $('#multimedia').append("<h3> <p class=\"text-primary\">Tabular Video Post Data</p></h3>");
+        $.get(file, function(data) {
+            var lines = data.split("\n");
+            var image=-1;
+      //                                      $('#multimedia').append("<tr><th class=\"active\">"+res[0]+"</td><tdclass=\"success\">"+res[1]+
+      //                                                                "</td><tdclass=\"warning\">"+res[2]+"</td><tdclass=\"danger\">"+res[3]+"</td>");
+
+                      $.each(lines, function(n, item) {
+                      if(image==-1)
+                      {
+                                                   $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                      $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
+                                                      "<th class=\"success\">Followers</th>"+
+                                                      "<th class=\"warning\">Post URL</th>"+
+                                                      "</tr>");
+
+                          image=0;
+                      }
+                      if(image==1)
+                                            {
+                                                  $('#multimedia').append('<div> <p class=\"text-primary\">'+item+'</p></div>');
+                                             }
+                      if(item=="photos")
+                                      {
+                                                $('#multimedia').append('</table>');
+                                           $('#multimedia').append("<h3> <p class=\"text-primary\">Audio Posts</p></h3>");
+                                           image=1;
+                                      }
+                      if(image==0)
+                      {
+                                  var res = item.split("break");
+                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+
+                                "<td class=\"warning\"><a href=\""+res[2]+"\">"+res[2]+"</a></td></tr>");
+                      }
+
+
+                    //   $('#slideshow_1').append("<div class=\"slideshow_item\"><div class=\"image\"><a href=\"#\"><img  alt=\"photo 1\" width=\"900\" height=\"400\" src=\""+item+"\""
+                     //   +"/></a></div></div>");
+
+                });
+            }, "text")
+              $('#multimedia').append("</div>");
+              },
+       2000);
+
 
 });
 
 
 $('#text').click(function(){
-        $('#legend').hide();
-d3.select("svg")
-       .remove();
-        $('#multimedia').text('');
-        $('#onemorediv').hide();
-            $('#multimedia').show();
-  var filenew="jun"+"tumblerText"+$("#ddlViewBy :selected").text()+".tsv";
-        $('#multimedia').append("<h3> <p class=\"text-primary\">Text Posts</p></h3>");
-  $.get(filenew, function(data) {
-      var lines = data.split("\n");
-                $.each(lines, function(n, item) {
-                   $('#multimedia').append('<br><br/>');
-                  $('#multimedia').append('<div class=\"bg-warning\"><p >'+item+'</p></div>');
-          });
-      }, "text")
+$('#img').show();
+              $('#legend').hide();
+      d3.select("svg")
+             .remove();
+          $('#multimedia').text('');
+                      $('#onemorediv').hide();
+          $('#multimedia').show();
+           var bottom=1000;
+           var top=10000;
+           var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+           var totalCount = count.toString();
+            //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+             requestData={show:$("#ddlViewBy :selected").text(), bottomTime:$("#datepicker").val(),
+             upperTime:$("#enddatepicker").val(),
+             id:totalCount};
+          var finalUrl=url+'tumblr/text';
+                         $.ajax(finalUrl, {
+                                                     type: 'POST',
+                                                     headers: {
+                                                                    Accept : "application/json; charset=utf-8",
+                                                                    "Content-Type": "application/json; charset=utf-8"
+
+                                                         },
+                                                     dataType:"jsonp",
+                                                                     jsonCallback: "jsonp",
+                                                                     data:requestData,
+                                                         async:false,
+                                                         success: AjaxSucceeded,
+                                                          error: AjaxFailed,
+
+                                          }).done(function(data) {console.log(data);
+                                                                  });;
+
+      setTimeout(function(){
+                 $('#img').hide();
+      var file="texttumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
+
+              $('#multimedia').append("<h3> <p class=\"text-primary\">Tabular Text Post Data</p></h3>");
+        $.get(file, function(data) {
+            var lines = data.split("\n");
+            var image=-1;
+      //                                      $('#multimedia').append("<tr><th class=\"active\">"+res[0]+"</td><tdclass=\"success\">"+res[1]+
+      //                                                                "</td><tdclass=\"warning\">"+res[2]+"</td><tdclass=\"danger\">"+res[3]+"</td>");
+
+                      $.each(lines, function(n, item) {
+                      if(image==-1)
+                      {
+                                                   $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                      $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
+                                                      "<th class=\"success\">Followers</th>"+
+                                                      "<th class=\"warning\">Post URL</th>"+
+                                                      "</tr>");
+
+                          image=0;
+                      }
+                       if(image==1)
+                                            {
+                                                $('#multimedia').append('<br><br/>');
+                                                  $('#multimedia').append('<div class=\"bg-warning\"><p >'+item+'</p></div>');
+                                             }
+                      if(item=="photos")
+                                      {
+                                                $('#multimedia').append('</table>');
+                                           $('#multimedia').append("<h3> <p class=\"text-primary\">Text Posts</p></h3>");
+                                           image=1;
+                                      }
+                      if(image==0)
+                      {
+                                  var res = item.split("break");
+                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+
+                                "<td class=\"warning\"><a href=\""+res[2]+"\">"+res[2]+"</a></td></tr>");
+
+                      }
+
+
+                    //   $('#slideshow_1').append("<div class=\"slideshow_item\"><div class=\"image\"><a href=\"#\"><img  alt=\"photo 1\" width=\"900\" height=\"400\" src=\""+item+"\""
+                     //   +"/></a></div></div>");
+
+                });
+            }, "text")
+              $('#multimedia').append("</div>");
+              },
+       2000);
+
 
 });
 
@@ -286,6 +389,10 @@ var file=totalCount+"phototumblr"+$("#ddlViewBy :selected").text()+".tsv";
 
                     image=0;
                 }
+                 if(image==1)
+                                {
+                                 $('#multimedia').append('<div><div class="image"><a href="#"><p><img    src="'+item+'"</p></a></div></div>');
+                                 }
                 if(item=="photos")
                                 {
                                           $('#multimedia').append('</table>');
@@ -299,10 +406,7 @@ var file=totalCount+"phototumblr"+$("#ddlViewBy :selected").text()+".tsv";
                           "<td class=\"warning\"><a href=\""+res[2]+"\">"+res[2]+"</a></td><td class=\"danger\"><a href=\""+res[3]+"\">"+res[3]+"</a></td></tr>");
                 }
 
-                if(image==1)
-                {
-                 $('#multimedia').append('<div><div class="image"><a href="#"><p><img    src="'+item+'"</p></a></div></div>');
-                 }
+
               //   $('#slideshow_1').append("<div class=\"slideshow_item\"><div class=\"image\"><a href=\"#\"><img  alt=\"photo 1\" width=\"900\" height=\"400\" src=\""+item+"\""
                //   +"/></a></div></div>");
 
@@ -498,7 +602,6 @@ function countryMapUS(data) {
 function jsonp(result)
 {
  console.log(result);
-        alert("coy");
     var json = $.parseJSON(result);
     alert(json);
 }
@@ -519,6 +622,334 @@ function jsonp(result)
 //                alert(result.statusText);
 
     }
+
+ $('#compare').click(function(){
+ var foo = "";
+ $('#multiple :selected').each(function(i, selected){
+   foo+=$(selected).text()+"split";
+ });
+ $('#multimedia').text('');
+     $('#multimedia').show();
+  $('#img').show();
+
+       var bottom=1000;
+       var top=10000;
+       var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+       var totalCount = count.toString();
+        //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+         requestData={show:foo, bottomTime:$("#datepicker").val(),
+         upperTime:$("#enddatepicker").val(),
+         id:totalCount};
+      var finalUrl=url+'compare';
+                     $.ajax(finalUrl, {
+                                                 type: 'POST',
+                                                 headers: {
+                                                                Accept : "application/json; charset=utf-8",
+                                                                "Content-Type": "application/json; charset=utf-8"
+
+                                                     },
+                                                 dataType:"jsonp",
+                                                                 jsonCallback: "jsonp",
+                                                                 data:requestData,
+                                                     async:false,
+                                                     success: AjaxSucceeded,
+                                                      error: AjaxFailed,
+
+                                      }).done(function(data) {console.log(data);
+                                                              });;
+
+
+  setTimeout(function(){
+             $('#img').hide();
+ var file="comparetumblr"+totalCount+".tsv";
+     $.get(file, function(data) {
+         var lines = data.split("\n");
+         var image=10;
+
+                   $.each(lines, function(n, item) {
+
+
+                   if(image==-1)
+                   {
+                                                   $('#one').append("<tr><th class=\"active\">Date</th>"+
+                                                   "<th class=\"success\">Total</th>"+
+                                                   "<th class=\"warning\">Video</th >"+
+                                                    "<th class=\"info\">Audio</th>"+
+                                                      "<th class=\"active\">Text</th>"+
+                                                   "<th class=\"danger\">Photo</th></tr>");
+
+                       image=0;
+                   }
+                    if(image==100)
+                                                                            {
+                                                                             $('#one').append("<tr><td></td><td></td><td></td><td></td></tr>");
+
+                                                                              $('#one').append("<tr><th class=\"active\">"+item+"</th></tr>");
+                                                                             image=-1;
+                                                                            }
+                   if(item=="newline")
+                                      {
+                                     $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                     image=100;
+                                      }
+
+                   if(image==0)
+                   {
+                               var res = item.split("break");
+                             $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+"</td>"+
+                             "<td class=\"warning\">"+res[2]+"</td><td class=\"info\">"+res[3]+"</td>"+
+                             "<td class=\"active\">"+res[4]+"</td><td class=\"danger\">"+res[5]+"</td>");
+                   }
+
+
+
+             });
+
+         }, "text")
+
+
+           },
+   4000);
+ });
+
+ $('#tumblrtrend').click(function(){
+
+ $('#img').show();
+ d3.select("svg")
+        .remove();
+ $('#maindiv').hide();
+       $('#newdiv').hide();
+          $('#onemorediv').show();
+     $('#multimedia').text('');
+         $('#multimedia').show();
+    $('#tweet').text('');
+        $('#positivetweet').text('');
+        $('#negativeTweet').text('');
+          $('#chart_div').text('');
+               $('#chart_div').hide();
+                var bottom=1000;
+                    var top=10000;
+                    var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+                    var totalCount = count.toString();
+                     //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+                      requestData={bottomTime:$("#datepicker").val(),
+                      upperTime:$("#enddatepicker").val(),
+                      id:totalCount};
+                   var finalUrl=url+'tumblr/trends';
+                                  $.ajax(finalUrl, {
+                                                              type: 'POST',
+                                                              headers: {
+                                                                             Accept : "application/json; charset=utf-8",
+                                                                             "Content-Type": "application/json; charset=utf-8"
+
+                                                                  },
+                                                              dataType:"jsonp",
+                                                                              jsonCallback: "jsonp",
+                                                                              data:requestData,
+                                                                  async:false,
+                                                                  success: AjaxSucceeded,
+                                                                   error: AjaxFailed,
+
+                                                   }).done(function(data) {console.log(data);
+                                                                           });;
+
+ setTimeout(function(){
+            $('#img').hide();
+ var file="trendstumblr"+totalCount+".tsv";
+
+   $('#multimedia').append("<h3> <p class=\"text-primary\">TRENDS</p></h3>");
+    $.get(file, function(data) {
+        var lines = data.split("\n");
+        var image=-1;
+
+                  $.each(lines, function(n, item) {
+                  if(image==-1)
+                  {
+                                               $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                  $('#one').append("<tr><th class=\"active\">SHOW</th>"+
+                                                  "<th class=\"success\">Count</th></tr>");
+
+                      image=0;
+                  }
+                  if(image==0)
+                  {
+                              var res = item.split("newvalue");
+                            $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+"</td></tr>");
+                  }
+
+
+            });
+            }, "text")
+
+           },
+   3000);
+ });
+
+
+
+$('#twittertrend').click(function(){
+
+ $('#img').show();
+ d3.select("svg")
+        .remove();
+ $('#maindiv').hide();
+       $('#newdiv').hide();
+          $('#onemorediv').show();
+     $('#multimedia').text('');
+         $('#multimedia').show();
+    $('#tweet').text('');
+        $('#positivetweet').text('');
+        $('#negativeTweet').text('');
+          $('#chart_div').text('');
+               $('#chart_div').hide();
+                var bottom=1000;
+                    var top=10000;
+                    var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+                    var totalCount = count.toString();
+                     //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+                      requestData={bottomTime:$("#datepicker").val(),
+                      upperTime:$("#enddatepicker").val(),
+                      id:totalCount};
+                   var finalUrl=url+'twitter/trends';
+                                  $.ajax(finalUrl, {
+                                                              type: 'POST',
+                                                              headers: {
+                                                                             Accept : "application/json; charset=utf-8",
+                                                                             "Content-Type": "application/json; charset=utf-8"
+
+                                                                  },
+                                                              dataType:"jsonp",
+                                                                              jsonCallback: "jsonp",
+                                                                              data:requestData,
+                                                                  async:false,
+                                                                  success: AjaxSucceeded,
+                                                                   error: AjaxFailed,
+
+                                                   }).done(function(data) {console.log(data);
+                                                                           });;
+
+ setTimeout(function(){
+            $('#img').hide();
+ var file="trendstwitter"+totalCount+".tsv";
+
+   $('#multimedia').append("<h3> <p class=\"text-primary\">TRENDS</p></h3>");
+    $.get(file, function(data) {
+        var lines = data.split("\n");
+        var image=-1;
+
+                  $.each(lines, function(n, item) {
+                  if(image==-1)
+                  {
+                                               $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                  $('#one').append("<tr><th class=\"active\">SHOW</th>"+
+                                                  "<th class=\"success\">Count</th></tr>");
+
+                      image=0;
+                  }
+                  if(image==0)
+                  {
+                              var res = item.split("newvalue");
+                            $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+"</td></tr>");
+                  }
+
+
+            });
+            }, "text")
+
+           },
+   3000);
+ });
+
+
+ $('#twittercompare').click(function(){
+  var foo = "";
+  $('#multiple :selected').each(function(i, selected){
+    foo+=$(selected).text()+"split";
+  });
+  $('#multimedia').text('');
+      $('#multimedia').show();
+   $('#img').show();
+
+        var bottom=1000;
+        var top=10000;
+        var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+        var totalCount = count.toString();
+         //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+          requestData={show:foo, bottomTime:$("#datepicker").val(),
+          upperTime:$("#enddatepicker").val(),
+          id:totalCount};
+       var finalUrl=url+'compare/twitter';
+                      $.ajax(finalUrl, {
+                                                  type: 'POST',
+                                                  headers: {
+                                                                 Accept : "application/json; charset=utf-8",
+                                                                 "Content-Type": "application/json; charset=utf-8"
+
+                                                      },
+                                                  dataType:"jsonp",
+                                                                  jsonCallback: "jsonp",
+                                                                  data:requestData,
+                                                      async:false,
+                                                      success: AjaxSucceeded,
+                                                       error: AjaxFailed,
+
+                                       }).done(function(data) {console.log(data);
+                                                               });;
+
+
+   setTimeout(function(){
+              $('#img').hide();
+  var file="comparetwitter"+totalCount+".tsv";
+      $.get(file, function(data) {
+          var lines = data.split("\n");
+          var image=10;
+
+                    $.each(lines, function(n, item) {
+
+
+                    if(image==-1)
+                    {
+                                                                                           $('#one').append("<tr><th class=\"active\">Date</th>"+
+                                                                                              "<th class=\"success\">Total</th>"+
+                                                                                               "<th class=\"warning\">Photo</th>"+
+                                                                                                      "<th class=\"info\">Text</th>"+
+                                                                                                                           "<th class=\"active\">Link</th></tr>");
+
+                        image=0;
+                    }
+                     if(image==100)
+                                                                             {
+                                                                              $('#one').append("<tr><td></td><td></td><td></td><td></td></tr>");
+
+                                                                               $('#one').append("<tr><th class=\"active\">"+item+"</th></tr>");
+                                                                              image=-1;
+                                                                             }
+                    if(item=="newline")
+                                       {
+                                      $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                      image=100;
+                                       }
+
+                    if(image==0)
+                    {
+                                var res = item.split("break");
+                              $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+"</td>"+
+                              "<td class=\"warning\">"+res[2]+"</td><td class=\"info\">"+res[3]+"</td>"+
+                              "<td class=\"active\">"+res[4]+"</td></tr>");
+                    }
+
+
+
+              });
+
+          }, "text")
+
+
+            },
+    4000);
+  });
+
+
 
 $('#graph').click(function(){
  $('#multimedia').text('');
@@ -591,7 +1022,6 @@ var file="statstumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
        }, "text")
 
 var file="graphtumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv"
-alert(file);
          showGraph(file);
          },
   3000);
@@ -748,6 +1178,8 @@ d3.select("svg")
 $('#sentiment').click(function(){
 $('#multimedia').text('');
      $('#multimedia').show();
+                 $('#onemorediv').hide();
+
   $('#img').show();
 
        var bottom=1000;
