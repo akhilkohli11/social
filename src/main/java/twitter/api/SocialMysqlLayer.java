@@ -330,7 +330,6 @@ public class SocialMysqlLayer {
             for(String show :showNames) {
                 statsOutput.write(show+"\t");
             }
-            statsOutput.write("X");
             statsOutput.newLine();
 
             for(Map.Entry<String,Map<String,Integer>> entry:datahsowCountMap.entrySet())
@@ -348,7 +347,6 @@ public class SocialMysqlLayer {
 
                     }
                 }
-                statsOutput.write("0");
                 statsOutput.newLine();
             }
 
