@@ -101,7 +101,7 @@ $('#videos').click(function(){
                                                       $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
                                                                                                       "<th class=\"danger\">Note Count</th>"+
 
-                                                      "<th class=\"success\">Followers</th>"+
+                                                      "<th class=\"success\">Blog Like Count</th>"+
                                                       "<th class=\"warning\">Post URL</th>"+
                                                       "</tr>");
 
@@ -190,7 +190,7 @@ $('#img').show();
                                                       $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
                                                                                                                                                             "<th class=\"danger\">Note Count</th>"+
 
-                                                      "<th class=\"success\">Followers</th>"+
+                                                      "<th class=\"success\">Blog Like Count</th>"+
                                                       "<th class=\"warning\">Post URL</th>"+
                                                       "</tr>");
 
@@ -278,7 +278,7 @@ $('#img').show();
                                                    $('#multimedia').append('<table id="one" class="table table-condensed">');
                                                       $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
                                                                                                                                                                                                                   "<th class=\"danger\">Note Count</th>"+
-                                                      "<th class=\"success\">Followers</th>"+
+                                                      "<th class=\"success\">Blog Like Count</th>"+
                                                       "<th class=\"warning\">Post URL</th>"+
                                                       "</tr>");
 
@@ -389,7 +389,7 @@ var file=totalCount+"phototumblr"+$("#ddlViewBy :selected").text()+".tsv";
                                              $('#multimedia').append('<table id="one" class="table table-condensed">');
                                                 $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
                                                 "<th class=\"danger\">Note Count</th>"+
-                                                "<th class=\"success\">Followers</th>"+
+                                                "<th class=\"success\">Blog Like Count</th>"+
                                                 "<th class=\"warning\">Post URL</th>"+
                                                 "<th class=\"danger\">Photo Link</th></tr>");
 
