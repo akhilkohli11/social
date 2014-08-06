@@ -1007,9 +1007,16 @@ public class TumblrSqlLayer {
             {
                 statsOutput.write(entry.getKey().replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "")+"\t");
                 Map<String,Integer> map=entry.getValue();
-                for(Map.Entry<String,Integer> newentry : map.entrySet())
+                for(String show : showNames)
                 {
-                    statsOutput.write(newentry.getValue()+"\t");
+                    if(map.containsKey(show)) {
+                        statsOutput.write(map.get(show) + "\t");
+                    }
+                    else
+                    {
+                        statsOutput.write("0" + "\t");
+
+                    }
                 }
                 statsOutput.write("0");
                 statsOutput.newLine();
