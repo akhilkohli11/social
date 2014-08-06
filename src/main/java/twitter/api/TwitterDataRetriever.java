@@ -242,6 +242,7 @@ public class TwitterDataRetriever {
                     e.printStackTrace();
                 }
             }
+            Thread.sleep(3000);
             hosebirdClient.reconnect();
         }
 

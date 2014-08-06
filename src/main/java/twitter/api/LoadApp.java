@@ -26,6 +26,7 @@
                 e.printStackTrace();
                 while (count<100)
                 {
+                    Thread.sleep(3000);
                     initialize();
                 }
             }
