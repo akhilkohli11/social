@@ -711,10 +711,45 @@ function jsonp(result)
 
              });
 
-         }, "text")
+         $('#multimedia').append("<br/><br/></div>");
+                                         $('#multimedia').append('<div id="newboy" class="newgraph-svg-component">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                                         +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                                                            +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+                                                            var count=0;
+                                        $('#multiple :selected').each(function(i, selected){
+                                        count++;
+                                       if(count==1)
+                                       {
+                                            $('#newboy').append('<span class="foo" style="background-color:#82CAFA;">'+$(selected).text()
+                                            +'</span>&nbsp;&nbsp;');
+                                            }
+                                             if(count==2)
+                                           {
+                                                   $('#newboy').append('<span class="foo" style="background-color:#FF8C00;">'+$(selected).text()
+                                                    +'</span>&nbsp;&nbsp;');
+                                           }
+                                      if(count==3)
+                                                                        {
+                                                                                $('#newboy').append('<span class="foo" style="background-color:#7FE817;">'+$(selected).text()
+                                                                                 +'</span>&nbsp;&nbsp;');
+                                                                        }
+                                        if(count==4)
+                                                                          {
+                                                                                  $('#newboy').append('<span class="foo" style="background-color:#DC143C;">'+$(selected).text()
+                                                                                   +'</span>&nbsp;&nbsp;');
+                                                                          }
+                                       if(count==5)
+                                                                         {
+                                                                                 $('#newboy').append('<span class="foo" style="background-color:#B19CD9;">'+$(selected).text()
+                                                                                  +'</span>&nbsp;&nbsp;');
+                                                                         }
+                                          });
 
+                  }, "text")
 
-           },
+                var file="comparetumblrgraph"+totalCount+".tsv";
+                         showGraph(file);
+                    },
    4000);
  });
 
@@ -1087,7 +1122,7 @@ d3.select("svg")
        .remove();
        var margin = {top: 20, right: 80, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    height = 300 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format("%Y%m%d").parse;
 
@@ -1153,8 +1188,7 @@ d3.tsv(fileNme, function(error, data) {
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
-      .style("text-anchor", "start")
-      .text("Post");
+      .style("text-anchor", "start");
 
   var city = svg.selectAll(".city")
       .data(cities)
@@ -1378,8 +1412,8 @@ function showGraph(fileNme)
 d3.select("svg")
        .remove();
        var margin = {top: 20, right: 80, bottom: 30, left: 50},
-    width = 1500 - margin.left - margin.right,
-    height = 700 - margin.top - margin.bottom;
+    width = 1200 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format("%Y%m%d").parse;
 
@@ -1394,12 +1428,12 @@ var color = d3.scale.category10();
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
-             .ticks(5);
+     .ticks(5);
 
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
-                 .ticks(5);
+      .ticks(5);
 
 var line = d3.svg.line()
     .interpolate("basis")
@@ -1448,8 +1482,8 @@ d3.tsv(fileNme, function(error, data) {
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
-      .style("text-anchor", "start")
-      .text("Post");
+      .style("text-anchor", "start");
+
 
   var city = svg.selectAll(".city")
       .data(cities)

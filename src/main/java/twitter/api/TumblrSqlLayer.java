@@ -937,4 +937,107 @@ public class TumblrSqlLayer {
 
         }
     }
+
+    public void loadComparisionGraphTumblr(String[] showNames,  String bottomtime,String uppertime, String id) throws Exception{
+        BufferedWriter statsOutput=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newFileName="comparetumblrgraph"+id+".tsv";
+        try {
+            File newFile = new File(fileDirectory+newFileName);
+            newFile.createNewFile();
+
+            statsOutput = new BufferedWriter(new FileWriter(newFile));
+
+
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            int loopcount=0;
+            Map<String,Map<String,Integer>> datahsowCountMap=new LinkedHashMap<String, Map<String, Integer>>();
+            for(String show : showNames) {
+                String showName = TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+                loopcount++;
+
+                String table = new String(showName);
+                table = table.trim().toLowerCase().replaceAll(" ", "").replaceAll("\"", "").replaceAll("'", "");
+                String query = "select count,created_on  from SHOW_COUNT_" + table + " where   socialType=? and created_on >=? and created_on<=? and type=? order by created_on asc";
+                preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, "tumblr");
+                preparedStatement.setString(2, bottomtime);
+                preparedStatement.setString(3, uppertime);
+                preparedStatement.setString(4, "total");
+                rs = preparedStatement.executeQuery();
+                int count = 1;
+                //STEP 5: Extract data from result set
+                int newcount = 0;
+                String oldCreate = "";
+
+                while (rs.next()) {
+                    String createdOn=rs.getString("created_on");
+                    int total=Integer.parseInt(rs.getString("count"));
+                    Map<String,Integer> showCountMap;
+                    if(datahsowCountMap.get(createdOn)!=null)
+                    {
+                        showCountMap=datahsowCountMap.get(createdOn);
+                    }
+                    else
+                    {
+                        showCountMap=new LinkedHashMap<String, Integer>();
+
+                    }
+                    showCountMap.put(show,total);
+                    datahsowCountMap.put(createdOn,showCountMap);
+
+                }
+
+
+            }
+
+            statsOutput.write("date" + "\t");
+            for(String show :showNames) {
+                statsOutput.write(show+"\t");
+            }
+            statsOutput.write("X");
+            statsOutput.newLine();
+
+            for(Map.Entry<String,Map<String,Integer>> entry:datahsowCountMap.entrySet())
+            {
+                statsOutput.write(entry.getKey().replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "")+"\t");
+                Map<String,Integer> map=entry.getValue();
+                for(Map.Entry<String,Integer> newentry : map.entrySet())
+                {
+                    statsOutput.write(newentry.getValue()+"\t");
+                }
+                statsOutput.write("0");
+                statsOutput.newLine();
+            }
+
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            statsOutput.close();
+
+        }
+    }
+
 }

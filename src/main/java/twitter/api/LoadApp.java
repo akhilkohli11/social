@@ -12,9 +12,23 @@
         public static final String MYSQL_URL = "jdbc:mysql://localhost/social?"
                 + "user=root";
        public static SocialMysqlLayer socialMysqlLayer;
+        static int count=0;
         public static void initialize() throws Exception
         {
-            TwitterDataRetriever.getTweets(5000,socialMysqlLayer);
+
+            try {
+                TwitterDataRetriever.getTweets(5000, socialMysqlLayer);
+                count++;
+            }
+            catch (Exception e)
+            {
+               System.out.println("Twitter stopped Twitter stopped");
+                e.printStackTrace();
+                while (count<100)
+                {
+                    initialize();
+                }
+            }
 
         }
         public static void  init() throws Exception{

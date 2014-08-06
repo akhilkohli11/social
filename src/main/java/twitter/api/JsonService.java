@@ -106,6 +106,8 @@ public class JsonService {
         String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
         String[] showNames= showList.split("split");
        NewJumblrMain.getTumblrSqlLayer().loadComparision(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+        NewJumblrMain.getTumblrSqlLayer().loadComparisionGraphTumblr(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+
 
         return null;
     }

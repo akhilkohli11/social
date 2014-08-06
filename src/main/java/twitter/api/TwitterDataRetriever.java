@@ -122,57 +122,60 @@ public class TwitterDataRetriever {
         Client hosebirdClient = builder.build();
 // Attempts to establish a connection.
         hosebirdClient.connect();
-        Extractor extractor = new Extractor();
-        String tweetConcat = "";
-        int tweetID = count;
-        java.util.Date date = new java.util.Date();
-        int failcount = 0;
+        int retrycount=0;
+        while (retrycount++<20) {
 
-        while (!hosebirdClient.isDone()) {
-            String msg = msgQueue.take();
+            Extractor extractor = new Extractor();
+            String tweetConcat = "";
+            int tweetID = count;
+            java.util.Date date = new java.util.Date();
+            int failcount = 0;
+            while (!hosebirdClient.isDone()) {
+                String msg = msgQueue.take();
 
-            try {
-                msg.getBytes("UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                continue;
-            }
-            tweetID++;
-            JSONObject jsonObject = new JSONObject(msg);
-            String createdAt = jsonObject.get("created_at").toString();
-            String tweettext = jsonObject.get("text").toString();
-            String lang = jsonObject.get("lang").toString();
-            String newloc = jsonObject.get("user").toString();
-            String selectedCity = null;
-            String selectedCountry = null;
-
-            JSONObject user = new JSONObject(newloc);
-           A: if (user.has("location")) {
-
-                String location = user.get("location").toString();
-                if (location.trim().equals("")) {
-                    break A;
+                try {
+                    msg.getBytes("UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    continue;
                 }
-                int found = 0;
-                for (String city : cityListUs) {
-                    city = city.trim();
-                    location = location.trim();
-                    if (city.contains(location)) {
-                        selectedCity = city;
-                        //output.write(location1);
-                        //output.newLine();
+                tweetID++;
+                JSONObject jsonObject = new JSONObject(msg);
+                String createdAt = jsonObject.get("created_at").toString();
+                String tweettext = jsonObject.get("text").toString();
+                String lang = jsonObject.get("lang").toString();
+                String newloc = jsonObject.get("user").toString();
+                String selectedCity = null;
+                String selectedCountry = null;
+
+                JSONObject user = new JSONObject(newloc);
+                A:
+                if (user.has("location")) {
+
+                    String location = user.get("location").toString();
+                    if (location.trim().equals("")) {
+                        break A;
                     }
-                }
-                if (selectedCity == null) {
+                    int found = 0;
                     for (String city : cityListUs) {
                         city = city.trim();
                         location = location.trim();
-                        if (location.contains(city)) {
+                        if (city.contains(location)) {
                             selectedCity = city;
+                            //output.write(location1);
+                            //output.newLine();
                         }
+                    }
+                    if (selectedCity == null) {
+                        for (String city : cityListUs) {
+                            city = city.trim();
+                            location = location.trim();
+                            if (location.contains(city)) {
+                                selectedCity = city;
+                            }
 
+                        }
                     }
                 }
-            }
                 if (!lang.toLowerCase().equals("en")) {
                     continue;
                 }
@@ -239,9 +242,11 @@ public class TwitterDataRetriever {
                     e.printStackTrace();
                 }
             }
+            hosebirdClient.reconnect();
+        }
 
             hosebirdClient.stop();
-            return tweetConcat;
+            return "ok";
 
         }
 
