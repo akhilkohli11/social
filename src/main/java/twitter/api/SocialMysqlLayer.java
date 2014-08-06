@@ -44,11 +44,11 @@ public class SocialMysqlLayer {
                 populateShowWiseTable(entry.getKey(), "twitter", "total", entry.getValue(), date);
                 populateMainTable(entry.getKey(), "twitter", "total", entry.getValue(), date);
                 populateShowWiseTable(entry.getKey(), "twitter", "photo", showNameToPhotoTweet.get(entry.getKey()), date);
-                populateMainTable(entry.getKey(), "twitter", "photo", showNameToPhotoTweet.get(entry.getKey()), date);
+                //populateMainTable(entry.getKey(), "twitter", "photo", showNameToPhotoTweet.get(entry.getKey()), date);
                 populateShowWiseTable(entry.getKey(), "twitter", "links", showNameToLinkTweet.get(entry.getKey()), date);
-                populateMainTable(entry.getKey(), "twitter", "links", showNameToLinkTweet.get(entry.getKey()), date);
+                //populateMainTable(entry.getKey(), "twitter", "links", showNameToLinkTweet.get(entry.getKey()), date);
                 populateShowWiseTable(entry.getKey(), "twitter", "text", showNameToTextTweet.get(entry.getKey()), date);
-                populateMainTable(entry.getKey(), "twitter", "text", showNameToTextTweet.get(entry.getKey()), date);
+                //opulateMainTable(entry.getKey(), "twitter", "text", showNameToTextTweet.get(entry.getKey()), date);
 
             }
             date = new DateTime(date).minusDays(1).toDate();
@@ -84,13 +84,13 @@ public class SocialMysqlLayer {
                 populateShowWiseTable(entry.getKey(),"tumblr","total",entry.getValue(),date);
                 populateMainTable(entry.getKey(),"tumblr","total",entry.getValue(),date);
                 populateShowWiseTable(entry.getKey(),"tumblr","photo",showNameToPhotoTweet.get(entry.getKey()),date);
-                populateMainTable(entry.getKey(),"tumblr","photo",showNameToPhotoTweet.get(entry.getKey()),date);
+                //populateMainTable(entry.getKey(),"tumblr","photo",showNameToPhotoTweet.get(entry.getKey()),date);
                 populateShowWiseTable(entry.getKey(),"tumblr","video",showNameToLinkTweet.get(entry.getKey()),date);
-                populateMainTable(entry.getKey(),"tumblr","video",showNameToLinkTweet.get(entry.getKey()),date);
+                //populateMainTable(entry.getKey(),"tumblr","video",showNameToLinkTweet.get(entry.getKey()),date);
                 populateShowWiseTable(entry.getKey(),"tumblr","text",showNameTEXTTweet.get(entry.getKey()),date);
-                populateMainTable(entry.getKey(),"tumblr","text",showNameTEXTTweet.get(entry.getKey()),date);
+                //populateMainTable(entry.getKey(),"tumblr","text",showNameTEXTTweet.get(entry.getKey()),date);
                 populateShowWiseTable(entry.getKey(),"tumblr","audio",showNameToLinkTweet.get(entry.getKey()),date);
-                populateMainTable(entry.getKey(),"tumblr","audio",showNameAUDIOTweet.get(entry.getKey()),date);
+                //populateMainTable(entry.getKey(),"tumblr","audio",showNameAUDIOTweet.get(entry.getKey()),date);
 
             }
             date = new DateTime(date).minusDays(1).toDate();
