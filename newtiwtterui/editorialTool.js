@@ -631,9 +631,16 @@ function jsonp(result)
 
  $('#compare').click(function(){
  var foo = "";
+ var totcount=0;
  $('#multiple :selected').each(function(i, selected){
    foo+=$(selected).text()+"split";
- });
+   totcount++;
+   });
+   if(totcount>5)
+   {
+     alert("Maximum 5 shows can be compared");
+     return;
+   }
  $('#multimedia').text('');
      $('#multimedia').show();
   $('#img').show();
