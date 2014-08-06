@@ -99,6 +99,8 @@ $('#videos').click(function(){
                       {
                                                    $('#multimedia').append('<table id="one" class="table table-condensed">');
                                                       $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
+                                                                                                      "<th class=\"danger\">Note Count</th>"+
+
                                                       "<th class=\"success\">Followers</th>"+
                                                       "<th class=\"warning\">Post URL</th>"+
                                                       "</tr>");
@@ -119,8 +121,8 @@ $('#videos').click(function(){
                       if(image==0)
                       {
                                   var res = item.split("break");
-                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+
-                                "<td class=\"warning\"><a href=\""+res[2]+"\">"+res[2]+"</a></td></tr>");
+                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"danger\">"+res[1]+"</td><td class=\"success\">"+res[2]+
+                                "<td class=\"warning\"><a href=\""+res[3]+"\">"+res[3]+"</a></td></tr>");
                       }
 
                     //   $('#slideshow_1').append("<div class=\"slideshow_item\"><div class=\"image\"><a href=\"#\"><img  alt=\"photo 1\" width=\"900\" height=\"400\" src=\""+item+"\""
@@ -186,6 +188,8 @@ $('#img').show();
                       {
                                                    $('#multimedia').append('<table id="one" class="table table-condensed">');
                                                       $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
+                                                                                                                                                            "<th class=\"danger\">Note Count</th>"+
+
                                                       "<th class=\"success\">Followers</th>"+
                                                       "<th class=\"warning\">Post URL</th>"+
                                                       "</tr>");
@@ -205,8 +209,8 @@ $('#img').show();
                       if(image==0)
                       {
                                   var res = item.split("break");
-                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+
-                                "<td class=\"warning\"><a href=\""+res[2]+"\">"+res[2]+"</a></td></tr>");
+                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"danger\">"+res[1]+"</td></td><td class=\"success\">"+res[2]+
+                                "<td class=\"warning\"><a href=\""+res[3]+"\">"+res[3]+"</a></td></tr>");
                       }
 
 
@@ -273,6 +277,7 @@ $('#img').show();
                       {
                                                    $('#multimedia').append('<table id="one" class="table table-condensed">');
                                                       $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
+                                                                                                                                                                                                                  "<th class=\"danger\">Note Count</th>"+
                                                       "<th class=\"success\">Followers</th>"+
                                                       "<th class=\"warning\">Post URL</th>"+
                                                       "</tr>");
@@ -293,8 +298,8 @@ $('#img').show();
                       if(image==0)
                       {
                                   var res = item.split("break");
-                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+
-                                "<td class=\"warning\"><a href=\""+res[2]+"\">"+res[2]+"</a></td></tr>");
+                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"danger\">"+res[1]+"</td></td><td class=\"success\">"+res[2]+
+                                "<td class=\"warning\"><a href=\""+res[3]+"\">"+res[3]+"</a></td></tr>");
 
                       }
 
@@ -383,6 +388,7 @@ var file=totalCount+"phototumblr"+$("#ddlViewBy :selected").text()+".tsv";
                 {
                                              $('#multimedia').append('<table id="one" class="table table-condensed">');
                                                 $('#one').append("<tr><th class=\"active\">Blog Name</th>"+
+                                                "<th class=\"danger\">Note Count</th>"+
                                                 "<th class=\"success\">Followers</th>"+
                                                 "<th class=\"warning\">Post URL</th>"+
                                                 "<th class=\"danger\">Photo Link</th></tr>");
@@ -402,8 +408,8 @@ var file=totalCount+"phototumblr"+$("#ddlViewBy :selected").text()+".tsv";
                 if(image==0)
                 {
                             var res = item.split("break");
-                          $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+
-                          "<td class=\"warning\"><a href=\""+res[2]+"\">"+res[2]+"</a></td><td class=\"danger\"><a href=\""+res[3]+"\">"+res[3]+"</a></td></tr>");
+                          $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"danger\">"+res[1]+"</td><td class=\"success\">"+res[2]+
+                          "<td class=\"warning\"><a href=\""+res[3]+"\">"+res[3]+"</a></td><td class=\"danger\"><a href=\""+res[4]+"\">"+res[4]+"</a></td></tr>");
                 }
 
 
@@ -863,9 +869,16 @@ $('#twittertrend').click(function(){
 
  $('#twittercompare').click(function(){
   var foo = "";
+  var totcount=0;
   $('#multiple :selected').each(function(i, selected){
     foo+=$(selected).text()+"split";
+    totcount++;
   });
+  if(totcount>5)
+  {
+    alert("Maximum 5 shows can be compared");
+    return;
+  }
   $('#multimedia').text('');
       $('#multimedia').show();
    $('#img').show();
@@ -941,10 +954,44 @@ $('#twittertrend').click(function(){
 
 
               });
+                 $('#multimedia').append("<br/><br/></div>");
+                                 $('#multimedia').append('<div id="newboy" class="newgraph-svg-component">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                                 +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                                                    +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+                                                    var count=0;
+                                $('#multiple :selected').each(function(i, selected){
+                                count++;
+                               if(count==1)
+                               {
+                                    $('#newboy').append('<span class="foo" style="background-color:#82CAFA;">'+$(selected).text()
+                                    +'</span>&nbsp;&nbsp;');
+                                    }
+                                     if(count==2)
+                                   {
+                                           $('#newboy').append('<span class="foo" style="background-color:#FF8C00;">'+$(selected).text()
+                                            +'</span>&nbsp;&nbsp;');
+                                   }
+                              if(count==3)
+                                                                {
+                                                                        $('#newboy').append('<span class="foo" style="background-color:#7FE817;">'+$(selected).text()
+                                                                         +'</span>&nbsp;&nbsp;');
+                                                                }
+                                if(count==4)
+                                                                  {
+                                                                          $('#newboy').append('<span class="foo" style="background-color:#DC143C;">'+$(selected).text()
+                                                                           +'</span>&nbsp;&nbsp;');
+                                                                  }
+                               if(count==5)
+                                                                 {
+                                                                         $('#newboy').append('<span class="foo" style="background-color:#B19CD9;">'+$(selected).text()
+                                                                          +'</span>&nbsp;&nbsp;');
+                                                                 }
+                                  });
 
           }, "text")
 
-
+        var file="comparetwittergraph"+totalCount+".tsv";
+                 showGraph(file);
             },
     4000);
   });
@@ -1016,9 +1063,12 @@ var file="statstumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
 
            });
             $('#multimedia').append("<br/><br/></div>");
-                   $('#multimedia').append('<div id="newboy" ><div class="foo" style="background-color:#82CAFA;">Total</div><br>'+
-                    '<div class="foo" style="background-color:#B19CD9;">Photo</div><br><div class="foo" style="background-color:#DC143C;">Text</div><br>'+
-                     '<div class="foo" style="background-color:#7FE817;">Audio</div><br><div class="foo" style="background-color:#FF8C00;">Video</div><br>');
+                   $('#multimedia').append('<div id="newboy" class="newgraph-svg-component">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                   +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                                      +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                   +'<span class="foo" style="background-color:#82CAFA;">Total</span>&nbsp;&nbsp;'+
+                    '<span class="foo" style="background-color:#B19CD9;">Photo</span>&nbsp;&nbsp;<span class="foo" style="background-color:#DC143C;">Text</span>'+
+                     '&nbsp;&nbsp;<span class="foo" style="background-color:#7FE817;">Audio</span>&nbsp;&nbsp;<span class="foo" style="background-color:#FF8C00;">Video</span>');
        }, "text")
 
 var file="graphtumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv"
@@ -1067,6 +1117,7 @@ var svg = d3.select("body").append("svg")
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 d3.tsv(fileNme, function(error, data) {
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
 
@@ -1322,129 +1373,13 @@ d3.select("svg")
 
 
 
-
-function drawRegionsMap() {
-
-            var randomNum = Math.floor(Math.random() * 100);
-
-                      var data = google.visualization.arrayToDataTable([
-                        ['Country', 'Popularity'],
-                        ['Germany', Math.floor(Math.random() * 100)],
-                        ['United States', Math.floor(Math.random() * 1000)],
-                        ['Brazil', Math.floor(Math.random() * 300)],
-                        ['Canada', Math.floor(Math.random() * 500)],
-                        ['France', Math.floor(Math.random() * 100)],
-                        ['RU', Math.floor(Math.random() * 600)],
-                        ['INDIA', Math.floor(Math.random() * 400)]
-
-
-
-                      ]);
-
-                      if($("#ddlViewBy :selected").text()=="Mahabharat")
-                                      {
-                                            var data = google.visualization.arrayToDataTable([
-                                              ['Country', 'Popularity'],
-                                              ['Germany', 200],
-                                              ['United States', 2000],
-                                              ['Brazil', 100],
-                                              ['Canada', 10],
-                                              ['France', 10],
-                                              ['RU', 500],
-                                              ['INDIA', 10000]
-
-                                            ]);
-                                            }
-
-                                                      if($("#ddlViewBy :selected").text()=="BalikaVadhu")
-                                                      {
-                                                            var data = google.visualization.arrayToDataTable([
-                                                              ['Country', 'Popularity'],
-                                                              ['Germany', 10],
-                                                              ['United States', 200],
-                                                              ['Brazil', 5],
-                                                              ['Canada', 10],
-                                                              ['France', 10],
-                                                              ['RU', 5],
-                                                              ['INDIA', 10000]
-
-                                                            ]);
-                                                            }
-
- if($("#ddlViewBy :selected").text()=="TheCondorHeroes")
-                                                      {
-                                                            var data = google.visualization.arrayToDataTable([
-                                                              ['Country', 'Popularity'],
-                                                              ['Germany', 10],
-                                                              ['United States', 200],
-                                                              ['Brazil', 5],
-                                                              ['Canada', 10],
-                                                              ['France', 10],
-                                                              ['RU', 5],
-                                                              ['China', 10000]
-
-                                                            ]);
-                                                            }
-                         if($("#ddlViewBy :selected").text()=="BuBuJingQing")
-                                                                            {
-                                                                                  var data = google.visualization.arrayToDataTable([
-                                                                                    ['Country', 'Popularity'],
-                                                                                   ['Germany', 10],
-                                                                                    ['United States', 100],
-                                                                                    ['Brazil', 5],
-                                                                                    ['Canada', 10],
-                                                                                    ['France', 10],
-                                                                                    ['RU', 5],
-                                                                                    ['China', 10000]
-
-                                                                                  ]);
-                                                                                  }
-                          if($("#ddlViewBy :selected").text()=="LeJunKai")
-                                                                             {
-                                                                                   var data = google.visualization.arrayToDataTable([
-                                                                                     ['Country', 'Popularity'],
-                                                                                     ['Germany', 10],
-                                                                                     ['United States', 80],
-                                                                                     ['Brazil', 5],
-                                                                                     ['Canada', 10],
-                                                                                     ['France', 10],
-                                                                                     ['RU', 5],
-                                                                                     ['China', 10000]
-
-                                                                                   ]);
-                                                                                   }
-
-
-                      var options = {};
-
-                      var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
-                      chart.draw(data, options);
-
-
-
-}
-
-				$("#wordcloud2").awesomeCloud({
-					"size" : {
-						"grid" : 9,
-						"factor" : 1
-					},
-					"options" : {
-						"color" : "random-dark",
-						"rotationRatio" : 0.35
-					},
-					"font" : "'Times New Roman', Times, serif",
-					"shape" : "circle"
-				});
-
-
 function showGraph(fileNme)
 {
 d3.select("svg")
        .remove();
        var margin = {top: 20, right: 80, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 1500 - margin.left - margin.right,
+    height = 700 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format("%Y%m%d").parse;
 
@@ -1458,11 +1393,13 @@ var color = d3.scale.category10();
 
 var xAxis = d3.svg.axis()
     .scale(x)
-    .orient("bottom");
+    .orient("bottom")
+             .ticks(5);
 
 var yAxis = d3.svg.axis()
     .scale(y)
-    .orient("left");
+    .orient("left")
+                 .ticks(5);
 
 var line = d3.svg.line()
     .interpolate("basis")
@@ -1472,6 +1409,7 @@ var line = d3.svg.line()
 var svg = d3.select("body").append("tweet").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+     .attr("class", "graph-svg-component")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 //var fileNme="jun7to14KeepingUpWiththeKardashians.tsv";
@@ -1522,6 +1460,13 @@ d3.tsv(fileNme, function(error, data) {
       .attr("class", "line")
       .attr("d", function(d) { return line(d.values); })
       .style("stroke", function(d) { return color(d.name); });
+
+      legend = svg.append("g")
+          .attr("class","legend")
+          .attr("transform","translate(50,30)")
+          .style("font-size","12px")
+          .call(d3.legend)
+
 
   city.append("text")
       .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
