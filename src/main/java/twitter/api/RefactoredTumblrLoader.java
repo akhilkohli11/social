@@ -38,7 +38,7 @@ public class RefactoredTumblrLoader {
         int limit =0;
         if(initalCount==0)
         {
-            limit=700;
+            limit=1000;
         }
         else
         {
@@ -132,11 +132,11 @@ public class RefactoredTumblrLoader {
             String name=post.getBlogName();
             Blog blog=client.blogInfo(name);
             Long id=post.getId();
+            int likes=Integer.parseInt(post.getNoteCount().toString());
             String type="video";
             QuotePost videoPostNEw=(QuotePost)post;
             String url=videoPostNEw.getSourceUrl();
             String time=post.getDateGMT();
-            int likes=blog.getFollowersCount();
             int followers=blog.getLikeCount();
             tumblrSqlLayer.populateTumblrData(id,name,videoPostNEw.getText(),showName,videoPostNEw.getSourceTitle(),official,"quote",0,likes,followers,0,
                     "",time,url,post.getPostUrl());
@@ -152,15 +152,16 @@ public class RefactoredTumblrLoader {
             String name=post.getBlogName();
             Blog blog=client.blogInfo(name);
             Long id=post.getId();
+            int likes=Integer.parseInt(post.getNoteCount().toString());
             String type="video";
             VideoPost videoPostNEw=(VideoPost)post;
             String url=videoPostNEw.getThumbnailUrl();
             String time=post.getDateGMT();
+            List<Note> notesList=post.getNotes();
             for(Video video : videoPostNEw.getVideos())
             {
                 int width=video.getWidth();
                 String embedCode=video.getEmbedCode();
-                int likes=blog.getFollowersCount();
                 int followers=blog.getLikeCount();
                 tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"video",0,likes,followers,width,
                         embedCode,time,url,post.getPostUrl());
@@ -174,15 +175,16 @@ public class RefactoredTumblrLoader {
         {
             String name=post.getBlogName();
             Blog blog=client.blogInfo(name);
+            int likes=Integer.parseInt(post.getNoteCount().toString());
             Long id=post.getId();
             String type="photo";
+            List<Note> notesList=post.getNotes();
             PhotoPost photoPosts=(PhotoPost)post;
             String url=photoPosts.getSourceUrl();
             String time=post.getDateGMT();
             for(Photo photo : photoPosts.getPhotos())
             {
                 String embedCode=photo.getOriginalSize().getUrl();
-                int likes=blog.getFollowersCount();
                 int followers=blog.getLikeCount();
                 tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"photo",0,likes,followers,photo.getOriginalSize().getWidth(),
                         embedCode,time,url,post.getPostUrl());
@@ -196,13 +198,12 @@ public class RefactoredTumblrLoader {
         {
             String name=post.getBlogName();
             Blog blog=client.blogInfo(name);
+            int likes=Integer.parseInt(post.getNoteCount().toString());
             Long id=post.getId();
             AudioPost audioPost=(AudioPost)post;
             String url=audioPost.getSourceUrl();
             String time=post.getDateGMT();
-
             String embedCode=audioPost.getEmbedCode();
-            int likes=blog.getFollowersCount();
             int followers=blog.getLikeCount();
             tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"audio",0,likes,followers,0,
                     embedCode,time,url,post.getPostUrl());
@@ -216,13 +217,14 @@ public class RefactoredTumblrLoader {
         {
             String name=post.getBlogName();
             Blog blog=client.blogInfo(name);
+            int likes=Integer.parseInt(post.getNoteCount().toString());
             Long id=post.getId();
             String type="video";
             TextPost videoPostNEw=(TextPost)post;
             String url=videoPostNEw.getSourceUrl();
             String time=post.getDateGMT();
-            int likes=blog.getFollowersCount();
             int followers=blog.getLikeCount();
+            List<Note> notesList=post.getNotes();
             tumblrSqlLayer.populateTumblrData(id,name,videoPostNEw.getBody(),showName,videoPostNEw.getTitle(),official,"text",0,likes,followers,0,
                     "",time,url,post.getPostUrl());
 

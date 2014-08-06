@@ -128,6 +128,7 @@ public class JsonService {
         String[] showNames= showList.split("split");
         System.out.println(btime + " " + utime + " " + showNames );
          LoadApp.getSocialMysqlLayer().loadComparision(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+        LoadApp.getSocialMysqlLayer().loadComparisionGraphTwitter(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
 
         return null;
     }
