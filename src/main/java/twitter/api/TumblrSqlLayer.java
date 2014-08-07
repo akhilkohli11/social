@@ -297,11 +297,11 @@ public class TumblrSqlLayer {
         } catch (SQLException se) {
             try {
                 if(likes>0) {
-                    preparedStatement = connection.prepareStatement("update SHOW_TUMBLR_" + table + " set likes=? where postID=?");
-                    preparedStatement.setInt(1, likes);
-                    preparedStatement.setLong(2, postID);
-                    System.out.println("updating for postID " + postID + " show " + showName + " likes " + likes);
-                    preparedStatement.executeUpdate();
+//                    preparedStatement = connection.prepareStatement("update SHOW_TUMBLR_" + table + " set likes=? where postID=?");
+//                    preparedStatement.setInt(1, likes);
+//                    preparedStatement.setLong(2, postID);
+//                    System.out.println("updating for postID " + postID + " show " + showName + " likes " + likes);
+//                    preparedStatement.executeUpdate();
                 }
             }
             catch (Exception e)
