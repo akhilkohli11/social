@@ -43,6 +43,6 @@ public class TwitterTumblrDaemon {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 15, 450, TimeUnit.MINUTES);
+        service.scheduleAtFixedRate(command, 3, 450, TimeUnit.MINUTES);
     }
 }

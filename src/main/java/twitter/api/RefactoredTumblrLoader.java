@@ -44,14 +44,16 @@ public class RefactoredTumblrLoader {
         {
             limit=30;
         }
-        Map<String, String> options = new HashMap<String, String>();
-        Date date = new Date();
-        long unixTime = (long) date.getTime()/1000;
+        int newcount=0;
+        while(newcount++<1000) {
+            Map<String, String> options = new HashMap<String, String>();
+            Date date = new Date();
+            long unixTime = (long) date.getTime() / 1000;
 
             options.put("before", String.valueOf(unixTime));
             options.put("limit", "100");
             int count = 0;
-            while (count++ < limit) {
+            while (count++ < 30) {
                 for (Map.Entry<String, List<SearchObject>> showSearch : searchMap.entrySet()) {
                     for (SearchObject searchObject : showSearch.getValue()) {
                         if (searchObject.isBlog()) {
@@ -91,6 +93,8 @@ public class RefactoredTumblrLoader {
                 unixTime = (long) daysAgo.getTime() / 1000;
                 options.put("before", String.valueOf(unixTime));
             }
+            Thread.sleep(1000*60*300);
+        }
 
     }
 

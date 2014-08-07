@@ -102,5 +102,9 @@ public class NewJumblrMain {
     public static Map<String, Integer> getTEXTTumblrForDayForShows(Date date) {
         return tumblrSqlLayer.getTextTumblr(date);
     }
+
+    public static Integer getLikesForShow(Date date,String show) {
+        return tumblrSqlLayer.getLikesForShow(date,show);
+    }
     //schema blog name,postid/blog likes/follower/type of post/video audio or something/blog content
 }

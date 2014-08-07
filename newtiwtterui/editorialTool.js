@@ -689,7 +689,8 @@ function jsonp(result)
                                                    "<th class=\"warning\">Video</th >"+
                                                     "<th class=\"info\">Audio</th>"+
                                                       "<th class=\"active\">Text</th>"+
-                                                   "<th class=\"danger\">Photo</th></tr>");
+                                                   "<th class=\"danger\">Photo</th>"+
+                                                   "<th class=\"warning\">Notes</th></tr>");
 
                        image=0;
                    }
@@ -711,7 +712,8 @@ function jsonp(result)
                                var res = item.split("break");
                              $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+"</td>"+
                              "<td class=\"warning\">"+res[2]+"</td><td class=\"info\">"+res[3]+"</td>"+
-                             "<td class=\"active\">"+res[4]+"</td><td class=\"danger\">"+res[5]+"</td>");
+                             "<td class=\"active\">"+res[4]+"</td><td class=\"danger\">"+res[5]+"</td>"
+                             +"</td><td class=\"warning\">"+res[6]+"</td>");
                    }
 
 

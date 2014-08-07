@@ -856,6 +856,7 @@ public class TumblrSqlLayer {
                 int textCount = 0;
                 int photoCount = 0;
                 int totalCount = 0;
+                int likescount=0;
                 int rowCount = 0;
                 int inlopp = 0;
                 statsOutput.write("newline");
@@ -868,7 +869,7 @@ public class TumblrSqlLayer {
                     if (!oldCreate.equals(create)) {
                         if (!oldCreate.equals("")) {
                             statsOutput.write(oldCreate.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "") + "break" + totalCount + "break" + videCount + "break" + audioCount + "break" + textCount + "break" +
-                                    photoCount);
+                                    photoCount+"break"+likescount);
                             statsOutput.newLine();
 
                             videCount = 0;
@@ -876,6 +877,7 @@ public class TumblrSqlLayer {
                             textCount = 0;
                             photoCount = 0;
                             totalCount = 0;
+                            likescount=0;
                         }
                         oldCreate = create;
                     }
@@ -883,6 +885,9 @@ public class TumblrSqlLayer {
                     String type = rs.getString("type");
                     if (type.equals("video")) {
                         videCount = Integer.parseInt(rs.getString("count"));
+                    }
+                    if (type.equals("likes")) {
+                        likescount= Integer.parseInt(rs.getString("count"));
                     }
                     if (type.equals("audio")) {
                         audioCount = Integer.parseInt(rs.getString("count"));
@@ -906,7 +911,7 @@ public class TumblrSqlLayer {
                 if (inlopp == 1) {
 
                     statsOutput.write(oldCreate.replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "") + "break" + totalCount + "break" + videCount + "break" + audioCount + "break" + textCount + "break" +
-                            photoCount);
+                            photoCount+"break"+likescount);
                     if(loopcount<showNames.length) {
                         statsOutput.newLine();
                     }
@@ -969,7 +974,7 @@ public class TumblrSqlLayer {
                 preparedStatement.setString(1, "tumblr");
                 preparedStatement.setString(2, bottomtime);
                 preparedStatement.setString(3, uppertime);
-                preparedStatement.setString(4, "total");
+                preparedStatement.setString(4, "likes");
                 rs = preparedStatement.executeQuery();
                 int count = 1;
                 //STEP 5: Extract data from result set
@@ -1046,4 +1051,51 @@ public class TumblrSqlLayer {
         }
     }
 
+    public Integer getLikesForShow(Date date,String show) {
+        Integer count=0;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        try {
+            String table=new String(show);
+            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String query = "select sum(likes) as count  from SHOW_TUMBLR_"+table+" where created_on =?";
+            preparedStatement = connection.prepareStatement(query);
+            java.sql.Date queryDate=new java.sql.Date(date.getTime());
+            preparedStatement.setDate(1, queryDate);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                String daycount = rs.getString("count");
+                count=Integer.parseInt(daycount);
+            }
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+
+        }
+        return count;
+
+    }
 }

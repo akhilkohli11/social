@@ -72,7 +72,7 @@ public class SocialMysqlLayer {
     public void populatDayWiseStatsForShowForTumblr() throws Exception {
         Date date = new Date();
         int count=0;
-        while (count++<7) {
+        while (count++<25) {
             Map<String,Integer> showNameToTweet=NewJumblrMain.getTumblrPostsForDay(date);
             Map<String,Integer> showNameToPhotoTweet= NewJumblrMain.getPhotoTumblrForDayForShows(date);
             Map<String,Integer> showNameToLinkTweet= NewJumblrMain.getVideoTumblrForDayForShows(date);
@@ -89,7 +89,10 @@ public class SocialMysqlLayer {
                 //populateMainTable(entry.getKey(),"tumblr","video",showNameToLinkTweet.get(entry.getKey()),date);
                 populateShowWiseTable(entry.getKey(),"tumblr","text",showNameTEXTTweet.get(entry.getKey()),date);
                 //populateMainTable(entry.getKey(),"tumblr","text",showNameTEXTTweet.get(entry.getKey()),date);
-                populateShowWiseTable(entry.getKey(),"tumblr","audio",showNameToLinkTweet.get(entry.getKey()),date);
+                populateShowWiseTable(entry.getKey(),"tumblr","audio",showNameAUDIOTweet.get(entry.getKey()),date);
+                int showNotesCount=NewJumblrMain.getLikesForShow(date,entry.getKey());
+                populateShowWiseTable(entry.getKey(),"tumblr","likes",showNotesCount,date);
+
                 //populateMainTable(entry.getKey(),"tumblr","audio",showNameAUDIOTweet.get(entry.getKey()),date);
 
             }
