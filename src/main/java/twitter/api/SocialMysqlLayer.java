@@ -1100,18 +1100,19 @@ public class SocialMysqlLayer {
                 if(type.equals("link"))
                 {
                     linkCount=Integer.parseInt(rs.getString("count"));
-                    totalCount+=linkCount;
                 }
 
                 if(type.equals("photo"))
                 {
                     photoCount=Integer.parseInt(rs.getString("count"));
-                    totalCount+=photoCount;
                 }
                 if(type.equals("text") || type.equals("quote"))
                 {
                     textCount=Integer.parseInt(rs.getString("count"));
-                    totalCount+=textCount;
+                }
+                if(type.equals("total"))
+                {
+                    totalCount=Integer.parseInt(rs.getString("count"));
                 }
                 //                if(newcount>30 && textCount!=videCount && videCount!=photoCount && photoCount!=audioCount && textCount>0&&
 //                        photoCount>0 && videCount>0)
