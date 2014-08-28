@@ -15,17 +15,21 @@ public static void main(String args[])
     public void init() {
         try {
             System.out.println(": initialised dsdsdsdssd");
-          TumblrDaemon tumblrDaemon=new TumblrDaemon();
-            tumblrDaemon.init();
+
             TwitterTweetDaeomon twitterTweetDaeomon=new TwitterTweetDaeomon();
             twitterTweetDaeomon.init();
-            new TwitterOneMore().init();
+            YoutubeDaemon youtubeDaemon=new YoutubeDaemon();
+            youtubeDaemon.init();
+
+
 
             TwitterTumblrDaemon twitterTumblrDaemon=new TwitterTumblrDaemon();
             twitterTumblrDaemon.init();
+            new TwitterOneMore().init();
 
-            YoutubeDaemon youtubeDaemon=new YoutubeDaemon();
-            youtubeDaemon.init();
+            TumblrDaemon tumblrDaemon=new TumblrDaemon();
+            tumblrDaemon.init();
+
 
         }
         catch (Exception e)

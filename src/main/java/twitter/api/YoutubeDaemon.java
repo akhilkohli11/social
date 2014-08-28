@@ -37,6 +37,6 @@ public class YoutubeDaemon {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 1, 5*60, TimeUnit.MINUTES);
+        service.scheduleAtFixedRate(command, 0, 10*60, TimeUnit.MINUTES);
     }
 }
