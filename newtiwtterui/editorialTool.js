@@ -1650,7 +1650,7 @@ d3.csv(file, function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Population");
+      .text("Popularity");
 
   var state = svg.selectAll(".state")
       .data(data)
