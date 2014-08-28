@@ -20,10 +20,13 @@ public static void main(String args[])
             TwitterTweetDaeomon twitterTweetDaeomon=new TwitterTweetDaeomon();
             twitterTweetDaeomon.init();
             new TwitterOneMore().init();
+
             TwitterTumblrDaemon twitterTumblrDaemon=new TwitterTumblrDaemon();
             twitterTumblrDaemon.init();
+
             YoutubeDaemon youtubeDaemon=new YoutubeDaemon();
             youtubeDaemon.init();
+
         }
         catch (Exception e)
         {
