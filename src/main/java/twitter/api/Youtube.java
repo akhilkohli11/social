@@ -29,7 +29,7 @@ public class Youtube {
         try {
 
             String sCurrentLine;
-            br = new BufferedReader(new FileReader("/tmp/youtubereader"));
+            br = new BufferedReader(new FileReader("/tmp/youtubereader.txt"));
             Map<String,String> map=new HashMap<String,String>();
             while ((sCurrentLine = br.readLine()) != null) {
 
