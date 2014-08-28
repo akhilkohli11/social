@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by akohli on 7/7/14.
  */
-public class TwitterTweetDaeomon {
+public class TwitterOneMore {
     public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
     public static final String MYSQL_URL = "jdbc:mysql://localhost/social?"
             + "user=root";
@@ -19,8 +19,8 @@ public class TwitterTweetDaeomon {
             BufferedReader br = null;
             try {
 
-                LoadApp.init();
-                LoadApp.initialize(0,200);
+                TwitterDataRetriever.getTweets(5000, LoadApp.getSocialMysqlLayer(),201,405);
+
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -36,6 +36,6 @@ public class TwitterTweetDaeomon {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 0, 12, TimeUnit.HOURS);
+        service.scheduleAtFixedRate(command, 2, 12*80, TimeUnit.MINUTES);
     }
 }

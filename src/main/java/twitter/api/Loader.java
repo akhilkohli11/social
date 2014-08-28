@@ -7,7 +7,10 @@ import javax.servlet.http.*;
  */
 public class Loader extends HttpServlet {
 
-
+public static void main(String args[])
+{
+    new Loader().init();
+}
 
     public void init() {
         try {
@@ -16,6 +19,7 @@ public class Loader extends HttpServlet {
             tumblrDaemon.init();
             TwitterTweetDaeomon twitterTweetDaeomon=new TwitterTweetDaeomon();
             twitterTweetDaeomon.init();
+            new TwitterOneMore().init();
             TwitterTumblrDaemon twitterTumblrDaemon=new TwitterTumblrDaemon();
             twitterTumblrDaemon.init();
             YoutubeDaemon youtubeDaemon=new YoutubeDaemon();

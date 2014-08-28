@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.TreeSet;
 
 /**
  * Created by akohli on 8/25/14.
@@ -11,8 +12,38 @@ import java.io.FileReader;
 public class CreateYoutubeFiles {
     public static void main(String args[]) throws Exception
     {
-        createYoutubeSql();
+        outputdata();
+     //   createYoutubeSql();
 
+    }
+
+    public static void outputdata() throws Exception
+
+    {
+        TreeSet<String> set=new TreeSet<String>();
+
+
+        BufferedReader br = null;
+
+
+            String sCurrentLine;
+
+            br = new BufferedReader(new FileReader("/tmp/showsfinal.txt"));
+            int count=1;
+
+            //  socialMysqlLayer.readData();
+            while ((sCurrentLine = br.readLine()) != null) {
+
+                String[] buffer= StringUtils.split(sCurrentLine, "@", 2);
+                System.out.println(sCurrentLine);
+                String[] newbuffer=StringUtils.split(buffer[1],"#",2);
+                String[] finalbuffer=StringUtils.split(newbuffer[1],"@",2);
+                set.add(buffer[0].trim().replaceAll(" ","").replaceAll("\"","").replaceAll("'",""));
+            }
+            for(String word : set)
+            {
+                System.out.println("<option>"+word+"</option>");
+            }
     }
 
 

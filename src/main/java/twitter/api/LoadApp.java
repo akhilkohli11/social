@@ -13,11 +13,11 @@
                 + "user=root";
        public static SocialMysqlLayer socialMysqlLayer;
         static int count=0;
-        public static void initialize() throws Exception
+        public static void initialize(int start,int end) throws Exception
         {
 
             try {
-                TwitterDataRetriever.getTweets(5000, socialMysqlLayer);
+                TwitterDataRetriever.getTweets(5000, socialMysqlLayer,start,end);
                 count++;
             }
             catch (Exception e)
@@ -27,7 +27,7 @@
                 while (count<100)
                 {
                     Thread.sleep(3000);
-                    initialize();
+                    initialize(start,end);
                 }
             }
 
@@ -47,6 +47,7 @@
                 while ((sCurrentLine = br.readLine()) != null) {
 
                     String[] buffer= StringUtils.split(sCurrentLine, "@", 2);
+                    System.out.println(sCurrentLine);
                     String[] newbuffer=StringUtils.split(buffer[1],"#",2);
                     String[] finalbuffer=StringUtils.split(newbuffer[1],"@",2);
                     String countString=String.valueOf(count);

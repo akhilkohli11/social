@@ -42,6 +42,8 @@ public class TwitterDataRetriever {
 
     static Map<String,String> tagToshowName =new HashMap<String, String>();
     static List<String> followTerms=new ArrayList<String>();
+
+
     static Set<String> shows=new HashSet<String>();
     static Map<String,String> showToNewName=new HashMap<String, String>();
     static Map<String,String> cityToSateListUs=new HashMap<String, String>();
@@ -90,12 +92,16 @@ public class TwitterDataRetriever {
     {
         return shows;
     }
-
-    public static String getTweets(int count,SocialMysqlLayer socialMysqlLayer) throws Exception {
-        init();
-        cityToSateListUs = socialMysqlLayer.getCityToStateMap();
-        cityListUs = socialMysqlLayer.getCityList();
-        System.out.println("twiiter"+followTerms);
+    static int start=0;
+    static int end=200;
+    static int init=0;
+    public static String getTweets(int count,SocialMysqlLayer socialMysqlLayer,int start,int end) throws Exception {
+        List<String> moreTerms=new ArrayList<String>();
+        if(init==0) {
+            cityToSateListUs = socialMysqlLayer.getCityToStateMap();
+            cityListUs = socialMysqlLayer.getCityList();
+            init=1;
+        }
         Authentication hosebirdAuth = new OAuth1("nDhWQNt3buDkIWNyBp9iilIXp", "OAFBjrd8mHCgMV6YXE5SgadBKP4Fl0cHBM9zU94vgn6OIDafHC",
                 "2524277576-3OyRFktWxMMB3NZw68C71Q1eZTrCc3tQQyWN8t0", "B3XQM3PM88xyZP6uiIA9RRaWkVNa4QrIaTShSJlwMZrzb");
 
@@ -107,7 +113,14 @@ public class TwitterDataRetriever {
         StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
         // Optional: set up some followings and track terms
         // List<Long> followings = Lists.newArrayList(83023305L);
-        List<String> terms = Lists.newArrayList(followTerms);
+
+            moreTerms=followTerms.subList(start,end);
+
+        System.out.println("twiiter"+moreTerms+moreTerms.size());
+
+        System.out.println(moreTerms);
+        List<String> terms = Lists.newArrayList(moreTerms);
+
         // hosebirdEndpoint.followings(followings);
         hosebirdEndpoint.trackTerms(terms);
         System.out.println("follow"+followTerms);
