@@ -1595,8 +1595,8 @@ d3.select("svg")
     function drawVisualization(file) {
 
 var margin = {top: 200, right: 20, bottom: 30, left: 40},
-    width = 1200 - margin.left - margin.right,
-    height = 1500 - margin.top - margin.bottom;
+    width = 1000 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
 
 var x0 = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);

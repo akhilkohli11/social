@@ -1108,23 +1108,23 @@ public class TumblrSqlLayer {
 
         try {
 
-            File csvFile = new File(fileDirectory+csvFileName);
+            File csvFile = new File(fileDirectory + csvFileName);
             csvFile.createNewFile();
 
-             csvOutput  = new BufferedWriter(new FileWriter(csvFile));
+            csvOutput = new BufferedWriter(new FileWriter(csvFile));
 
             Class.forName(jdbcDriverStr);
             connection = DriverManager.getConnection(jdbcURL);
             statement = connection.createStatement();
-            int loopcount=0;
-            Map<String,Map<String,Integer>> datahsowCountMap=new LinkedHashMap<String, Map<String, Integer>>();
-            for(String show : showNames) {
+            int loopcount = 0;
+            Map<String, Integer> datahsowCountMap = new LinkedHashMap<String, Integer>();
+            for (String show : showNames) {
                 String showName = TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
                 loopcount++;
 
                 String table = new String(showName);
                 table = table.trim().toLowerCase().replaceAll(" ", "").replaceAll("\"", "").replaceAll("'", "");
-                String query = "select count,created_on  from SHOW_COUNT_" + table + " where   socialType=? and created_on >=? and created_on<=? and type=? order by created_on asc";
+                String query = "select count from SHOW_COUNT_" + table + " where   socialType=? and created_on >=? and created_on<=? and type=? order by created_on asc";
                 preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, "tumblr");
                 preparedStatement.setString(2, bottomtime);
@@ -1135,22 +1135,11 @@ public class TumblrSqlLayer {
                 //STEP 5: Extract data from result set
                 int newcount = 0;
                 String oldCreate = "";
-
+                int total = 0;
                 while (rs.next()) {
-                    String createdOn=rs.getString("created_on");
-                    int total=Integer.parseInt(rs.getString("count"));
-                    Map<String,Integer> showCountMap;
-                    if(datahsowCountMap.get(createdOn)!=null)
-                    {
-                        showCountMap=datahsowCountMap.get(createdOn);
-                    }
-                    else
-                    {
-                        showCountMap=new LinkedHashMap<String, Integer>();
+                    total += Integer.parseInt(rs.getString("count"));
 
-                    }
-                    showCountMap.put(show,total);
-                    datahsowCountMap.put(createdOn,showCountMap);
+                    datahsowCountMap.put(show, total);
 
                 }
 
@@ -1158,30 +1147,24 @@ public class TumblrSqlLayer {
             }
 
             csvOutput.write("State,");
-            for(String show :showNames) {
-                csvOutput.write(show+",");
+            for (String show : showNames) {
+                csvOutput.write(show + ",");
             }
             csvOutput.newLine();
 
-            for(Map.Entry<String,Map<String,Integer>> entry:datahsowCountMap.entrySet())
-            {
-                csvOutput.write(entry.getKey().replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "")+",");
-                Map<String,Integer> map=entry.getValue();
-                for(String show : showNames)
-                {
-                    if(map.containsKey(show)) {
-                        csvOutput.write(map.get(show) + ",");
 
-                    }
-                    else
-                    {
-                        csvOutput.write(map.get(show) + ",");
+            csvOutput.write("Total" + ",");
+            for (String show : showNames) {
 
+                if (datahsowCountMap.containsKey(show)) {
+                    csvOutput.write(datahsowCountMap.get(show) + ",");
 
-                    }
+                } else {
+                    csvOutput.write(0 + ",");
                 }
-                csvOutput.newLine();
             }
+            csvOutput.newLine();
+
 
 
         } catch (SQLException se) {

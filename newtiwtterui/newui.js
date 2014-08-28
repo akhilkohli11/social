@@ -14,6 +14,10 @@ function changeFunction()
                  $('#legend').hide();
                  d3.select("svg")
                         .remove();
+                         d3.select("svg").remove();
+                                                  d3.select("svg").remove();
+
+
 
 
     if($("#socialType :selected").text()=="TUMBLR")
