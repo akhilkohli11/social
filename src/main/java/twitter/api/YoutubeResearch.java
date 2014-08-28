@@ -68,7 +68,7 @@ public class YoutubeResearch {
      */
     private static Credential authorize(List<String> scopes) throws Exception {
 
-        InputStream  inputStream=new FileInputStream("/Users/akohli/akhilsocial/src/client_secrets.json");
+        InputStream  inputStream=new FileInputStream("/tmp/client_secrets.json");
         System.out.println(inputStream);
         Reader reader = new InputStreamReader(inputStream);
         // Load client secrets.
