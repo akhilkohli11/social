@@ -1,37 +1,27 @@
 package twitter.api;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by akohli on 7/1/14.
+ * Created by akohli on 7/7/14.
  */
-public class TwitterTumblrDaemon {
+public class YoutubeDaemon {
     public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
     public static final String MYSQL_URL = "jdbc:mysql://localhost/social?"
             + "user=root";
 
     Runnable command = new Runnable() {
         public void run() {
-            SocialMysqlLayer socialMysqlLayer = new SocialMysqlLayer(MYSQL_DRIVER, MYSQL_URL);
             BufferedReader br = null;
 
             try {
-                socialMysqlLayer.populatDayWiseStatsForShowForTwitter();
 
-                socialMysqlLayer.populatDayWiseStatsForShowForYoutube();
+                Youtube.init();
 
-                socialMysqlLayer.populatDayWiseStatsForShowForTumblr();
-
-                // socialMysqlLayer.populateLocationDataForTwitter();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -47,6 +37,6 @@ public class TwitterTumblrDaemon {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 4, 450, TimeUnit.MINUTES);
+        service.scheduleAtFixedRate(command, 0, 5, TimeUnit.HOURS);
     }
 }

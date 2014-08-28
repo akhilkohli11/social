@@ -247,6 +247,7 @@ public class YoutubeResearch {
         while (iteratorVideoResults.hasNext()) {
 
             Video singleVideo = iteratorVideoResults.next();
+        //    singleVideo.get
         try{
             Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
             if(singleVideo.getSnippet().getChannelTitle().toLowerCase().contains("netflix")) {
@@ -267,7 +268,6 @@ public class YoutubeResearch {
         {
             e.printStackTrace();
         }
-
             //   System.out.println(" Location: " + location.getLatitude() + ", " + location.getLongitude());
 //            System.out.println(" Thumbnail: " + thumbnail.getUrl());
 //            if(singleVideo.getStatistics()!=null) {

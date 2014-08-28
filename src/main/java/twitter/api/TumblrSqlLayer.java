@@ -21,7 +21,7 @@ public class TumblrSqlLayer {
     private ResultSet resultSet;
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
    String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
-   // String fileDirectory="/Library/Tomcat/webapps/examples/";
+ //   String fileDirectory="/Library/Tomcat/webapps/examples/";
 
 
     private PreparedStatement preparedStatement;
@@ -775,9 +775,6 @@ public class TumblrSqlLayer {
                 {
                     totalCount=Integer.parseInt(rs.getString("count"));
                 }
-                //                if(newcount>30 && textCount!=videCount && videCount!=photoCount && photoCount!=audioCount && textCount>0&&
-//                        photoCount>0 && videCount>0)
-//                    break;
 
             }
             if(inlopp==1)
@@ -1099,5 +1096,115 @@ public class TumblrSqlLayer {
         }
         return count;
 
+    }
+
+    public void loadBarGraph(String[] showNames, String bottomtime,String uppertime, String id) throws Exception{
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String csvFileName="comparetumblrgraph"+id+".csv";
+        BufferedWriter csvOutput=null;
+
+        try {
+
+            File csvFile = new File(fileDirectory+csvFileName);
+            csvFile.createNewFile();
+
+             csvOutput  = new BufferedWriter(new FileWriter(csvFile));
+
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            int loopcount=0;
+            Map<String,Map<String,Integer>> datahsowCountMap=new LinkedHashMap<String, Map<String, Integer>>();
+            for(String show : showNames) {
+                String showName = TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+                loopcount++;
+
+                String table = new String(showName);
+                table = table.trim().toLowerCase().replaceAll(" ", "").replaceAll("\"", "").replaceAll("'", "");
+                String query = "select count,created_on  from SHOW_COUNT_" + table + " where   socialType=? and created_on >=? and created_on<=? and type=? order by created_on asc";
+                preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, "tumblr");
+                preparedStatement.setString(2, bottomtime);
+                preparedStatement.setString(3, uppertime);
+                preparedStatement.setString(4, "likes");
+                rs = preparedStatement.executeQuery();
+                int count = 1;
+                //STEP 5: Extract data from result set
+                int newcount = 0;
+                String oldCreate = "";
+
+                while (rs.next()) {
+                    String createdOn=rs.getString("created_on");
+                    int total=Integer.parseInt(rs.getString("count"));
+                    Map<String,Integer> showCountMap;
+                    if(datahsowCountMap.get(createdOn)!=null)
+                    {
+                        showCountMap=datahsowCountMap.get(createdOn);
+                    }
+                    else
+                    {
+                        showCountMap=new LinkedHashMap<String, Integer>();
+
+                    }
+                    showCountMap.put(show,total);
+                    datahsowCountMap.put(createdOn,showCountMap);
+
+                }
+
+
+            }
+
+            csvOutput.write("State,");
+            for(String show :showNames) {
+                csvOutput.write(show+",");
+            }
+            csvOutput.newLine();
+
+            for(Map.Entry<String,Map<String,Integer>> entry:datahsowCountMap.entrySet())
+            {
+                csvOutput.write(entry.getKey().replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "")+",");
+                Map<String,Integer> map=entry.getValue();
+                for(String show : showNames)
+                {
+                    if(map.containsKey(show)) {
+                        csvOutput.write(map.get(show) + ",");
+
+                    }
+                    else
+                    {
+                        csvOutput.write(map.get(show) + ",");
+
+
+                    }
+                }
+                csvOutput.newLine();
+            }
+
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            csvOutput.close();
+
+        }
     }
 }

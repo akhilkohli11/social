@@ -21,18 +21,18 @@ public class SocialMysqlLayer {
     Map<String,List> timeMap=new HashMap<String, List>();
     DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
       String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
-    //String fileDirectory="/Library/Tomcat/webapps/examples/";
+   // String fileDirectory="/Library/Tomcat/webapps/examples/";
     private int tweetsForDayForShows;
 
 
     DateFormat newformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Object location;
-
+        int totalcount=40;
     public void populatDayWiseStatsForShowForTwitter() throws Exception {
 
         Date date = new Date();
         int count=0;
-        while (count++<7) {
+        while (count++<totalcount) {
             Map<String, Integer> showNameToTweet = getTweetsForDayForShows(date);
             Map<String, Integer> showNameToPhotoTweet = getPhotoTweetsForDayForShows(date);
             Map<String, Integer> showNameToLinkTweet = getLinkTweetsForDayForShows(date);
@@ -72,7 +72,7 @@ public class SocialMysqlLayer {
     public void populatDayWiseStatsForShowForTumblr() throws Exception {
         Date date = new Date();
         int count=0;
-        while (count++<25) {
+        while (count++<totalcount) {
             Map<String,Integer> showNameToTweet=NewJumblrMain.getTumblrPostsForDay(date);
             Map<String,Integer> showNameToPhotoTweet= NewJumblrMain.getPhotoTumblrForDayForShows(date);
             Map<String,Integer> showNameToLinkTweet= NewJumblrMain.getVideoTumblrForDayForShows(date);
@@ -98,7 +98,7 @@ public class SocialMysqlLayer {
             }
             date = new DateTime(date).minusDays(1).toDate();
         }
-
+        totalcount=10;
 
     }
 
@@ -724,6 +724,135 @@ public class SocialMysqlLayer {
 
     }
 
+    public void loadBarGraph(String[] showNames,  String bottomtime,String uppertime, String id) throws Exception{
+        BufferedWriter statsOutput=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newFileName="comparetwittergraph"+id+".csv";
+        try {
+            File newFile = new File(fileDirectory+newFileName);
+            newFile.createNewFile();
+
+            statsOutput = new BufferedWriter(new FileWriter(newFile));
+
+
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            int loopcount=0;
+            Map<String,Map<String,Integer>> datahsowCountMap=new LinkedHashMap<String, Map<String, Integer>>();
+            for(String show : showNames) {
+                String showName = TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+                loopcount++;
+
+                String table = new String(showName);
+                table = table.trim().toLowerCase().replaceAll(" ", "").replaceAll("\"", "").replaceAll("'", "");
+                String query = "select count,created_on  from SHOW_COUNT_" + table + " where   socialType=? and created_on >=? and created_on<=? and type=? order by created_on asc";
+                preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, "twitter");
+                preparedStatement.setString(2, bottomtime);
+                preparedStatement.setString(3, uppertime);
+                preparedStatement.setString(4, "total");
+                rs = preparedStatement.executeQuery();
+                int count = 1;
+                //STEP 5: Extract data from result set
+                int newcount = 0;
+                String oldCreate = "";
+
+                while (rs.next()) {
+                    String createdOn=rs.getString("created_on");
+                    int total=Integer.parseInt(rs.getString("count"));
+                    Map<String,Integer> showCountMap;
+                    if(datahsowCountMap.get(createdOn)!=null)
+                    {
+                        showCountMap=datahsowCountMap.get(createdOn);
+                    }
+                    else
+                    {
+                        showCountMap=new LinkedHashMap<String, Integer>();
+
+                    }
+                    showCountMap.put(show,total);
+                    datahsowCountMap.put(createdOn,showCountMap);
+
+                }
+
+
+            }
+
+            statsOutput.write("State" + ",");
+            for(String show :showNames) {
+                statsOutput.write(show+",");
+            }
+            statsOutput.newLine();
+
+            for(Map.Entry<String,Map<String,Integer>> entry:datahsowCountMap.entrySet())
+            {
+                statsOutput.write(entry.getKey().replaceAll("00:00:00.0", "").replaceAll(" ", "").replaceAll("-", "")+",");
+                Map<String,Integer> map=entry.getValue();
+                for(String show : showNames)
+                {
+                    if(map.containsKey(show)) {
+                        statsOutput.write(map.get(show) + ",");
+                    }
+                    else
+                    {
+                        statsOutput.write("0" + ",");
+
+                    }
+                }
+                statsOutput.newLine();
+            }
+
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+            statsOutput.close();
+
+        }
+    }
+
+    public void populatDayWiseStatsForShowForYoutube() throws Exception{
+        Date date = new Date();
+        int count=0;
+        while (count++<totalcount) {
+            Map<String,Integer> showNameToViews=Youtube.getViews(date);
+            Map<String,Integer> showNameToComments= Youtube.getComments(date);
+            Map<String,Integer> showNameToLikes= Youtube.getLikes(date);
+            Map<String,Integer> showNameToDislikes= Youtube.getDislikes(date);
+            System.out.println("Youtube "+showNameToComments+" "+showNameToViews);
+            for(Map.Entry<String,Integer> entry : showNameToViews.entrySet())
+            {
+                populateShowWiseTable(entry.getKey(),"youtube","views",entry.getValue(),date);
+                populateShowWiseTable(entry.getKey(),"youtube","comments",showNameToComments.get(entry.getKey()),date);
+                populateShowWiseTable(entry.getKey(),"youtube","likes",showNameToLikes.get(entry.getKey()),date);
+                populateShowWiseTable(entry.getKey(),"youtube","dislikes",showNameToDislikes.get(entry.getKey()),date);
+
+
+            }
+            date = new DateTime(date).minusDays(1).toDate();
+        }
+
+    }
 
 
     enum TestTableColumns {

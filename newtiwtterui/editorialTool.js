@@ -1,9 +1,9 @@
 var negative=0;
 var postive=0;
 var neutral=0;
-       var url='http://ec2-54-187-52-149.us-west-2.compute.amazonaws.com:8080/rest/test/';
+      // var url='http://ec2-54-187-52-149.us-west-2.compute.amazonaws.com:8080/rest/test/';
         //      var url='http://localhost:9999/rest/test/';
-    //    var url='http://localhost:9199/rest/test/';
+            var url='http://localhost:9199/rest/test/';
 
 function foobar_cont(){
     console.log("finished.");
@@ -16,14 +16,33 @@ function changeFunction()
                 $('#twitterButton').hide();
                   $('#tmsbutton').hide();
                           $('#multimedia').text('');
+                                                    $('#visualization').text('');
+                                                                                                        $('#visualization').empty();
+
+                                                  $('#newvisualization').text('');
+                                                                                                    $('#newvisualization').empty();
+
+
                           $('#maindiv').hide();
                                 $('#newdiv').hide();
                                       $('#onemorediv').hide();
                  $('#legend').hide();
                                                 $("#multiple").hide();
-                 d3.select("svg")
-                        .remove();
+                                                        $("#svgak").empty();
+                                                                                                                $("#svgak").text('');
 
+
+                d3.select("#svg1").remove();
+                 d3.select("tweet").select("svg")
+                        .remove();
+                        d3.select("keet").select("svg")
+                                                .remove();
+                                                d3.select("keet").empty();
+                                                d3.select("svg")
+                                                                        .remove();
+
+
+        $("#svg1").empty();
 
     if($("#socialType :selected").text()=="TUMBLR")
     {
@@ -629,7 +648,14 @@ function jsonp(result)
 
     }
 
+
  $('#compare').click(function(){
+           $('#visualization').text('');
+                                                                                                         $('#visualization').empty();
+
+                                                   $('#newvisualization').text('');
+                                                                                                     $('#newvisualization').empty();
+
  var foo = "";
  var totcount=0;
  $('#multiple :selected').each(function(i, selected){
@@ -757,9 +783,13 @@ function jsonp(result)
                   }, "text")
 
                 var file="comparetumblrgraph"+totalCount+".tsv";
+                var visualization="comparetumblrgraph"+totalCount+".csv";
                          showGraph(file);
+                        drawVisualization(visualization);
                     },
    4000);
+
+
  });
 
  $('#tumblrtrend').click(function(){
@@ -912,6 +942,12 @@ $('#twittertrend').click(function(){
 
 
  $('#twittercompare').click(function(){
+           $('#visualization').text('');
+                                                                                                         $('#visualization').empty();
+
+                                                   $('#newvisualization').text('');
+                                                                                                     $('#newvisualization').empty();
+
   var foo = "";
   var totcount=0;
   $('#multiple :selected').each(function(i, selected){
@@ -1035,7 +1071,150 @@ $('#twittertrend').click(function(){
           }, "text")
 
         var file="comparetwittergraph"+totalCount+".tsv";
-                 showGraph(file);
+              var visualization="comparetwittergraph"+totalCount+".csv";
+                                      showGraph(file);
+                                     drawVisualization(visualization);
+            },
+    4000);
+  });
+
+
+
+
+
+ $('#youtubecompare').click(function(){
+           $('#visualization').text('');
+                                                                                                         $('#visualization').empty();
+
+                                                   $('#newvisualization').text('');
+                                                                                                     $('#newvisualization').empty();
+
+  var foo = "";
+  var totcount=0;
+  $('#multiple :selected').each(function(i, selected){
+    foo+=$(selected).text()+"split";
+    totcount++;
+  });
+  if(totcount>5)
+  {
+    alert("Maximum 5 shows can be compared");
+    return;
+  }
+  $('#multimedia').text('');
+      $('#multimedia').show();
+   $('#img').show();
+
+        var bottom=1000;
+        var top=10000;
+        var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+        var totalCount = count.toString();
+         //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+          requestData={show:foo, bottomTime:$("#datepicker").val(),
+          upperTime:$("#enddatepicker").val(),
+          id:totalCount};
+       var finalUrl=url+'compare/youtube';
+                      $.ajax(finalUrl, {
+                                                  type: 'POST',
+                                                  headers: {
+                                                                 Accept : "application/json; charset=utf-8",
+                                                                 "Content-Type": "application/json; charset=utf-8"
+
+                                                      },
+                                                  dataType:"jsonp",
+                                                                  jsonCallback: "jsonp",
+                                                                  data:requestData,
+                                                      async:false,
+                                                      success: AjaxSucceeded,
+                                                       error: AjaxFailed,
+
+                                       }).done(function(data) {console.log(data);
+                                                               });;
+
+
+   setTimeout(function(){
+              $('#img').hide();
+  var file="compareyoutube"+totalCount+".tsv";
+      $.get(file, function(data) {
+          var lines = data.split("\n");
+          var image=10;
+
+                    $.each(lines, function(n, item) {
+
+
+                    if(image==-1)
+                    {
+                                                                                           $('#one').append("<tr><th class=\"active\">Date</th>"+
+                                                                                              "<th class=\"success\">Views</th>"+
+                                                                                               "<th class=\"warning\">Likes</th>"+
+                                                                                                      "<th class=\"info\">Dislikes</th>"+
+                                                                                                                           "<th class=\"active\">Comments</th></tr>");
+
+                        image=0;
+                    }
+                     if(image==100)
+                                                                             {
+                                                                              $('#one').append("<tr><td></td><td></td><td></td><td></td></tr>");
+
+                                                                               $('#one').append("<tr><th class=\"active\">"+item+"</th></tr>");
+                                                                              image=-1;
+                                                                             }
+                    if(item=="newline")
+                                       {
+                                      $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                      image=100;
+                                       }
+
+                    if(image==0)
+                    {
+                                var res = item.split("break");
+                              $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"success\">"+res[1]+"</td>"+
+                              "<td class=\"warning\">"+res[2]+"</td><td class=\"info\">"+res[3]+"</td>"+
+                              "<td class=\"active\">"+res[4]+"</td></tr>");
+                    }
+
+
+
+              });
+                 $('#multimedia').append("<br/><br/></div>");
+                                 $('#multimedia').append('<div id="newboy" class="newgraph-svg-component">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                                 +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                                                    +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+                                                    var count=0;
+                                $('#multiple :selected').each(function(i, selected){
+                                count++;
+                               if(count==1)
+                               {
+                                    $('#newboy').append('<span class="foo" style="background-color:#82CAFA;">'+$(selected).text()
+                                    +'</span>&nbsp;&nbsp;');
+                                    }
+                                     if(count==2)
+                                   {
+                                           $('#newboy').append('<span class="foo" style="background-color:#FF8C00;">'+$(selected).text()
+                                            +'</span>&nbsp;&nbsp;');
+                                   }
+                              if(count==3)
+                                                                {
+                                                                        $('#newboy').append('<span class="foo" style="background-color:#7FE817;">'+$(selected).text()
+                                                                         +'</span>&nbsp;&nbsp;');
+                                                                }
+                                if(count==4)
+                                                                  {
+                                                                          $('#newboy').append('<span class="foo" style="background-color:#DC143C;">'+$(selected).text()
+                                                                           +'</span>&nbsp;&nbsp;');
+                                                                  }
+                               if(count==5)
+                                                                 {
+                                                                         $('#newboy').append('<span class="foo" style="background-color:#B19CD9;">'+$(selected).text()
+                                                                          +'</span>&nbsp;&nbsp;');
+                                                                 }
+                                  });
+
+          }, "text")
+
+        var file="compareyoutubegraph"+totalCount+".tsv";
+              var visualization="compareyoutubegraph"+totalCount+".csv";
+                                      showGraph(file);
+                                     drawVisualization(visualization);
             },
     4000);
   });
@@ -1107,7 +1286,7 @@ var file="statstumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
 
            });
             $('#multimedia').append("<br/><br/></div>");
-                   $('#multimedia').append('<div id="newboy" class="newgraph-svg-component">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                   $('#newvisualization').append('<div id="newboy" class="newgraph-svg-component">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
                    +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
                                       +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
                    +'<span class="foo" style="background-color:#82CAFA;">Total</span>&nbsp;&nbsp;'+
@@ -1334,7 +1513,7 @@ $('#multimedia').text('');
 
             });
              $('#multimedia').append("<br/><br/></div>");
-                    $('#multimedia').append('<div id="newboy" ><div class="foo" style="background-color:#82CAFA;">Total</div><br>'+
+                    $('##newvisualization').append('<div id="newboy" ><div class="foo" style="background-color:#82CAFA;">Total</div><br>'+
                      '<div class="foo" style="background-color:#DC143C;">Link</div><br>'+
                       '<div class="foo" style="background-color:#7FE817;">Text</div><br><div class="foo" style="background-color:#FF8C00;">Photo</div><br>');
         }, "text")
@@ -1413,6 +1592,103 @@ d3.select("svg")
 });
 
 
+    function drawVisualization(file) {
+
+var margin = {top: 200, right: 20, bottom: 30, left: 40},
+    width = 1200 - margin.left - margin.right,
+    height = 1500 - margin.top - margin.bottom;
+
+var x0 = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var x1 = d3.scale.ordinal();
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.ordinal()
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+var xAxis = d3.svg.axis()
+    .scale(x0)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickFormat(d3.format(".2s"));
+
+var svg = d3.select("#visualization").append("zeet").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("id","svg1")
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+//var file="data.csv";
+
+d3.csv(file, function(error, data) {
+  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "State"; });
+
+  data.forEach(function(d) {
+    d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
+  });
+
+  x0.domain(data.map(function(d) { return d.State; }));
+  x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
+  y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Population");
+
+  var state = svg.selectAll(".state")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "g")
+      .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });
+
+  state.selectAll("rect")
+      .data(function(d) { return d.ages; })
+    .enter().append("rect")
+      .attr("width", x1.rangeBand())
+      .attr("x", function(d) { return x1(d.name); })
+      .attr("y", function(d) { return y(d.value); })
+      .attr("height", function(d) { return height - y(d.value); })
+      .style("fill", function(d) { return color(d.name); });
+
+  var legend = svg.selectAll(".legend")
+      .data(ageNames.slice().reverse())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+
+});
+
+    }
 
 
 
@@ -1449,7 +1725,7 @@ var line = d3.svg.line()
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.temperature); });
 
-var svg = d3.select("body").append("tweet").append("svg")
+var svg = d3.select("#newvisualization").append("tweet").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
      .attr("class", "graph-svg-component")

@@ -107,6 +107,31 @@ public class JsonService {
         String[] showNames= showList.split("split");
        NewJumblrMain.getTumblrSqlLayer().loadComparision(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
         NewJumblrMain.getTumblrSqlLayer().loadComparisionGraphTumblr(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+        NewJumblrMain.getTumblrSqlLayer().loadBarGraph(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+
+
+        return null;
+    }
+
+
+    @GET
+    @Path("/compare/youtube")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+
+    public String getYoutubeCompareFile(@QueryParam("show") String showList,
+                                 @QueryParam("bottomTime") String bottomtime,
+                                 @QueryParam("upperTime") String upperTime,
+                                 @QueryParam("id") String id) throws Exception
+    {
+        String bTime[]=bottomtime.split("/");
+        String btime=bTime[2]+"-"+bTime[0]+"-"+bTime[1];
+        String uperTime[]=upperTime.split("/");
+        String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
+        String[] showNames= showList.split("split");
+        Youtube.getYoutubeSqlLayer().loadComparision(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+        Youtube.getYoutubeSqlLayer().loadComparisionGraphTumblr(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+        Youtube.getYoutubeSqlLayer().loadBarGraph(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
 
 
         return null;
@@ -131,6 +156,8 @@ public class JsonService {
         System.out.println(btime + " " + utime + " " + showNames );
          LoadApp.getSocialMysqlLayer().loadComparision(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
         LoadApp.getSocialMysqlLayer().loadComparisionGraphTwitter(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+        LoadApp.getSocialMysqlLayer().loadBarGraph(showNames, btime + " 00:00:00", utime + " 00:00:00", id);
+
 
         return null;
     }

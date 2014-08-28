@@ -18,6 +18,8 @@ public class Loader extends HttpServlet {
             twitterTweetDaeomon.init();
             TwitterTumblrDaemon twitterTumblrDaemon=new TwitterTumblrDaemon();
             twitterTumblrDaemon.init();
+            YoutubeDaemon youtubeDaemon=new YoutubeDaemon();
+            youtubeDaemon.init();
         }
         catch (Exception e)
         {
