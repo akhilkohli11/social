@@ -65,7 +65,6 @@ public class YoutubeResearch {
      * Initialize a YouTube object to search for videos on YouTube. Then
      * display the name and thumbnail image of each video in the result set.
      *
-     * @param args command line args.
      */
     private static Credential authorize(List<String> scopes) throws Exception {
 
