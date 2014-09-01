@@ -27,7 +27,7 @@ public class SocialMysqlLayer {
 
     DateFormat newformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Object location;
-        int totalcount=40;
+        int totalcount=10;
     public void populatDayWiseStatsForShowForTwitter() throws Exception {
 
         Date date = new Date();
@@ -92,7 +92,7 @@ public class SocialMysqlLayer {
                 populateShowWiseTable(entry.getKey(),"tumblr","audio",showNameAUDIOTweet.get(entry.getKey()),date);
                 int showNotesCount=NewJumblrMain.getLikesForShow(date,entry.getKey());
                 populateShowWiseTable(entry.getKey(),"tumblr","likes",showNotesCount,date);
-                System.out.println("Updaiting likes "+showNotesCount+" for date "+date+ "show "+entry.getKey());
+                System.out.println("COUNT  COUNT COUNT "+showNotesCount+" for date "+date+ "show "+entry.getKey());
                 //populateMainTable(entry.getKey(),"tumblr","audio",showNameAUDIOTweet.get(entry.getKey()),date);
 
             }
