@@ -125,7 +125,7 @@ public class YoutubeLoader {
                 daysAgo = new org.joda.time.DateTime(date).minusHours(4).toDate();
                 for (Map.Entry<String, String> showSearch : searchMap.entrySet()) {
                     try {
-                        String queryTerm=showSearch.getKey()+" tv show";
+                        String queryTerm=showSearch.getKey()+" tv series american";
                         search.setQ(queryTerm);
 
 

@@ -22,8 +22,8 @@ public class YoutubeSqlLayer {
     private Statement statement;
     private ResultSet resultSet;
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
-  //   String fileDirectory="/Library/Tomcat/webapps/examples/";
+   // String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
+    String fileDirectory="/Library/Tomcat/webapps/examples/";
 
 
     private PreparedStatement preparedStatement;
@@ -519,11 +519,12 @@ public class YoutubeSqlLayer {
             statement = connection.createStatement();
             String table=new String(showName);
             table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
-            String query = "select distinct embedCodeVideo, title,likes,dislikes,views,comments from SHOW_YOUTUBE_"+table+" where show_name=? and   created_on >=? and created_on<=? order by "+type+" desc limit 10";
+            String query = "select distinct embedCodeVideo, title,likes,dislikes,views,comments from SHOW_YOUTUBE_"+table+" where show_name=? and   created_on >=? and created_on<=? and title LIKE ? order by "+type+" desc limit 10";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1,showName);
             preparedStatement.setString(2, bottomtime);
             preparedStatement.setString(3, uppertime);
+            preparedStatement.setString(4, "%" + showName + "%");
 
             rs = preparedStatement.executeQuery();
             int count=1;
