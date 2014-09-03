@@ -376,7 +376,7 @@ public class YoutubeSqlLayer {
             System.out.println(query + new java.sql.Date(date.getTime()));
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setDate(1, new java.sql.Date(date.getTime()));
-            preparedStatement.setString(2, "%" + showName + "%%%%"+"tv+%");
+            preparedStatement.setString(2, "%" + showName + "%");
 
             rs = preparedStatement.executeQuery();
             while (rs.next()) {
@@ -526,7 +526,7 @@ public class YoutubeSqlLayer {
             preparedStatement.setString(1,showName);
             preparedStatement.setString(2, bottomtime);
             preparedStatement.setString(3, uppertime);
-            preparedStatement.setString(4, "%" + showName + "%%%%"+"tv+%");
+            preparedStatement.setString(4, "%" + showName + "%");
 
             rs = preparedStatement.executeQuery();
             int count=1;
