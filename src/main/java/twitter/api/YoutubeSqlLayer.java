@@ -525,7 +525,7 @@ public class YoutubeSqlLayer {
             preparedStatement.setString(1,showName);
             preparedStatement.setString(2, bottomtime);
             preparedStatement.setString(3, uppertime);
-            preparedStatement.setString(4, "%" + showName + "%");
+            preparedStatement.setString(4, "%" + showName + "%%%%"+"tv+%");
 
             rs = preparedStatement.executeQuery();
             int count=1;
