@@ -37,6 +37,6 @@ public class TumblrDaemon {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 0, 5, TimeUnit.HOURS);
+        service.scheduleAtFixedRate(command, 0, 20, TimeUnit.HOURS);
     }
 }

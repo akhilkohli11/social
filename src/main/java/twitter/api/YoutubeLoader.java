@@ -107,7 +107,7 @@ public class YoutubeLoader {
         YouTube.Search.List search = youtube.search().list("id,snippet");
 
         int newcount = 0;
-        while (newcount++ < 1000) {
+        while (newcount++ < 20) {
             int count = 0;
 
             search.setType("video");

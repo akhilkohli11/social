@@ -26,7 +26,6 @@ public class SocialMysqlLayer {
 
 
     DateFormat newformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private Object location;
         int totalcount=10;
     public void populatDayWiseStatsForShowForTwitter() throws Exception {
 

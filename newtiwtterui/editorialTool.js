@@ -1285,17 +1285,17 @@ var file="statstumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
 
 
            });
-            $('#multimedia').append("<br/><br/></div>");
-                   $('#newvisualization').append('<div id="newboy" class="newgraph-svg-component">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-                   +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-                                      +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-                   +'<span class="foo" style="background-color:#82CAFA;">Total</span>&nbsp;&nbsp;'+
-                    '<span class="foo" style="background-color:#B19CD9;">Photo</span>&nbsp;&nbsp;<span class="foo" style="background-color:#DC143C;">Text</span>'+
-                     '&nbsp;&nbsp;<span class="foo" style="background-color:#7FE817;">Audio</span>&nbsp;&nbsp;<span class="foo" style="background-color:#FF8C00;">Video</span>');
+//            $('#multimedia').append("<br/><br/></div>");
+//                   $('#newvisualization').append('<div id="newboy" class="newgraph-svg-component">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+//                   +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+//                                      +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+//                   +'<span class="foo" style="background-color:#82CAFA;">Total</span>&nbsp;&nbsp;'+
+//                    '<span class="foo" style="background-color:#B19CD9;">Photo</span>&nbsp;&nbsp;<span class="foo" style="background-color:#DC143C;">Text</span>'+
+//                     '&nbsp;&nbsp;<span class="foo" style="background-color:#7FE817;">Audio</span>&nbsp;&nbsp;<span class="foo" style="background-color:#FF8C00;">Video</span>');
        }, "text")
 
 var file="graphtumblr"+totalCount+$("#ddlViewBy :selected").text()+".tsv"
-         showGraph(file);
+       //  showGraph(file);
          },
   3000);
 });
@@ -1512,14 +1512,14 @@ $('#multimedia').text('');
 
 
             });
-             $('#multimedia').append("<br/><br/></div>");
-                    $('##newvisualization').append('<div id="newboy" ><div class="foo" style="background-color:#82CAFA;">Total</div><br>'+
-                     '<div class="foo" style="background-color:#DC143C;">Link</div><br>'+
-                      '<div class="foo" style="background-color:#7FE817;">Text</div><br><div class="foo" style="background-color:#FF8C00;">Photo</div><br>');
+//             $('#multimedia').append("<br/><br/></div>");
+//                    $('##newvisualization').append('<div id="newboy" ><div class="foo" style="background-color:#82CAFA;">Total</div><br>'+
+//                     '<div class="foo" style="background-color:#DC143C;">Link</div><br>'+
+//                      '<div class="foo" style="background-color:#7FE817;">Text</div><br><div class="foo" style="background-color:#FF8C00;">Photo</div><br>');
         }, "text")
 
  var file="graphtwitter"+totalCount+$("#ddlViewBy :selected").text()+".tsv"
-          showGraph(file);
+         // showGraph(file);
           },
    3000);
 });
@@ -1595,8 +1595,8 @@ d3.select("svg")
     function drawVisualization(file) {
 
 var margin = {top: 200, right: 20, bottom: 30, left: 40},
-    width = 1000 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    width = 800 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
 var x0 = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
