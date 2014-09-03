@@ -15,6 +15,8 @@ function changeFunction()
                 $('#tumblrButton').hide();
                 $('#twitterButton').hide();
                   $('#tmsbutton').hide();
+                                    $('#youtubebutton').hide();
+
                           $('#multimedia').text('');
                                                     $('#visualization').text('');
                                                                                                         $('#visualization').empty();
@@ -57,6 +59,15 @@ function changeFunction()
                 $('#twitterButton').show();
 
         }
+
+
+         if($("#socialType :selected").text()=="YOUTUBE")
+                {
+                $("#multiple").hide();
+                                      $("#ddlViewBy").show();
+                        $('#youtubebutton').show();
+
+                }
     if($("#socialType :selected").text()=="COMPARE")
             {
                       $("#multiple").show();
@@ -156,6 +167,177 @@ $('#videos').click(function(){
 
 
 });
+
+
+
+$('#youtubeviewed').click(function(){
+        $('#img').show();
+              $('#legend').hide();
+      d3.select("svg")
+             .remove();
+          $('#multimedia').text('');
+                      $('#onemorediv').hide();
+          $('#multimedia').show();
+           var bottom=1000;
+           var top=10000;
+           var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+           var totalCount = count.toString();
+            //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+             requestData={show:$("#ddlViewBy :selected").text(), bottomTime:$("#datepicker").val(),
+             upperTime:$("#enddatepicker").val(),
+             id:totalCount};
+          var finalUrl=url+'loadYoutubeViews';
+                         $.ajax(finalUrl, {
+                                                     type: 'POST',
+                                                     headers: {
+                                                                    Accept : "application/json; charset=utf-8",
+                                                                    "Content-Type": "application/json; charset=utf-8"
+
+                                                         },
+                                                     dataType:"jsonp",
+                                                                     jsonCallback: "jsonp",
+                                                                     data:requestData,
+                                                         async:false,
+                                                         success: AjaxSucceeded,
+                                                          error: AjaxFailed,
+
+                                          }).done(function(data) {console.log(data);
+                                                                  });;
+
+      setTimeout(function(){
+                 $('#img').hide();
+      var file="viewsyoutube"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
+
+              $('#multimedia').append("<h3> <p class=\"text-primary\">Tabular Video Post Data</p></h3>");
+        $.get(file, function(data) {
+            var lines = data.split("\n");
+            var image=-1;
+      //                                      $('#multimedia').append("<tr><th class=\"active\">"+res[0]+"</td><tdclass=\"success\">"+res[1]+
+      //                                                                "</td><tdclass=\"warning\">"+res[2]+"</td><tdclass=\"danger\">"+res[3]+"</td>");
+
+                      $.each(lines, function(n, item) {
+                      if(image==-1)
+                      {
+                                                   $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                      $('#one').append("<tr><th class=\"active\">Title</th>"+
+                                                                                                      "<th class=\"danger\">Views</th>"+
+
+                                                      "<th class=\"success\">Likes</th>"+
+                                                      "<th class=\"warning\">Dislikes</th>"+
+                                                                                                            "<th class=\"danger\">Comments</th>"+
+                                                                                                          "<th class=\"active\">Video Link</th>"+
+
+                                                      "</tr>");
+
+                          image=0;
+                      }
+
+
+                      if(image==0)
+                      {
+                                  var res = item.split("break");
+                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"danger\">"+res[1]+"</td><td class=\"success\">"+res[2]+
+                                "<td class=\"warning\">"+res[3]+"</td><td class=\"danger\">"+res[4]+
+
+                                "<td class=\"active\"><a href=\""+res[5]+"\">"+res[5]+"</a></td></tr>");
+                      }
+
+                    //   $('#slideshow_1').append("<div class=\"slideshow_item\"><div class=\"image\"><a href=\"#\"><img  alt=\"photo 1\" width=\"900\" height=\"400\" src=\""+item+"\""
+                     //   +"/></a></div></div>");
+
+                });
+            }, "text")
+              $('#multimedia').append("</div>");
+              },
+       2000);
+
+});
+
+
+$('#youtubelikes').click(function(){
+        $('#img').show();
+              $('#legend').hide();
+      d3.select("svg")
+             .remove();
+          $('#multimedia').text('');
+                      $('#onemorediv').hide();
+          $('#multimedia').show();
+           var bottom=1000;
+           var top=10000;
+           var count= Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
+           var totalCount = count.toString();
+            //   requestData={criteria:"ok", maxNumberOfItems:"10",totalCount:count};
+             requestData={show:$("#ddlViewBy :selected").text(), bottomTime:$("#datepicker").val(),
+             upperTime:$("#enddatepicker").val(),
+             id:totalCount};
+          var finalUrl=url+'loadYoutubeLiked';
+                         $.ajax(finalUrl, {
+                                                     type: 'POST',
+                                                     headers: {
+                                                                    Accept : "application/json; charset=utf-8",
+                                                                    "Content-Type": "application/json; charset=utf-8"
+
+                                                         },
+                                                     dataType:"jsonp",
+                                                                     jsonCallback: "jsonp",
+                                                                     data:requestData,
+                                                         async:false,
+                                                         success: AjaxSucceeded,
+                                                          error: AjaxFailed,
+
+                                          }).done(function(data) {console.log(data);
+                                                                  });;
+
+      setTimeout(function(){
+                 $('#img').hide();
+      var file="likesyoutube"+totalCount+$("#ddlViewBy :selected").text()+".tsv";
+
+              $('#multimedia').append("<h3> <p class=\"text-primary\">Tabular Video Post Data</p></h3>");
+        $.get(file, function(data) {
+            var lines = data.split("\n");
+            var image=-1;
+      //                                      $('#multimedia').append("<tr><th class=\"active\">"+res[0]+"</td><tdclass=\"success\">"+res[1]+
+      //                                                                "</td><tdclass=\"warning\">"+res[2]+"</td><tdclass=\"danger\">"+res[3]+"</td>");
+
+                      $.each(lines, function(n, item) {
+                      if(image==-1)
+                      {
+                                                   $('#multimedia').append('<table id="one" class="table table-condensed">');
+                                                      $('#one').append("<tr><th class=\"active\">Title</th>"+
+                                                                                                      "<th class=\"danger\">Views</th>"+
+
+                                                      "<th class=\"success\">Likes</th>"+
+                                                      "<th class=\"warning\">Dislikes</th>"+
+                                                                                                            "<th class=\"danger\">Comments</th>"+
+                                                                                                          "<th class=\"active\">Video Link</th>"+
+
+                                                      "</tr>");
+
+                          image=0;
+                      }
+
+
+                      if(image==0)
+                      {
+                                  var res = item.split("break");
+                                $('#one').append("<tr><td class=\"active\">"+res[0]+"</td><td class=\"danger\">"+res[1]+"</td><td class=\"success\">"+res[2]+
+                                "<td class=\"warning\">"+res[3]+"</td><td class=\"danger\">"+res[4]+
+
+                                "<td class=\"active\"><a href=\""+res[5]+"\">"+res[5]+"</a></td></tr>");
+                      }
+
+                    //   $('#slideshow_1').append("<div class=\"slideshow_item\"><div class=\"image\"><a href=\"#\"><img  alt=\"photo 1\" width=\"900\" height=\"400\" src=\""+item+"\""
+                     //   +"/></a></div></div>");
+
+                });
+            }, "text")
+              $('#multimedia').append("</div>");
+              },
+       2000);
+
+});
+
+
 
 $('#audio').click(function(){
 $('#img').show();

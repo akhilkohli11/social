@@ -439,7 +439,7 @@ public class SocialMysqlLayer {
                     }
 
                     String type = rs.getString("type");
-                    if (type.equals("link")) {
+                    if (type.equals("links")) {
                         linkCount = Integer.parseInt(rs.getString("count"));
                     }
 

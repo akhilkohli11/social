@@ -500,4 +500,68 @@ public class YoutubeSqlLayer {
 
         }
     }
+
+    public void loadMostViewed(String showName,String bottomtime,String uppertime,String id,String type) throws Exception{
+
+        BufferedWriter output=null;
+        Connection connection=null;
+        Statement statement=null;
+        ResultSet rs;
+        PreparedStatement preparedStatement;
+        String newshow=new String(showName);
+        String fileName=type+"youtube"+id+newshow.trim().replaceAll(" ","").replaceAll("'","")+".tsv";
+        try {
+            File file = new File(fileDirectory+fileName);
+            file.createNewFile();
+            output = new BufferedWriter(new FileWriter(file));
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String table=new String(showName);
+            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+            String query = "select distinct embedCodeVideo, title,likes,dislikes,views,comments from SHOW_YOUTUBE_"+table+" where show_name=? and   created_on >=? and created_on<=? order by "+type+" desc limit 10";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,showName);
+            preparedStatement.setString(2, bottomtime);
+            preparedStatement.setString(3, uppertime);
+
+            rs = preparedStatement.executeQuery();
+            int count=1;
+            List<String> embedCodeList=new ArrayList<String>();
+            //STEP 5: Extract data from result set
+            while (rs.next()) {
+                embedCodeList.add(rs.getString("embedCodeVideo"));
+                output.write(rs.getString("title")+"break"+rs.getString("views")+"break"+rs.getString("likes")+"break"+rs.getString("dislikes")+"break"
+                                +rs.getString("comments")+"break"+rs.getString("embedCodeVideo")
+                );
+                output.newLine();
+            }
+
+            output.close();
+
+            //  getResultSet(resultSet);
+
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (statement != null)
+                    connection.close();
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+
+        }
+
+    }
 }

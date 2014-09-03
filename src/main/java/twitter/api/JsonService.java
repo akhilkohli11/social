@@ -164,6 +164,50 @@ public class JsonService {
 
 
     @GET
+    @Path("/loadYoutubeViews")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+
+    public String getYoutubeViewsFile(@QueryParam("show") String show,
+                                        @QueryParam("bottomTime") String bottomtime,
+                                        @QueryParam("upperTime") String upperTime,
+                                        @QueryParam("id") String id) throws Exception
+    {
+        String bTime[]=bottomtime.split("/");
+        String btime=bTime[2]+"-"+bTime[0]+"-"+bTime[1];
+        String uperTime[]=upperTime.split("/");
+        String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
+        String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+        Youtube.getYoutubeSqlLayer().loadMostViewed(showName, btime + " 00:00:00", utime + " 00:00:00", id,"views");
+
+        return null;
+    }
+
+    @GET
+    @Path("/loadYoutubeLiked")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+
+    public String getYoutubeLikedFile(@QueryParam("show") String show,
+                                      @QueryParam("bottomTime") String bottomtime,
+                                      @QueryParam("upperTime") String upperTime,
+                                      @QueryParam("id") String id) throws Exception
+    {
+        String bTime[]=bottomtime.split("/");
+        String btime=bTime[2]+"-"+bTime[0]+"-"+bTime[1];
+        String uperTime[]=upperTime.split("/");
+        String utime=uperTime[2]+"-"+uperTime[0]+"-"+uperTime[1];
+        String showName=TwitterDataRetriever.getShowToTableName().get(show.toLowerCase());
+        Youtube.getYoutubeSqlLayer().loadMostViewed(showName, btime + " 00:00:00", utime + " 00:00:00", id,"likes");
+
+        return null;
+    }
+
+
+
+
+
+    @GET
     @Path("/tumblr/trends")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

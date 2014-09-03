@@ -12,8 +12,8 @@ import java.util.TreeSet;
 public class CreateYoutubeFiles {
     public static void main(String args[]) throws Exception
     {
-        outputdata();
-     //   createYoutubeSql();
+       // outputdata();
+        createYoutubeSql();
 
     }
 
