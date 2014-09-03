@@ -45,7 +45,7 @@ public class RefactoredTumblrLoader {
             limit=30;
         }
         int newcount=0;
-        while(newcount++<1000) {
+        while(newcount++<20) {
             Map<String, String> options = new HashMap<String, String>();
             Date date = new Date();
             long unixTime = (long) date.getTime() / 1000;
