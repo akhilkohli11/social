@@ -231,12 +231,13 @@ public class YoutubeSqlLayer {
 
                 String table = new String(showName);
                 table = table.trim().toLowerCase().replaceAll(" ", "").replaceAll("\"", "").replaceAll("'", "");
-                String query = "select count,created_on  from SHOW_COUNT_" + table + " where   socialType=? and created_on >=? and created_on<=? and type=? order by created_on asc";
+                String query = "select count,created_on  from SHOW_COUNT_" + table + " where   socialType=? and created_on >=? and created_on<=? and type=? and title LIKE ? order by created_on asc";
                 preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, "youtube");
                 preparedStatement.setString(2, bottomtime);
                 preparedStatement.setString(3, uppertime);
                 preparedStatement.setString(4, "views");
+                preparedStatement.setString(5, "%" + showName + "%");
                 rs = preparedStatement.executeQuery();
                 int count = 1;
                 //STEP 5: Extract data from result set
