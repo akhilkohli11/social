@@ -84,7 +84,9 @@ public class YoutubeSqlLayer {
                       }
                   }
                   catch (Exception e)
-                  {}
+                  {
+                      e.printStackTrace();
+                  }
         } catch (Exception e) {
             //Handle errors for Class.forName
              e.printStackTrace();
