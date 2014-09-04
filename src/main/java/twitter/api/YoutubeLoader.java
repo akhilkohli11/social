@@ -107,7 +107,7 @@ public class YoutubeLoader {
         YouTube.Search.List search = youtube.search().list("id,snippet");
 
         int newcount = 0;
-        while (newcount++ < 20) {
+        while (newcount++ < 500) {
             int count = 0;
 
             search.setType("video");
@@ -125,7 +125,7 @@ public class YoutubeLoader {
                 daysAgo = new org.joda.time.DateTime(date).minusHours(4).toDate();
                 for (Map.Entry<String, String> showSearch : searchMap.entrySet()) {
                     try {
-                        String queryTerm=showSearch.getKey()+" tv series american";
+                        String queryTerm=showSearch.getKey()+" tv series american   ";
                         search.setQ(queryTerm);
 
 

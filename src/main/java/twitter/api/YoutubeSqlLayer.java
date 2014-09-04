@@ -40,10 +40,10 @@ public class YoutubeSqlLayer {
         Statement statement = null;
         ResultSet rs;
         PreparedStatement preparedStatement;
-          try {
-              String table=new String(showName);
-              table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
-              Class.forName(jdbcDriverStr);
+        String table=new String(showName);
+        table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+        try {
+                Class.forName(jdbcDriverStr);
             connection = DriverManager.getConnection(jdbcURL);
             System.out.println("youtube "+showName+ table+"    "+createdAt+"   "+new java.sql.Date(createdAt.getValue()));
             preparedStatement = connection.prepareStatement("insert into SHOW_YOUTUBE_"+table+"(id," +
@@ -68,7 +68,23 @@ public class YoutubeSqlLayer {
 
             preparedStatement.executeUpdate();
         } catch (SQLException se) {
-            se.printStackTrace();
+
+                  try {
+                      if(views>0) {
+                          preparedStatement = connection.prepareStatement("update SHOW_YOUTUBE_" + table + " set views=?,likes=?,dislikes=?,comments=? where id=? and show_name=?");
+                          preparedStatement.setInt(1, views);
+                          preparedStatement.setInt(2, likes);
+                          preparedStatement.setInt(3, dislikes);
+                          preparedStatement.setInt(4, comments);
+
+                          preparedStatement.setString(5, id);
+                          preparedStatement.setString(6, showName);
+                          System.out.println("updating YOUTUBE for postID " + id + " show " + showName + " likes " + likes+" views "+views+" dislikes "+dislikes +" comments "+comments);
+                          preparedStatement.executeUpdate();
+                      }
+                  }
+                  catch (Exception e)
+                  {}
         } catch (Exception e) {
             //Handle errors for Class.forName
              e.printStackTrace();
