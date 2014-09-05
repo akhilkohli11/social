@@ -968,18 +968,18 @@ public class SocialMysqlLayer {
             tweetText  = tweetText.replaceAll("[^\\u0000-\\uFFFF]", "");
             System.out.println("Twitrer "+showName);
             table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
-            preparedStatement = connection.prepareStatement("insert into SHOW_TWITTER_"+table+"(tweet," +
-                    "tweetText,show_name,created_on,sentimentalScore,embedCode,type,lastUpdated" + ") values (?,?,?,?,?,?,?,?)");
-            preparedStatement.setString(1, tweet);
-            preparedStatement.setString(2, tweetText);
-            preparedStatement.setString(3, showName);
-            preparedStatement.setDate(4, new java.sql.Date(df.parse(createdOn).getTime()));
-            preparedStatement.setInt(5, sentimentalScore);
-            preparedStatement.setString(6, embedCode);
-            preparedStatement.setString(7, type);
-            preparedStatement.setTimestamp(8, new Timestamp(df.parse(createdOn).getTime()));
-
-            preparedStatement.executeUpdate();
+//            preparedStatement = connection.prepareStatement("insert into SHOW_TWITTER_"+table+"(tweet," +
+//                    "tweetText,show_name,created_on,sentimentalScore,embedCode,type,lastUpdated" + ") values (?,?,?,?,?,?,?,?)");
+//            preparedStatement.setString(1, tweet);
+//            preparedStatement.setString(2, tweetText);
+//            preparedStatement.setString(3, showName);
+//            preparedStatement.setDate(4, new java.sql.Date(df.parse(createdOn).getTime()));
+//            preparedStatement.setInt(5, sentimentalScore);
+//            preparedStatement.setString(6, embedCode);
+//            preparedStatement.setString(7, type);
+//            preparedStatement.setTimestamp(8, new Timestamp(df.parse(createdOn).getTime()));
+//
+//            preparedStatement.executeUpdate();
 
 
             preparedStatement = connection.prepareStatement("insert into SHOW_GEO_TWITTER_"+table+"(city," +
