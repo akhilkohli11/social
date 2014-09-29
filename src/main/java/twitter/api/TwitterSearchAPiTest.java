@@ -47,13 +47,25 @@ public class TwitterSearchAPiTest {
         newoutput = new BufferedWriter(new FileWriter(positiveFile.getAbsoluteFile()));
 //        Long unixTime =
 //        Long newUnixTime = (long) until.getTime()/1000;
-        List<String> showNames= Arrays.asList("BiggBossSuvarna", "Mahaparva", "AkashaDeepa", "Mahabharat", "TaarakMehtaKaOoltahChashmah", "BalikaVadhu"
-                , "Jhalak","comedynightswithkapil");
+        List<String> showNames= Arrays.asList("Game of Thrones");
 
-        for(String showName :showNames) {
-            Query query = new Query("Akele Hum Akele Tum");
+//        while (true) {
+//            ResponseList<Status> statuses = twitter.timelines().getUserTimeline("GameOfThrones");
+//            int newcount = 0;
+//            while (newcount < statuses.size()) {
+//                Status status1 = statuses.get(newcount);
+//                System.out.println("@" + status1.getUser().getScreenName() + ":" + status1.getText() + ":" + status1.getCreatedAt());
+//                newcount++;
+//            }
+//            Thread.sleep(1000 * 2);
+//        }
+
+//        for(String showName :showNames)
+        {
+            Query query = new Query("Game of thrones");
             //query.setUntil(formatter5.format(until).toString());
             // query.setUntil(formatter5.format(until).toString());
+            query.setSince("2014-09-01");
 
             QueryResult result = twitter.search(query);
             for (Status status1 : result.getTweets()) {
@@ -63,36 +75,36 @@ public class TwitterSearchAPiTest {
             }
 
         int count=0;
-            do {
-
-                List<Status> tweets = result.getTweets();
-                long max = 0;
-                for (Status tweet : tweets) {
-                    String text=tweet.getText();
-                    System.out.println("Tweet: " + tweet.getText() + "    " + tweet.getCreatedAt());
-                    if(count++%2==0) {
-                        output.write(text);
-                        output.newLine();
-                    }
-                    else
-                    {
-                       newoutput.write(tweet.getText());
-                        newoutput.newLine();
-                    }
-                    if (tweet.getId() > max) {
-                        max = tweet.getId();
-                    }
-
-                }
-
-                query = new Query("Akele Hum Akele Tum");
-                //   query.setUntil(formatter5.format(until).toString());
-                if (query != null)
-
-                    result = twitter.search(query);
-                Thread.sleep(1000 * 60);
-
-            } while (query != null);
+//            do {
+//
+//                List<Status> tweets = result.getTweets();
+//                long max = 0;
+//                for (Status tweet : tweets) {
+//                    String text=tweet.getText();
+//                    System.out.println("Tweet: " + tweet.getText() + "    " + tweet.getCreatedAt());
+//                    if(count++%2==0) {
+//                        output.write(text);
+//                        output.newLine();
+//                    }
+//                    else
+//                    {
+//                       newoutput.write(tweet.getText());
+//                        newoutput.newLine();
+//                    }
+//                    if (tweet.getId() > max) {
+//                        max = tweet.getId();
+//                    }
+//
+//                }
+//
+//                query = new Query("Akele Hum Akele Tum");
+//                //   query.setUntil(formatter5.format(until).toString());
+//                if (query != null)
+//
+//                    result = twitter.search(query);
+//                Thread.sleep(1000 * 60);
+//
+//            } while (query != null);
             output.close();
            newoutput.close();
         }

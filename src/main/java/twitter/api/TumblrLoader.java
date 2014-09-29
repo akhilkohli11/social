@@ -2,12 +2,10 @@ package twitter.api;
 
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.*;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.sql.*;
+import java.io.*;
 import java.util.*;
 import java.util.Date;
 
@@ -27,217 +25,186 @@ public class TumblrLoader {
                 "ZHdZH7guXA1iemJ7mpcTZSdZqYchTUciD2QxgreGQ99rLhauIf"
         );
     }
-     String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
+    String fileDirectory="/usr/local/apache-tomcat-7.0.47/webapps/examples/";
+
+
+    public static void main(String args[]) throws Exception
+    {
+        init();
+        String sCurrentLine;
+        BufferedReader br = null;
+        br = new BufferedReader(new FileReader("/tmp/showsfinal.txt"));
+        TumblrLoader.init();
+        RefactoredTumblrLoader.init();
+        while ((sCurrentLine = br.readLine()) != null) {
+
+            String[] buffer= StringUtils.split(sCurrentLine, "@", 2);
+            String[] newbuffer=StringUtils.split(buffer[1],"#",2);
+            String[] finalbuffer=StringUtils.split(newbuffer[1], "@", 2);
+            String caste[]=new String[1000];
+            String hashtag[]=new String[1000];
+
+            //  populateShowIDToShowName(socialMysqlLayer, countString,buffer[0].trim() , "@"+newbuffer[0].trim(), null, "#"+newbuffer[1].trim());
+          //  loadTumblr(null,buffer[0].trim());
+
+             loadTumblr(null,buffer[0].trim());
+
+
+        }
+        // System.out.println(showName+"    "+tumblerPage);
+
+    }
 
 
 
 
 
-    public static void loadTumblr(TumblrSqlLayer tumblrSqlLayer,Map<String,List<SearchObject>> searchMap) throws Exception
+    public static void loadTumblr(TumblrSqlLayer tumblrSqlLayer,String showName) throws Exception
     {
         Map<String, String> options = new HashMap<String, String>();
         Date date = new Date();
-        long unixTime = (long) date.getTime()/1000;
+        long unixTime = (long) date.getTime() / 1000;
+
         options.put("before", String.valueOf(unixTime));
-        options.put("limit", "50");
-        while(true) {
-            for(Map.Entry<String,List<SearchObject>> showSearch : searchMap.entrySet()) {
-                for(SearchObject searchObject : showSearch.getValue()) {
-                    if(searchObject.isBlog()) {
-//
-//                        Map<String, String> newoptions = new HashMap<String, String>();
-//                        newoptions.put("type", "video");
-//                        System.out.println(searchObject.getSearchTerm());
-//                        List<Post> videoPosts = client.blogPosts(searchObject.getSearchTerm().trim(), newoptions);
-//                        dbVidePost(tumblrSqlLayer,videoPosts,showSearch.getKey(),"true");
-//                        newoptions.put("type", "photo");
-//                        List<Post> photoposts = client.blogPosts(searchObject.getSearchTerm(), newoptions);
-//
-//
-//                        newoptions.put("type", "audio");
-//                        List<Post> audioPosts = client.blogPosts(searchObject.getSearchTerm(), newoptions);
-//
-//
-//                        newoptions.put("type", "text");
-//                        List<Post> textPosts = client.blogPosts(searchObject.getSearchTerm(), newoptions);
-//
+        options.put("limit", "100");
+        int count = 0;
+        Map<String,Integer> tvMap=new HashMap<String, Integer>();
+        Map<String,Integer> showNameMap=new HashMap<String, Integer>();
+        Map<String,Integer> seasonMap=new HashMap<String, Integer>();
+        Map<String,Integer> finalMap=null;
+        while (count++ < 30) {
+
+            List<Post> posts = client.tagged(showName.trim() + " TV series", options);
+
+            for (Post post : posts) {
+                persist(tumblrSqlLayer, post, showName.trim(), tvMap);
+
+            }
+            System.out.println(" TV  series");
+            System.out.println(sortByValue(tvMap));
+            posts = client.tagged(showName.trim()+" TV ", options);
 
 
+            for (Post post : posts) {
+                persist(tumblrSqlLayer, post, showName.trim(), showNameMap);
 
-                    }
-                    else {
-                        List<Post> posts = client.tagged(searchObject.getSearchTerm().trim(), options);
-                        for (Post post : posts) {
-                            persist(tumblrSqlLayer,post,showSearch.getKey(),searchObject.getIsOfficial().toString());
-
-                        }
-                    }
-                }
-                Thread.sleep(1000);
             }
 
-            Date daysAgo = new DateTime(date).minusHours(1).toDate();
+            System.out.println(" TV");
+            System.out.println(sortByValue(showNameMap));
+
+            posts = client.tagged(showName.trim() + " Show", options);
+
+            for (Post post : posts) {
+                persist(tumblrSqlLayer, post, showName.trim(), seasonMap);
+
+            }
+
+            System.out.println(" show ");
+            System.out.println(sortByValue(seasonMap));
+
+            finalMap=new HashMap<String, Integer>();
+
+            for(Map.Entry<String,Integer> entry:tvMap.entrySet())
+            {
+                if(!finalMap.containsKey(entry.getKey()))
+                {
+                    finalMap.put(entry.getKey(),entry.getValue());
+                }
+                else
+                {
+                    int newvalue=finalMap.get(entry.getKey())+entry.getValue();
+                    finalMap.put(entry.getKey(),newvalue);
+                }
+            }
+
+
+            for(Map.Entry<String,Integer> entry:seasonMap.entrySet())
+            {
+                if(!finalMap.containsKey(entry.getKey()))
+                {
+                    finalMap.put(entry.getKey(),entry.getValue());
+                }
+                else
+                {
+                    int newvalue=finalMap.get(entry.getKey())+entry.getValue();
+                    finalMap.put(entry.getKey(),newvalue);
+                }
+            }
+
+            for(Map.Entry<String,Integer> entry:showNameMap.entrySet())
+            {
+                if(!finalMap.containsKey(entry.getKey()))
+                {
+                    finalMap.put(entry.getKey(),entry.getValue());
+                }
+                else
+                {
+                    int newvalue=finalMap.get(entry.getKey())+entry.getValue();
+                    finalMap.put(entry.getKey(),newvalue);
+                }
+            }
+
+            System.out.println(" final map "+date);
+            System.out.println(sortByValue(finalMap));
+
+
+            Thread.sleep(1000);
+
+
+            Date daysAgo = new DateTime(date).minusDays(4).toDate();
             date = daysAgo;
             unixTime = (long) daysAgo.getTime() / 1000;
             options.put("before", String.valueOf(unixTime));
+
         }
+        //print maps into a file
+    }
 
+    static Map sortByValue(Map map) {
+        List list = new LinkedList(map.entrySet());
+        Collections.sort(list, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                return ((Comparable) ((Map.Entry) (o2)).getValue())
+                        .compareTo(((Map.Entry) (o1)).getValue());
+            }
+        });
 
+        Map result = new LinkedHashMap();
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            Map.Entry entry = (Map.Entry)it.next();
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
     }
 
 
-    private static void persist(TumblrSqlLayer tumblrSqlLayer,Post post,String showName,String official) throws Exception{
-        //text, quote, link, answer, video, audio, photo, chat
-        if(post.getType().equals("photo"))
-        {
-            dbPhotoPost(tumblrSqlLayer,Arrays.asList(post),showName,official);
+    private static void persist(TumblrSqlLayer tumblrSqlLayer,Post post,String showName,Map<String,Integer> map) throws Exception{
 
-        }
-        if(post.getType().equals("video"))
-        {
-            dbVidePost(tumblrSqlLayer,Arrays.asList(post),showName,official);
-        }
-
-        if(post.getType().equals("audio"))
-        {
-            dbAudioPost(tumblrSqlLayer,Arrays.asList(post),showName,official);
-
-        }
-        if(post.getType().equals("text"))
-        {
-            dbTextPost(tumblrSqlLayer, Arrays.asList(post), showName, official);
-
-        }
-
-        if(post.getType().equals("quote"))
-        {
-            dbQuotePost(tumblrSqlLayer, Arrays.asList(post), showName, official);
-
-        }
+        dbVidePost(tumblrSqlLayer,Arrays.asList(post),showName,map);
 
     }
 
-    private static void dbQuotePost(TumblrSqlLayer tumblrSqlLayer, List<Post> posts, String showName, String official) throws Exception{
-        for(Post post : posts)
-        {
-            String name=post.getBlogName();
-            Blog blog=client.blogInfo(name);
-            Long id=post.getId();
-            String type="video";
-            QuotePost videoPostNEw=(QuotePost)post;
-            String url=videoPostNEw.getSourceUrl();
-            String time=post.getDateGMT();
-            int likes=blog.getFollowersCount();
-            int followers=blog.getLikeCount();
-            tumblrSqlLayer.populateTumblrData(id,name,videoPostNEw.getText(),showName,videoPostNEw.getSourceTitle(),official,"quote",0,likes,followers,0,
-                    "",time,url,post.getPostUrl());
-
-        }
-    }
-
-
-    private static void dbVidePost(TumblrSqlLayer tumblrSqlLayer,List<Post> videoPosts,String showName,String official) throws Exception
+    private static void dbVidePost(TumblrSqlLayer tumblrSqlLayer,List<Post> videoPosts,String showName,Map<String,Integer> map) throws Exception
     {
         for(Post post : videoPosts)
         {
             String name=post.getBlogName();
             Blog blog=client.blogInfo(name);
-            Long id=post.getId();
-            String type="video";
-            VideoPost videoPostNEw=(VideoPost)post;
-            String url=videoPostNEw.getThumbnailUrl();
-            String time=post.getDateGMT();
-            for(Video video : videoPostNEw.getVideos())
-            {
-                int width=video.getWidth();
-                String embedCode=video.getEmbedCode();
-                int likes=blog.getFollowersCount();
-                int followers=blog.getLikeCount();
-                tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"video",0,likes,followers,width,
-                        embedCode,time,url,post.getPostUrl());
-            }
+           for(String tag :post.getTags())
+           {
+               if(map.containsKey(tag))
+               {
+                   int value=map.get(tag);
+                   value++;
+                   map.put(tag,value);
+               }
+               else
+               {
+                   map.put(tag,1);
+               }
+           }
         }
     }
-
-    private static void dbPhotoPost(TumblrSqlLayer tumblrSqlLayer,List<Post> photoposts,String showName,String official) throws Exception
-    {
-        for(Post post : photoposts)
-        {
-            String name=post.getBlogName();
-            Blog blog=client.blogInfo(name);
-            Long id=post.getId();
-            String type="photo";
-            PhotoPost photoPosts=(PhotoPost)post;
-            String url=photoPosts.getSourceUrl();
-            String time=post.getDateGMT();
-            for(Photo photo : photoPosts.getPhotos())
-            {
-                String embedCode=photo.getOriginalSize().getUrl();
-                int likes=blog.getFollowersCount();
-                int followers=blog.getLikeCount();
-                tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"photo",0,likes,followers,photo.getOriginalSize().getWidth(),
-                        embedCode,time,url,post.getPostUrl());
-            }
-        }
-    }
-
-    private static void dbAudioPost(TumblrSqlLayer tumblrSqlLayer,List<Post> audioPosts,String showName,String official) throws Exception
-    {
-        for(Post post : audioPosts)
-        {
-            String name=post.getBlogName();
-            Blog blog=client.blogInfo(name);
-            Long id=post.getId();
-            AudioPost audioPost=(AudioPost)post;
-            String url=audioPost.getSourceUrl();
-            String time=post.getDateGMT();
-
-                String embedCode=audioPost.getEmbedCode();
-                int likes=blog.getFollowersCount();
-                int followers=blog.getLikeCount();
-                tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"audio",0,likes,followers,0,
-                        embedCode,time,url,post.getPostUrl());
-
-        }
-    }
-
-    private static void dbTextPost(TumblrSqlLayer tumblrSqlLayer,List<Post> videoPosts,String showName,String official) throws Exception
-    {
-        for(Post post : videoPosts)
-        {
-            String name=post.getBlogName();
-            Blog blog=client.blogInfo(name);
-            Long id=post.getId();
-            String type="video";
-            TextPost videoPostNEw=(TextPost)post;
-            String url=videoPostNEw.getSourceUrl();
-            String time=post.getDateGMT();
-                int likes=blog.getFollowersCount();
-                int followers=blog.getLikeCount();
-                tumblrSqlLayer.populateTumblrData(id,name,videoPostNEw.getBody(),showName,videoPostNEw.getTitle(),official,"text",0,likes,followers,0,
-                        "",time,url,post.getPostUrl());
-
-        }
-    }
-
-
-    public static void loadTumblrData(TumblrSqlLayer tumblrSqlLayer,Map<String,String> map) throws Exception{
-        Map<String,List<SearchObject>> searchList=new HashMap<String, List<SearchObject>>();
-        for(Map.Entry<String,String> entry : map.entrySet()) {
-            List<SearchObject> searchObjectList = new ArrayList<SearchObject>();
-            if (entry.getValue() == null) {
-                searchObjectList.add(new SearchObject(entry.getKey(), "true", false));
-            } else {
-                searchObjectList.add(new SearchObject(entry.getKey(), "false", false));
-                searchObjectList.add(new SearchObject(entry.getValue(), "true", true));
-            }
-            searchList.put(entry.getKey(), searchObjectList);
-        }
-        loadTumblr(tumblrSqlLayer,searchList);
-
-    }
-
-
-
 
 }

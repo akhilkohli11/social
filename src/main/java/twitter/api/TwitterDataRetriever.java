@@ -251,6 +251,8 @@ public class TwitterDataRetriever {
                     }
                     socialMysqlLayer.populateTweetData(msg.trim(), tweettext.trim(), showName.trim(),
                             createdAt, time, 0, type, embedCode, selectedCity, selectedCountry, selectedState);
+                    CloudSolrPersistenceLayer.getInstance().populateTweetData(msg.trim(), tweettext.trim(), showName.trim(),
+                            createdAt, time, 0, type, embedCode, selectedCity, selectedCountry, selectedState);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

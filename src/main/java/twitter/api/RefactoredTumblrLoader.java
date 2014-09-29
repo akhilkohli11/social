@@ -144,6 +144,8 @@ public class RefactoredTumblrLoader {
             int followers=blog.getLikeCount();
             tumblrSqlLayer.populateTumblrData(id,name,videoPostNEw.getText(),showName,videoPostNEw.getSourceTitle(),official,"quote",0,likes,followers,0,
                     "",time,url,post.getPostUrl());
+            CloudSolrPersistenceLayer.getInstance().populateTumblrData(id,name,videoPostNEw.getText(),showName,videoPostNEw.getSourceTitle(),official,"quote",0,likes,followers,0,
+                    "",time,url,post.getPostUrl());
 
         }
     }
@@ -169,6 +171,8 @@ public class RefactoredTumblrLoader {
                 int followers=blog.getLikeCount();
                 tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"video",0,likes,followers,width,
                         embedCode,time,url,post.getPostUrl());
+                CloudSolrPersistenceLayer.getInstance().populateTumblrData(id,name,null,showName,null,official,"video",0,likes,followers,width,
+                        embedCode,time,url,post.getPostUrl());
             }
         }
     }
@@ -192,6 +196,8 @@ public class RefactoredTumblrLoader {
                 int followers=blog.getLikeCount();
                 tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"photo",0,likes,followers,photo.getOriginalSize().getWidth(),
                         embedCode,time,url,post.getPostUrl());
+                CloudSolrPersistenceLayer.getInstance().populateTumblrData(id,name,null,showName,null,official,"photo",0,likes,followers,photo.getOriginalSize().getWidth(),
+                        embedCode,time,url,post.getPostUrl());
             }
         }
     }
@@ -210,6 +216,8 @@ public class RefactoredTumblrLoader {
             String embedCode=audioPost.getEmbedCode();
             int followers=blog.getLikeCount();
             tumblrSqlLayer.populateTumblrData(id,name,null,showName,null,official,"audio",0,likes,followers,0,
+                    embedCode,time,url,post.getPostUrl());
+            CloudSolrPersistenceLayer.getInstance().populateTumblrData(id,name,null,showName,null,official,"audio",0,likes,followers,0,
                     embedCode,time,url,post.getPostUrl());
 
         }
@@ -230,6 +238,8 @@ public class RefactoredTumblrLoader {
             int followers=blog.getLikeCount();
             List<Note> notesList=post.getNotes();
             tumblrSqlLayer.populateTumblrData(id,name,videoPostNEw.getBody(),showName,videoPostNEw.getTitle(),official,"text",0,likes,followers,0,
+                    "",time,url,post.getPostUrl());
+            CloudSolrPersistenceLayer.getInstance().populateTumblrData(id,name,videoPostNEw.getBody(),showName,videoPostNEw.getTitle(),official,"text",0,likes,followers,0,
                     "",time,url,post.getPostUrl());
 
         }

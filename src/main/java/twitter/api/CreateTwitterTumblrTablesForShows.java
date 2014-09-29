@@ -12,10 +12,28 @@ public class CreateTwitterTumblrTablesForShows {
 
     public static void main(String args[]) throws Exception
     {
-        createTwitterSql();
-        createTumblrSql();
-       createShowCountSql();
-        createLocationSql();
+        printshow();
+//        createTwitterSql();
+//        createTumblrSql();
+//       createShowCountSql();
+//        createLocationSql();
+    }
+
+    private static void printshow() throws Exception{
+            BufferedReader br = null;
+            String sCurrentLine;
+            br = new BufferedReader(new FileReader("/tmp/showsfinal.txt"));
+            int count=1;
+            //  socialMysqlLayer.readData();
+            while ((sCurrentLine = br.readLine()) != null) {
+
+                String[] buffer= StringUtils.split(sCurrentLine, "@", 2);
+               System.out.println(buffer[0].trim());
+
+
+            }
+            br.close();
+
     }
 
     private static void createLocationSql() throws Exception{

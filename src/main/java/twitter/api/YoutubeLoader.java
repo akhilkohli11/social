@@ -212,6 +212,9 @@ public class YoutubeLoader {
                     youtubeSqlLayer.populateYoutubeData(singleVideo.getId(),showName,videoSnippet.getTitle(),
                             official,likes,dislikes,views,comments,singleVideo.getPlayer().getEmbedHtml(),null,null,
                             videoSnippet.getPublishedAt(),videoSnippet.getChannelTitle(),null);
+                CloudSolrPersistenceLayer.getInstance().populateYoutubeData(singleVideo.getId(),showName,videoSnippet.getTitle(),
+                        official,likes,dislikes,views,comments,singleVideo.getPlayer().getEmbedHtml(),null,null,
+                        videoSnippet.getPublishedAt(),videoSnippet.getChannelTitle(),null);
 
 
             }
