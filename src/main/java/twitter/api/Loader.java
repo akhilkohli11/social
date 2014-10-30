@@ -14,7 +14,7 @@ public static void main(String args[])
 
     public void init() {
         try {
-            System.out.println(": initialised dsdsdsdssd");
+            CloudSolrPersistenceLayer.getInstance().init();
             YoutubeDaemon youtubeDaemon=new YoutubeDaemon();
             youtubeDaemon.init();
             TwitterTweetDaeomon twitterTweetDaeomon=new TwitterTweetDaeomon();

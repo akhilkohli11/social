@@ -2,6 +2,7 @@ package twitter.api;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.CloudSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.RangeFacet;
 import org.apache.solr.common.SolrDocument;
@@ -37,12 +38,12 @@ public class CloudSolrPersistenceLayer {
         return cloudSolrPersistenceLayer;
     }
 
-    public CloudSolrServer server;
+    public HttpSolrServer server;
 
     public void init()
     {
-        server = new CloudSolrServer("localhost:2181");
-        server.setDefaultCollection("collection1");
+         server = new HttpSolrServer("http://localhost:8983/solr/collection1");
+
     }
 
     public  int populateTweetData(String tweet,String tweetText,String showName,
@@ -128,7 +129,8 @@ public class CloudSolrPersistenceLayer {
 
     public  void populateYoutubeData(String id,String showName,String title,String official,int likes,
                                      int dislikes,int views,int comments,String embedCodeVideo,
-                                     String embedCodePic,String tag, com.google.api.client.util.DateTime createdAt,String channel,String link) throws Exception {
+                                     String embedCodePic,String tag, com.google.api.client.util.DateTime createdAt,String channel,String link,
+                                     int showID) throws Exception {
         try {
             SolrInputDocument doc = new SolrInputDocument();
             doc.addField("id", showName+id);
@@ -145,8 +147,7 @@ public class CloudSolrPersistenceLayer {
             doc.addField("posturl", link);
             doc.addField("embedCode", embedCodeVideo);
             doc.addField("channel", channel);
-            doc.addField("tag", tag);
-
+            doc.addField("showID", showID);
             doc.addField("createdOn", new Date(createdAt.getValue()));
             doc.addField("last_modified", new Date(createdAt.getValue()));
             doc.addField("category", "youtube");
@@ -174,7 +175,7 @@ public class CloudSolrPersistenceLayer {
     int count1=0;
     private void readQuery() throws Exception{
         SolrQuery solrQuery = new  SolrQuery().
-                setQuery("showName:Suits AND createdOn:[2014-09-23T00:00:00Z TO 2014-11-17T00:00:00Z] ");
+                    setQuery("showName:Suits AND createdOn:[2014-09-23T00:00:00Z TO 2014-11-17T00:00:00Z] ");
         solrQuery.setRows(10);
         solrQuery.setStart(count1);
 

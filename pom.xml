@@ -205,7 +205,7 @@
         <dependency>
             <groupId>org.facebook4j</groupId>
             <artifactId>facebook4j-core</artifactId>
-            <version>[2.1,)</version>
+            <version>[2.2,)</version>
         </dependency>
 
         <dependency>
@@ -251,6 +251,14 @@
             <groupId>com.google.oauth-client</groupId>
             <artifactId>google-oauth-client-jetty</artifactId>
             <version>${project.oauth.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>sample</groupId>
+            <artifactId>com.sample</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>/tmp/klout-java-wrapper.jar</systemPath>
         </dependency>
 
 

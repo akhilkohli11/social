@@ -102,7 +102,7 @@ public class YoutubeLoader {
      * user's channel using the YouTube Analytics API.
      *
      */
-    public static void populate(YoutubeSqlLayer youtubeSqlLayer, Map<String,String> searchMap) throws Exception {
+    public static void populate( Map<String,Integer> searchMap) throws Exception {
 
         YouTube.Search.List search = youtube.search().list("id,snippet");
 
@@ -123,9 +123,9 @@ public class YoutubeLoader {
 
                 date = new org.joda.time.DateTime(date).minusHours(1).toDate();
                 daysAgo = new org.joda.time.DateTime(date).minusHours(4).toDate();
-                for (Map.Entry<String, String> showSearch : searchMap.entrySet()) {
+                for (Map.Entry<String, Integer> showSearch : searchMap.entrySet()) {
                     try {
-                        String queryTerm=showSearch.getKey()+" tv series american   ";
+                        String queryTerm=showSearch.getKey()+" tv";
                         search.setQ(queryTerm);
 
 
@@ -153,8 +153,8 @@ public class YoutubeLoader {
                             List<Video> videoList = listResponse.getItems();
 
                             if (videoList != null) {
-                                newprettyPrint(videoList.iterator(), queryTerm,youtubeSqlLayer,showSearch.getValue(),
-                                        showSearch.getKey());
+                                newprettyPrint(videoList.iterator(), queryTerm,
+                                        showSearch.getKey(),showSearch.getValue());
                             }
                         }
 
@@ -171,8 +171,8 @@ public class YoutubeLoader {
 
     static Set<String> id=new HashSet<String>();
 
-    private static void newprettyPrint(Iterator<Video> iteratorVideoResults, String query,YoutubeSqlLayer youtubeSqlLayer,
-                                       String officialChannel,String showName) {
+    private static void     newprettyPrint(Iterator<Video> iteratorVideoResults, String query,
+                                       String showName,int id) {
 
         System.out.println("\n=============================================================");
         System.out.println(
@@ -191,9 +191,9 @@ public class YoutubeLoader {
                 {
                     continue;
                 }
-                if(singleVideo.getSnippet().getChannelTitle().toLowerCase().contains(officialChannel)) {
-                    official="true";
-                }
+//                if(singleVideo.getSnippet().getChannelTitle().toLowerCase().contains(officialChannel)) {
+//                    official="true";
+//                }
                 int likes=0;
                 int dislikes=0;
                 int comments=0;
@@ -209,12 +209,9 @@ public class YoutubeLoader {
                 }
                 VideoSnippet videoSnippet=singleVideo.getSnippet();
 
-                    youtubeSqlLayer.populateYoutubeData(singleVideo.getId(),showName,videoSnippet.getTitle(),
-                            official,likes,dislikes,views,comments,singleVideo.getPlayer().getEmbedHtml(),null,null,
-                            videoSnippet.getPublishedAt(),videoSnippet.getChannelTitle(),null);
                 CloudSolrPersistenceLayer.getInstance().populateYoutubeData(singleVideo.getId(),showName,videoSnippet.getTitle(),
                         official,likes,dislikes,views,comments,singleVideo.getPlayer().getEmbedHtml(),null,null,
-                        videoSnippet.getPublishedAt(),videoSnippet.getChannelTitle(),null);
+                        videoSnippet.getPublishedAt(),videoSnippet.getChannelTitle(),null,id);
 
 
             }

@@ -45,7 +45,7 @@ public class Youtube {
             System.out.println("Youtube map"+map);
             // System.out.println(showName+"    "+tumblerPage);
             YoutubeLoader.init();
-            YoutubeLoader.populate(youtubeSqlLayer,map);
+           // YoutubeLoader.populate(youtubeSqlLayer,map);
 
         } catch (IOException e) {
             e.printStackTrace();

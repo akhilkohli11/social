@@ -20,7 +20,7 @@ public class YoutubeDaemon {
 
             try {
 
-                Youtube.init();
+                YoutubeForAllShowsInitializer.init();
 
             } catch (Exception e) {
                 e.printStackTrace();

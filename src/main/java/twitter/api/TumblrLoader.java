@@ -47,7 +47,7 @@ public class TumblrLoader {
             //  populateShowIDToShowName(socialMysqlLayer, countString,buffer[0].trim() , "@"+newbuffer[0].trim(), null, "#"+newbuffer[1].trim());
           //  loadTumblr(null,buffer[0].trim());
 
-             loadTumblr(null,buffer[0].trim());
+             loadTumblr(null,"game of thrones");
 
 
         }
