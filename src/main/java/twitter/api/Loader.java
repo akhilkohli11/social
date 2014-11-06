@@ -16,7 +16,9 @@ public static void main(String args[])
         try {
             CloudSolrPersistenceLayer.getInstance().init();
             Zap2ItSolrApi.init();
+            Thread.sleep(10000);
             SocialXMLParser.init();
+            Thread.sleep(2000);
             MapSocialWebsitesToShows.init();
 
 //            ViewsYoutubeLoader.init();

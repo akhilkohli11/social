@@ -324,7 +324,7 @@ public class CloudSolrPersistenceLayer {
 
         server.add(doc);
         commitCountyoutube++;
-        if (commitCountyoutube % 100 == 0) {
+        if (commitCountyoutube % 20 == 0) {
             server.commit();
         }
 

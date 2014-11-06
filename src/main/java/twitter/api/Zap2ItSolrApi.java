@@ -59,6 +59,7 @@ public class Zap2ItSolrApi {
                 SolrDocument document=iterator.next();
                 CloudSolrPersistenceLayer.getInstance().populateDoc(document);
             }
+            Thread.sleep(1000);
         }
     }
 
