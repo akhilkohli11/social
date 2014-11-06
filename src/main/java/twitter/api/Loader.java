@@ -15,10 +15,10 @@ public static void main(String args[])
     public void init() {
         try {
             CloudSolrPersistenceLayer.getInstance().init();
-            Zap2ItSolrApi.init();
-            Thread.sleep(10000);
-            SocialXMLParser.init();
-            Thread.sleep(2000);
+//            Zap2ItSolrApi.init();
+//            Thread.sleep(10000);
+//            SocialXMLParser.init();
+//            Thread.sleep(2000);
             MapSocialWebsitesToShows.init();
 
 //            ViewsYoutubeLoader.init();
