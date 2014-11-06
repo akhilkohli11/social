@@ -11,25 +11,25 @@ import java.util.Map;
 public class ShowLoader {
 
     static ShowLoader showLoader=new ShowLoader();
-    private Map<String, Integer> showTOIDMap=new HashMap<String, Integer>();
+    private Map<String, String> showTOIDMap=new HashMap<String, String>();
+    private Map<String, String> popularShowTOIDMap;
 
-    public  List<String> getShows()
-    {
-        //todo read shows from solr
-        return Arrays.asList("Game of Thrones","Big Bang Theory","Friends");
-    }
 
     public static ShowLoader getShowLoader()
     {
+
         return showLoader;
     }
 
-    public Map<String, Integer> getShowTOIDMap() {
-        showTOIDMap=new HashMap<String, Integer>();
-       showTOIDMap.put("Game of Thrones",1);
-        showTOIDMap.put("Big Bang Theory",2);
-        showTOIDMap.put("Friends",3);
+    public Map<String, String> getShowTOIDMap() throws Exception{
+
+       if(showTOIDMap.isEmpty())
+       {
+           showTOIDMap=CloudSolrPersistenceLayer.getInstance().getPopular100ShowMap();
+       }
         return showTOIDMap;
 
     }
+
+
 }

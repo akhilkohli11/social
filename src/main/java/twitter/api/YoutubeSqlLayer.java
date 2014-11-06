@@ -585,4 +585,34 @@ public class YoutubeSqlLayer {
         }
 
     }
+
+
+
+    public void populateShowWiseTable(String showName,String showNameAlternate,String genre,
+                                       String tmsID,String published) throws Exception{
+        try{
+            Class.forName(jdbcDriverStr);
+            connection = DriverManager.getConnection(jdbcURL);
+            statement = connection.createStatement();
+            String table=new String(showName);
+            table=table.trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+            preparedStatement = connection.prepareStatement("insert into SHOW_SOCIAL(show_name," +
+                    ",show_name_alternate,genre," +
+                    " tms_show_id,publish_date) values (?,?,?,?,?)");
+            preparedStatement.setString(1, showName);
+            preparedStatement.setString(2, showNameAlternate);
+            preparedStatement.setString(3, genre);
+            preparedStatement.setString(4, tmsID);
+
+            preparedStatement.setString(5, published);
+
+            preparedStatement.executeUpdate();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+    }
 }

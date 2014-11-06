@@ -2,6 +2,8 @@ package twitter.api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +22,22 @@ public class YoutubeDaemon {
 
             try {
 
-                YoutubeForAllShowsInitializer.init();
+                Date before = new Date();
+                Date after =  new org.joda.time.DateTime(before).minusHours(3).toDate();
+                Map<String,String> map=ShowLoader.getShowLoader().getShowTOIDMap();
+
+                ViewsYoutubeLoader.populate(map,null,null,"viewCount");
+                ViewsYoutubeLoader.populate(map,null,null,"relevance");
+                int count=0;
+                while (count++<=2)
+                {
+                    before=after;
+                    after =  new org.joda.time.DateTime(before).minusHours(6).toDate();
+                    ViewsYoutubeLoader.populate(map,after,before,"relevance");
+                    ViewsYoutubeLoader.populate(map,after,before,"viewCount");
+                    ViewsYoutubeLoader.populate(map,after,before,null);
+
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -38,5 +55,28 @@ public class YoutubeDaemon {
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
         service.scheduleAtFixedRate(command, 0, 50*60, TimeUnit.MINUTES);
+    }
+
+
+    public static void main(String args[]) throws Exception
+    {
+        CloudSolrPersistenceLayer.getInstance().init();
+        ViewsYoutubeLoader.init();
+        Date before = new Date();
+        Date after =  new org.joda.time.DateTime(before).minusHours(3).toDate();
+        Map<String,String> map=ShowLoader.getShowLoader().getShowTOIDMap();
+
+        ViewsYoutubeLoader.populate(map,null,null,"viewCount");
+        ViewsYoutubeLoader.populate(map,null,null,"relevance");
+        int count=0;
+        while (count++<=2)
+        {
+            before=after;
+            after =  new org.joda.time.DateTime(before).minusHours(6).toDate();
+            ViewsYoutubeLoader.populate(map,after,before,"relevance");
+            ViewsYoutubeLoader.populate(map,after,before,"viewCount");
+            ViewsYoutubeLoader.populate(map,after,before,null);
+
+        }
     }
 }

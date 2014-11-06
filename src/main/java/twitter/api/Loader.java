@@ -15,20 +15,35 @@ public static void main(String args[])
     public void init() {
         try {
             CloudSolrPersistenceLayer.getInstance().init();
-            YoutubeDaemon youtubeDaemon=new YoutubeDaemon();
-            youtubeDaemon.init();
-            TwitterTweetDaeomon twitterTweetDaeomon=new TwitterTweetDaeomon();
-            twitterTweetDaeomon.init();
+            Zap2ItSolrApi.init();
+            SocialXMLParser.init();
+            MapSocialWebsitesToShows.init();
+
+//            ViewsYoutubeLoader.init();
+//            RefactoredTumblrLoader.init();
+//            KloutDaemon kloutDaemon=new KloutDaemon();
+//            kloutDaemon.init();
+//            YoutubeDaemon youtubeDaemon=new YoutubeDaemon();
+//            youtubeDaemon.init();
+//
+//            TorrentzDaemon torrentzDaemon = new TorrentzDaemon();
+//            torrentzDaemon.init();
+//
+//
+//            TumblrDaemon tumblrDaemon=new TumblrDaemon();
+//            tumblrDaemon.init();
 
 
 
 
-            TwitterTumblrDaemon twitterTumblrDaemon=new TwitterTumblrDaemon();
-            twitterTumblrDaemon.init();
-            new TwitterOneMore().init();
 
-            TumblrDaemon tumblrDaemon=new TumblrDaemon();
-            tumblrDaemon.init();
+//            TwitterTweetDaeomon twitterTweetDaeomon=new TwitterTweetDaeomon();
+//            twitterTweetDaeomon.init();
+//
+//            TwitterTumblrDaemon twitterTumblrDaemon=new TwitterTumblrDaemon();
+//            twitterTumblrDaemon.init();
+//            new TwitterOneMore().init();
+
 
 
         }

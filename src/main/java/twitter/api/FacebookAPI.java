@@ -15,9 +15,9 @@ public class FacebookAPI {
     public static void main(String args[]) throws Exception {
 
         Facebook facebook = new FacebookFactory().getInstance();
-        facebook.setOAuthAppId("204880952860915", "a4bc36ce7da8ec474877da4ff9d85594");
+            facebook.setOAuthAppId("716670628425125", "c2647b471fc740abd80c30838b041218");
         // facebook.setOAuthPermissions(commaSeparetedPermissions);
-        facebook.setOAuthAccessToken(new AccessToken("CAAC6VpBqoPMBADSi7j1sFQr1iKsztT2Kji6qHsnjB3hTkLnOElynSoUAJLIboFAVoYr8CIgKGdCC9C0ET8E4Su4iBs72r9Jn4GWrp9vN50z3wscMIlbOwVCAZABsMoWzZCmVCNYZB2L9kJQ3xc6ZANZCuSuar81K9EldC4ULSvGsF1400VwJS85tmz9pQqMCpEN8f6Kt3jIZC0H9gZC76hI", null));
+        facebook.setOAuthAccessToken(new AccessToken("716670628425125|K8Q1ZVxbMVAbgvXdskRe29L3o7M", null));
         Date date = new Date();
         while (true) {
             Reading reading = new Reading();
@@ -26,20 +26,38 @@ public class FacebookAPI {
             date = until;
             reading.since(since.toString());
             reading.until(until.toString());
-            ResponseList<facebook4j.Post> results = facebook.searchPosts("Game Of Thrones", reading);
+          //  ResponseList<facebook4j.Post> results = facebook.searchPosts("Game Of Thrones", reading);
             // ResponseList<JSONObject> results = facebook.search("Game of Thrones TV", reading);
-            System.out.println(results.size());
-            for (Post post : results) {
-                System.out.println( post.getLikes().size()+"  "+post.getComments().size());
-                //  post.get
-
-            }
-            ResponseList<facebook4j.Page> pages=facebook.searchPages("Game Of Thrones", reading);
+          //  System.out.println(results.size());
+//            for (Post post : results) {
+//                System.out.println( post.getLikes().size()+"  "+post.getComments().size()+" "+
+//                post.getLink());
+//                //  post.get
+//
+//            }
+            ResponseList<facebook4j.Page> pages=facebook.searchPages("Game of Thrones");
             for (Page page : pages) {
-                System.out.println( "Page"+page.getLikes()+"  "+page.getTalkingAboutCount());
-                //  post.get
+                System.out.println( "Page"+page.getLink()+page.getLikes()+"  "+page.getTalkingAboutCount()
+                        +page.getLink()+page.getName());
+                Reading reading1=new Reading();
+                reading1.filter(page.getId());
+                ResponseList<Post> feed = facebook.getFeed(page.getId());
+                for (Post post : feed) {
+                    System.out.println(post.getSharesCount()+"  "
 
+                            +post.getComments().getCount());
+              //  System.out.println( "  "+post.getComments().size()+" "+
+               // post.getLink()+post.getName());
+                }
+//                //  post.get
+                           //  post.get
+//                ResponseList<facebook4j.Album> photo= facebook.getAlbums(reading1);
+//                for(Album album: photo)
+//                {
+//                    System.out.println(album.getLink());
+//                }
             }
+
         }
     }
 }

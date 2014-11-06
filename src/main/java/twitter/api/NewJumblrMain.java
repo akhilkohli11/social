@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by akohli on 6/20/14.
- */
+* Created by akohli on 6/20/14.
+*/
 public class NewJumblrMain {
     public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
     public static final String MYSQL_URL = "jdbc:mysql://localhost/social?"
@@ -65,7 +65,7 @@ public class NewJumblrMain {
             }
             System.out.println("TUMBLR TUMRBLRRRKLKRKRLKRLRKLRKLRKL map"+map);
             // System.out.println(showName+"    "+tumblerPage);
-            RefactoredTumblrLoader.loadNewTumblrData(tumblrSqlLayer,map);
+           // RefactoredTumblrLoader.loadNewTumblrData(map);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -18,7 +18,34 @@ import java.util.*;
 /**
  * Created by akohli on 8/25/14.
  */
-public class YoutubeLoader {
+public class ViewsYoutubeLoader {
+
+    public static void main(String args[]) throws Exception
+    {
+        CloudSolrPersistenceLayer.getInstance().init();
+        ViewsYoutubeLoader.init();
+        Map<String,String> map=new HashMap<String, String>();
+        map.put("Big Bang Theory","1");
+    //    map.put("Friends","2");
+        Date before = new Date();
+        Date after =  new org.joda.time.DateTime(before).minusHours(3).toDate();
+
+
+        ViewsYoutubeLoader.populate(map,null,null,"viewCount");
+        ViewsYoutubeLoader.populate(map,null,null,"relevance");
+        int count=0;
+        while (count++<=4)
+        {
+            before=after;
+            after =  new org.joda.time.DateTime(before).minusHours(3).toDate();
+            ViewsYoutubeLoader.populate(map,after,before,"relevance");
+            ViewsYoutubeLoader.populate(map,after,before,"viewCount");
+            ViewsYoutubeLoader.populate(map,after,before,null);
+
+        }
+
+
+    }
 
     public static void init() throws Exception {
         // Scopes required to access YouTube general and analytics information.
@@ -44,7 +71,6 @@ public class YoutubeLoader {
 
     private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
 
-    private static int goback=6*30;
 
     /**
      * Define a global instance of a Youtube object, which will be used
@@ -102,78 +128,76 @@ public class YoutubeLoader {
      * user's channel using the YouTube Analytics API.
      *
      */
-    public static void populate( Map<String,String> searchMap) throws Exception {
+    public static void populate( Map<String,String> searchMap,Date after,Date before,String type) throws Exception {
 
         YouTube.Search.List search = youtube.search().list("id,snippet");
 
         int newcount = 0;
-        while (newcount++ < 500) {
+        while (newcount++ <    1) {
             int count = 0;
 
             search.setType("video");
+            search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)");
 
-            long number = 50;
-            Date date = new Date();
-            Date daysAgo =  new org.joda.time.DateTime(date).minusHours(4).toDate();
-            while (count++ < goback) {
-                search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)");
-                search.setMaxResults(number);
-                search.setPublishedAfter(new com.google.api.client.util.DateTime(daysAgo));
-                search.setPublishedBefore(new com.google.api.client.util.DateTime(date));
 
-                date = new org.joda.time.DateTime(date).minusHours(1).toDate();
-                daysAgo = new org.joda.time.DateTime(date).minusHours(4).toDate();
-                for (Map.Entry<String, String> showSearch : searchMap.entrySet()) {
-                    try {
-                        String queryTerm=showSearch.getKey()+" tv";
-                        search.setQ(queryTerm);
+            for (Map.Entry<String, String> showSearch : searchMap.entrySet()) {
+                try {
+                    String queryTerm=showSearch.getKey()+" tv";
+                    search.setQ(queryTerm);
+                    if(type!=null) {
+                        search.setOrder(type);
+                    }
 
-                      //  search.setOrder("viewCount")
+                    if(after!=null && before!=null) {
+                        search.setPublishedAfter(new com.google.api.client.util.DateTime(after));
+                        search.setPublishedBefore(new com.google.api.client.util.DateTime(before));
+                    }
 
-                        // Call the API and print res
-                        // ults.
-                        List<String> videoIds = new ArrayList<String>();
-                        SearchListResponse searchResponse = search.execute();
-                        List<SearchResult> searchResultList = searchResponse.getItems();
+                    // Call the API and print res
+                    // ults.
+                    List<String> videoIds = new ArrayList<String>();
+                    SearchListResponse searchResponse = search.execute();
+                    List<SearchResult> searchResultList = searchResponse.getItems();
 //                        if (searchResultList != null) {
 //                            prettyPrint(searchResultList.iterator(), queryTerm);
 //                        }
 
-                        if (searchResultList != null) {
-                            for (SearchResult searchResult : searchResultList) {
-                                videoIds.add(searchResult.getId().getVideoId());
-                            }
-                            Joiner stringJoiner = Joiner.on(',');
-                            String videoId = stringJoiner.join(videoIds);
-
-                            // Call the YouTube Data API's youtube.videos.list method to
-                            // retrieve the resources that represent the specified videos.
-                            YouTube.Videos.List listVideosRequest = youtube.videos().list("snippet, recordingDetails,statistics,player").setId(videoId);
-                            VideoListResponse listResponse = listVideosRequest.execute();
-
-                            List<Video> videoList = listResponse.getItems();
-
-                            if (videoList != null) {
-                                newprettyPrint(videoList.iterator(), queryTerm,
-                                        showSearch.getKey(),showSearch.getValue());
-                            }
+                    if (searchResultList != null) {
+                        for (SearchResult searchResult : searchResultList) {
+                            videoIds.add(searchResult.getId().getVideoId());
                         }
+                        Joiner stringJoiner = Joiner.on(',');
+                        String videoId = stringJoiner.join(videoIds);
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        // Call the YouTube Data API's youtube.videos.list method to
+                        // retrieve the resources that represent the specified videos.
+                        YouTube.Videos.List listVideosRequest = youtube.videos().list("snippet, recordingDetails,statistics,player").setId(videoId);
+                        VideoListResponse listResponse = listVideosRequest.execute();
 
+                        List<Video> videoList = listResponse.getItems();
+
+                        if (videoList != null) {
+                            newprettyPrint(videoList.iterator(), queryTerm,
+                                    showSearch.getKey(),showSearch.getValue());
+                        }
                     }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
                 }
+                Thread.sleep(1000);
             }
-            Thread.sleep(1000*60*300);
+
         }
     }
+
 
 
     static Set<String> id=new HashSet<String>();
 
     private static void     newprettyPrint(Iterator<Video> iteratorVideoResults, String query,
-                                       String showName,String id) {
+                                           String showName,String id) {
 
         System.out.println("\n=============================================================");
         System.out.println(
@@ -218,7 +242,7 @@ public class YoutubeLoader {
             }
             catch (Exception e)
             {
-              //  e.printStackTrace();
+                //  e.printStackTrace();
             }
 
         }

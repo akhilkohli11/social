@@ -29,7 +29,7 @@ import java.net.*;
                 // command-line arg, or read it from a file.                  //
                 //------------------------------------------------------------//
 
-                u = new URL("http://torrentz.com/search?f=game+of+thrones&p=2");
+                u = new URL("http://torrentz.com/search?f=game+of+thrones&p=50");
 
                 //----------------------------------------------//
                 // Step 3:  Open an input stream from the url.  //

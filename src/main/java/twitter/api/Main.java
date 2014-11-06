@@ -10,7 +10,7 @@ public class Main {
 
 
 // retrieves klout id with twitter screen name
-        String[] data = k.getIdentity("GameOfThrones", Klout.TWITTER_SCREEN_NAME); // contains ["635263", "ks]
+        String[] data = k.getIdentity("crash_starz".toUpperCase(), Klout.TWITTER_SCREEN_NAME); // contains ["635263", "ks]
 
         System.out.println(data[0]);
 

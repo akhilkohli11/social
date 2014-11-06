@@ -6,6 +6,7 @@ package twitter.api;
 public class SearchObject {
     private String searchTerm;
     private String isOfficial;
+    private String id;
 
     public boolean isBlog() {
         return isBlog;
@@ -13,16 +14,21 @@ public class SearchObject {
 
     private boolean isBlog;
 
-    public SearchObject(String searchTerm, String isOfficial,boolean isBlog) {
+    public SearchObject(String searchTerm, String isOfficial,boolean isBlog,String id) {
         this.searchTerm = searchTerm;
         this.isOfficial = isOfficial;
         this.isBlog=isBlog;
+        this.id=id;
     }
 
     public String getSearchTerm() {
         return searchTerm;
     }
 
+    public String getID()
+    {
+        return id;
+    }
     public String getIsOfficial() {
         return isOfficial;
     }
