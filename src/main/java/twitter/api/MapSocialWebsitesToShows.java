@@ -63,7 +63,6 @@ public class MapSocialWebsitesToShows {
 
     private static SolrDocument searchTitle(SolrDocument document) throws Exception{
         Map<String,String> params=new HashMap<String, String>();
-        Collection<Object> titleCol=(Collection<Object>)document.getFieldValue("title");
         params.put("q", "id:"+document.get("id").toString()+"xml");
         return CloudSolrPersistenceLayer.getInstance().findSolrDocument(params);
     }
