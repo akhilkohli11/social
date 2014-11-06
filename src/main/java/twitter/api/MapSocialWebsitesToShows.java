@@ -18,11 +18,16 @@ import java.util.Map;
 public class MapSocialWebsitesToShows {
     public static void main(String args[]) throws Exception
     {
-        init();
+        try {
+            init();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     public static void init() throws Exception
     {
-        CloudSolrPersistenceLayer.getInstance().init();
         Map<String,Object> params = new HashMap<String,Object>();
         int start=0;
         int fetchSize=50;
