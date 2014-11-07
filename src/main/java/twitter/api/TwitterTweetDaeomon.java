@@ -38,4 +38,13 @@ public class TwitterTweetDaeomon {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
         service.scheduleAtFixedRate(command, 0, 12, TimeUnit.HOURS);
     }
+
+
+    public static void main(String args[]) throws Exception
+    {
+        CloudSolrPersistenceLayer.getInstance().init();
+
+        LoadApp.init();
+        LoadApp.initialize(0,200);
+    }
 }

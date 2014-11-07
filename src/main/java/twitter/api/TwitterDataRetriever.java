@@ -58,9 +58,11 @@ public class TwitterDataRetriever {
         showToNewName.put(table,showName);
 
         for(int i=0;i<hashtag.length;i++) {
-            if (!StringUtils.isNullOrEmpty(hashtag[i]) && !StringUtils.isNullOrEmpty(showName)) {
-                tagToshowName.put(hashtag[i].trim().replaceAll(",",""), showName);
-                followTerms.add(hashtag[i].trim().replaceAll(",",""));
+            if(i<5) {
+                if (!StringUtils.isNullOrEmpty(hashtag[i]) && !StringUtils.isNullOrEmpty(showName)) {
+                    tagToshowName.put(hashtag[i].trim().replaceAll(",", ""), showName);
+                    followTerms.add(hashtag[i].trim().replaceAll(",", ""));
+                }
             }
         }
         shows.add(showName.trim());
@@ -69,10 +71,10 @@ public class TwitterDataRetriever {
             tagToshowName.put(showName.trim(), showName);
         }
 
-            if(!StringUtils.isNullOrEmpty(twitterHandle) && !StringUtils.isNullOrEmpty(showName)) {
-                tagToshowName.put(twitterHandle.trim(), showName);
-               // followTerms.add(twitterHandle.trim());
-            }
+        if(!StringUtils.isNullOrEmpty(twitterHandle) && !StringUtils.isNullOrEmpty(showName)) {
+            tagToshowName.put(twitterHandle.trim(), showName);
+            // followTerms.add(twitterHandle.trim());
+        }
 //        for(int i=0;i<casteHandle.length;i++) {
 //            System.out.print("  "+casteHandle[i]+",");
 //            if (!StringUtils.isNullOrEmpty(casteHandle[i]) && !StringUtils.isNullOrEmpty(showName)) {
@@ -114,7 +116,7 @@ public class TwitterDataRetriever {
         // Optional: set up some followings and track terms
         // List<Long> followings = Lists.newArrayList(83023305L);
 
-            moreTerms=followTerms.subList(start,end);
+        moreTerms=followTerms.subList(start,end);
 
         System.out.println("twiiter"+moreTerms+moreTerms.size());
 
@@ -159,6 +161,7 @@ public class TwitterDataRetriever {
                 String newloc = jsonObject.get("user").toString();
                 String selectedCity = null;
                 String selectedCountry = null;
+                String id=jsonObject.get("id").toString();
 
                 JSONObject user = new JSONObject(newloc);
                 A:
@@ -249,10 +252,8 @@ public class TwitterDataRetriever {
                         selectedState = cityToSateListUs.get(selectedCity);
                         selectedCountry = "United States of America";
                     }
-                    socialMysqlLayer.populateTweetData(msg.trim(), tweettext.trim(), showName.trim(),
-                            createdAt, time, 0, type, embedCode, selectedCity, selectedCountry, selectedState);
                     CloudSolrPersistenceLayer.getInstance().populateTweetData(msg.trim(), tweettext.trim(), showName.trim(),
-                            createdAt, time, 0, type, embedCode, selectedCity, selectedCountry, selectedState);
+                            createdAt, time, 0, type, embedCode, selectedCity, selectedCountry, selectedState,showName.trim(),id);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -261,16 +262,16 @@ public class TwitterDataRetriever {
             hosebirdClient.reconnect();
         }
 
-            hosebirdClient.stop();
-            return "ok";
+        hosebirdClient.stop();
+        return "ok";
 
-        }
+    }
 
 
 
 
     public static void init() {
-      // pipeline = new StanfordCoreNLP("MyPropFile.properties");
+        // pipeline = new StanfordCoreNLP("MyPropFile.properties");
     }
 
     public static int findSentiment(String tweet) {

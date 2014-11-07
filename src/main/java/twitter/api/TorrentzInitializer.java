@@ -22,13 +22,13 @@ public class TorrentzInitializer {
 
                 populateSeedersLeechers(showSearch.getKey(),showSearch.getKey() + " tv", showSearch.getValue());
             //    populateSeedersLeechers(showSearch.getKey() + " season", showSearch.getValue());
-                populateSeedersLeechers(showSearch.getKey(),showSearch.getKey() + " show", showSearch.getValue());
+             //   populateSeedersLeechers(showSearch.getKey(),showSearch.getKey() + " show", showSearch.getValue());
             //    populateSeedersLeechers(showSearch.getKey() + " series", showSearch.getValue());
 
 
                 populateTorrentz(showSearch.getKey(),showSearch.getKey() + " tv", showSearch.getValue());
                 // populateTorrentz(showSearch.getKey() + " season", showSearch.getValue());
-                populateTorrentz(showSearch.getKey(),showSearch.getKey() + " show", showSearch.getValue());
+            //    populateTorrentz(showSearch.getKey(),showSearch.getKey() + " show", showSearch.getValue());
                 //  populateTorrentz(showSearch.getKey() + " series", showSearch.getValue());
 
 
@@ -52,7 +52,7 @@ public class TorrentzInitializer {
         String show = new String(query);
         show = show.trim().toLowerCase().replaceAll(" ", "+");
         try {
-            for (int i = 1; i < 10; i++) {
+            for (int i = 1; i < 6; i++) {
 
                 try {
                     String url = "http://torrentz.com/search?f=" + show.toString() + "&p=" + String.valueOf(i);
@@ -114,7 +114,7 @@ public class TorrentzInitializer {
         String show = new String(query);
         show = show.trim().toLowerCase().replaceAll(" ", "+");
         try {
-            for (int i = 1; i < 10; i++) {
+            for (int i = 1; i < 6; i++) {
 
                 try {
                     u = new URL("http://www.torrenthound.com/search/game+of+thrones");

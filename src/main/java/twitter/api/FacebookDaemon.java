@@ -2,6 +2,7 @@ package twitter.api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,9 @@ public class FacebookDaemon {
             try {
 
                 FacebookInitializer.init();
+                Map<String,String> map=ShowLoader.getShowLoader().getShowTOIDMap();
+
+                 FacebookInitializer.populate(map);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -34,5 +38,16 @@ public class FacebookDaemon {
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
         service.scheduleAtFixedRate(command, 0, 50*60, TimeUnit.MINUTES);
+    }
+
+    public static void main(String args[]) throws Exception
+    {
+        CloudSolrPersistenceLayer.getInstance().init();
+        InitializePopularDocuments.init();
+        FacebookInitializer.init();
+        Map<String,String> map=ShowLoader.getShowLoader().getShowTOIDMap();
+
+        FacebookInitializer.populate(map);
+
     }
 }

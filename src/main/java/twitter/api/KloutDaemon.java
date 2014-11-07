@@ -44,7 +44,7 @@ public class KloutDaemon {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 0, 60, TimeUnit.MINUTES);
+        service.scheduleAtFixedRate(command, 5, 60, TimeUnit.MINUTES);
     }
 
     public void initlize() throws Exception
@@ -63,9 +63,9 @@ public class KloutDaemon {
         while (newiterator.hasNext())
         {
             SolrDocument document=newiterator.next();
-            Collection<Object> titleCol=(Collection<Object>)document.getFieldValue("title");
+            String title=document.getFieldValue("title").toString();
 
-            kloutLoader.populate(titleCol.toArray()[0].toString(),document.get("showID").toString(),document.get("twit"));
+            kloutLoader.populate(title,document.get("showID").toString(),document.get("twit"));
         }
         SolrDocumentList allDocs = new SolrDocumentList();
         while(documents.size() > 0) {
@@ -78,9 +78,9 @@ public class KloutDaemon {
             while (iterator.hasNext())
             {
                 SolrDocument document=iterator.next();
-                Collection<Object> titleCol=(Collection<Object>)document.getFieldValue("title");
+                String title=document.getFieldValue("title").toString();
 
-                kloutLoader.populate(titleCol.toArray()[0].toString(),document.get("showID").toString(),document.get("twit"));
+                kloutLoader.populate(title,document.get("showID").toString(),document.get("twit"));
 
             }
         }

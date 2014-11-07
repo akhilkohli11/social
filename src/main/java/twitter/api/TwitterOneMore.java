@@ -36,6 +36,6 @@ public class TwitterOneMore {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 2, 12*80, TimeUnit.MINUTES);
+        service.scheduleAtFixedRate(command, 2, 60*80, TimeUnit.MINUTES);
     }
 }

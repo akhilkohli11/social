@@ -16,77 +16,55 @@ public class FacebookInitializer {
 
     public static void main(String args[]) throws Exception
     {
-            init();
+        init();
 
     }
 
     public static void init() throws Exception {
         facebook = new FacebookFactory().getInstance();
-        facebook.setOAuthAppId("204880952860915", "a4bc36ce7da8ec474877da4ff9d85594");
+        facebook.setOAuthAppId("716670628425125", "c2647b471fc740abd80c30838b041218");
         // facebook.setOAuthPermissions(commaSeparetedPermissions);
-        facebook.setOAuthAccessToken(new AccessToken("CAAC6VpBqoPMBADSi7j1sFQr1iKsztT2Kji6qHsnjB3hTkLnOElynSoUAJLIboFAVoYr8CIgKGdCC9C0ET8E4Su4iBs72r9Jn4GWrp9vN50z3wscMIlbOwVCAZABsMoWzZCmVCNYZB2L9kJQ3xc6ZANZCuSuar81K9EldC4ULSvGsF1400VwJS85tmz9pQqMCpEN8f6Kt3jIZC0H9gZC76hI", null));
-
+        facebook.setOAuthAccessToken(new AccessToken("716670628425125|K8Q1ZVxbMVAbgvXdskRe29L3o7M", null));
     }
 
 
-    public static void populate( Map<String,Integer> searchMap) throws Exception {
+    public static void populate( Map<String,String> searchMap) throws Exception {
 
 
         int newcount = 0;
-        while (newcount++ < 500) {
+        while (newcount++ < 2) {
 
 
-            Date date = new Date();
-            for (Map.Entry<String, Integer> showSearch : searchMap.entrySet()) {
+            for (Map.Entry<String, String> showSearch : searchMap.entrySet()) {
                 try {
-                    Reading reading = new Reading();
-                    Date since = new DateTime(date).minusDays(4).toDate();
-                    Date until = new DateTime(date).minusDays(1).toDate();
-                    date = until;
-                    reading.since(since.toString());
-                    reading.until(until.toString());
-                    ResponseList<Post> results = facebook.searchPosts(showSearch.getKey()+" TV", reading);
-                    System.out.println(showSearch.getKey()+" TV"+results.size());
-                    for (Post post : results) {
-                        System.out.println( post.getLikes().size()+"  "+post.getComments().size());
-                        //  post.get
-
-                    }
-                    ResponseList<facebook4j.Page> pages=facebook.searchPages(showSearch.getKey()+" Series", reading);
+                    int count=0;
+                    ResponseList<facebook4j.Page> pages = facebook.searchPages(showSearch.getKey()+" tv show");
                     for (Page page : pages) {
-                        CloudSolrPersistenceLayer.getInstance().populateFacebook(showSearch.getKey(),showSearch.getValue(),page.getLink(),
-                                page.getLikes(),page.getCategory(),page.getWereHereCount(),
-                                page.getId(),page.getCreatedTime());
-
-
-                    }
-
-                    pages=facebook.searchPages(showSearch.getKey()+" season", reading);
-                    for (Page page : pages) {
-                        CloudSolrPersistenceLayer.getInstance().populateFacebook(showSearch.getKey(),showSearch.getValue(),page.getLink(),
-                                page.getLikes(),page.getCategory(),page.getWereHereCount(),
-                                page.getId(),page.getCreatedTime());
-
-
-
-                    }
-
-                    pages=facebook.searchPages(showSearch.getKey()+" show", reading);
-                    for (Page page : pages) {
-                        CloudSolrPersistenceLayer.getInstance().populateFacebook(showSearch.getKey(),showSearch.getValue(),page.getLink(),
-                                page.getLikes(),page.getCategory(),page.getWereHereCount(),
-                                page.getId(),page.getCreatedTime());
-
+                        try {
+                            System.out.println("Page" + page.getLink() + page.getLikes() + "  " + page.getTalkingAboutCount()
+                                    + page.getLink() + page.getName());
+                            Reading reading1 = new Reading();
+                            reading1.filter(page.getId());
+                            ResponseList<Post> feed = facebook.getFeed(page.getId());
+                            for (Post post : feed) {
+                                if (post != null) {
+                                    CloudSolrPersistenceLayer.getInstance().populateFacebook(post.getId(), post.getSharesCount(),
+                                            post.getScheduledPublishTime(), showSearch.getKey(), showSearch.getValue());
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
 
                     }
-
-                } catch (Exception e) {
+                }catch (Exception e) {
                     e.printStackTrace();
 
                 }
             }
         }
-        Thread.sleep(1000*60*300);
     }
 
 

@@ -40,7 +40,7 @@ public class CloudSolrPersistenceLayer {
     DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
     DateFormat tumblrDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+    static List<SolrDocument> popularDocuments=new ArrayList<SolrDocument>();
 
     static CloudSolrPersistenceLayer cloudSolrPersistenceLayer= new CloudSolrPersistenceLayer();
 
@@ -60,7 +60,7 @@ public class CloudSolrPersistenceLayer {
 
     public  int populateTweetData(String tweet,String tweetText,String showName,
                                   String createdOn,String persistTime,int sentimentalScore,String type,String embedCode,String selectedCity,String selectedCountry,
-                                  String selectedState) throws Exception
+                                  String selectedState,String showID,String id) throws Exception
     {
 
         try {
@@ -70,18 +70,20 @@ public class CloudSolrPersistenceLayer {
 //            {
 //                deleteDocuments(exitingDoc.get("id").toString());
 //            }
-            doc.addField("id", showName+createdOn);
-            doc.addField("city", selectedCity);
-            doc.addField("showName", showName);
-            doc.addField("socialTextcontent", tweetText);
-            doc.addField("sentimentalScore", sentimentalScore);
-            doc.addField("country", selectedCountry);
-            doc.addField("state", selectedState);
-            doc.addField("embedCode", embedCode);
-            doc.addField("socialcontenttype", type);
+            doc.addField("id", showID+id+"twitter");
+
+//            doc.addField("city", selectedCity);
+//            doc.addField("socialTextcontent", tweetText);
+//            doc.addField("sentimentalScore", sentimentalScore);
+//            doc.addField("country", selectedCountry);
+//            doc.addField("state", selectedState);
+//            doc.addField("embedCode", embedCode);
+         //   doc.addField("socialcontenttype", type);
             doc.addField("createdOn", new Date(df.parse(createdOn).getTime()));
             doc.addField("last_modified", new Date(df.parse(createdOn).getTime()));
             doc.addField("category", "twitter");
+            doc.addField("showID", showID);
+
 
             server.add(doc);
             commitCounttwitter++;
@@ -231,24 +233,60 @@ public class CloudSolrPersistenceLayer {
     }
 
 
-    public  void populateFacebook(String key, Integer value, URL link,
-                                 Integer likes, String category, Integer wereHereCount,
-                                 String id, Date createdTime) {
+    public  void populateFacebook(String id,Integer shareCount,Date publishedTime,String showName,String showID) {
+
+
+        try {
+            SolrInputDocument doc = new SolrInputDocument();
+//            SolrDocument exitingDoc=findSolrDocument("id",showID+"youtube");
+//            if(exitingDoc!=null)
+//            {
+//                deleteDocuments(exitingDoc.get("id").toString());
+//            }
+            doc.addField("id", showID+id+"facebook");
+            doc.addField("showName", showName);
+            doc.addField("showID", showID);
+            if(shareCount==null) {
+                doc.addField("views", 0);
+            }
+            else
+            {
+                doc.addField("views", shareCount.intValue());
+
+            }
+            doc.addField("createdOn", publishedTime);
+            doc.addField("last_modified", publishedTime);
+            doc.addField("category", "facebook");
+
+            server.add(doc);
+            commitCountfacebook++;
+            if (commitCountfacebook % 10 == 0) {
+                server.commit();
+            }
+
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+        }
 
 
     }
 
 
     public void deleteDocuments(String query) {
-            try {
-                    server.deleteByQuery(query);
-                    server.commit();
-                }
-             catch (Exception e) {
-
-                e.printStackTrace();
-            }
+        try {
+            server.deleteByQuery(query);
+            server.commit();
         }
+        catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
 
 
 
@@ -397,14 +435,14 @@ public class CloudSolrPersistenceLayer {
 
             }
         }
-            doc.addField("category","xmlshow");
-            server.add(doc);
-            commitCountyoutube++;
-            if (commitCountyoutube % 100 == 0) {
-                server.commit();
-            }
-
+        doc.addField("category","xmlshow");
+        server.add(doc);
+        commitCountyoutube++;
+        if (commitCountyoutube % 100 == 0) {
+            server.commit();
         }
+
+    }
 
     public  SolrDocumentList getSolrDocumentsWithPagination(Map<String,Object> params, int start, int rows) throws SolrServerException {
         SolrQuery parameters = new SolrQuery();
@@ -439,81 +477,18 @@ public class CloudSolrPersistenceLayer {
     }
 
 
-    public Map<String,String> getShowToIDMapping() throws Exception
-    {
-        Map<String,String> showNameToIdMap=new HashMap<String, String>();
-        Map<String,Object> params = new HashMap<String,Object>();
-        int start=0;
-        int fetchSize=50;
-        params.put("q", "category:shows");
-        params.put("start", start);
-        params.put("rows",fetchSize);
-        SolrDocumentList documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
-        ListIterator<SolrDocument> newiterator=documents.listIterator();
 
-        while (newiterator.hasNext())
-        {
-            SolrDocument document=newiterator.next();
-            Collection<Object> titleCol=(Collection<Object>)document.getFieldValue("title");
-
-            showNameToIdMap.put(titleCol.toArray()[0].toString(), document.get("showID").toString());
-        }
-        SolrDocumentList allDocs = new SolrDocumentList();
-        while(documents.size() > 0) {
-            allDocs.addAll(documents);
-            start += fetchSize;
-            params.put("start",fetchSize);
-            documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
-            ListIterator<SolrDocument> iterator=documents.listIterator();
-
-            while (iterator.hasNext())
-            {
-                SolrDocument document=iterator.next();
-                Collection<Object> titleCol=(Collection<Object>)document.getFieldValue("title");
-
-                showNameToIdMap.put(titleCol.toArray()[0].toString(), document.get("showID").toString());
-
-            }
-        }
-        return showNameToIdMap;
-    }
 
     public Map<String,String> getPopular100ShowMap() throws Exception{
         Map<String,String> showNameToIdMap=new HashMap<String, String>();
-        Map<String,Object> params = new HashMap<String,Object>();
-        int start=0;
-        int fetchSize=10;
-        params.put("q", "category:shows");
-        params.put("start", start);
-        params.put("rows",fetchSize);
-        SolrDocumentList documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
-        ListIterator<SolrDocument> newiterator=documents.listIterator();
-
+        ListIterator<SolrDocument> newiterator=popularDocuments.listIterator();
         while (newiterator.hasNext())
         {
             SolrDocument document=newiterator.next();
-            Collection<Object> titleCol=(Collection<Object>)document.getFieldValue("title");
-
-            showNameToIdMap.put(titleCol.toArray()[0].toString(), document.get("showID").toString());
+            String title=document.getFieldValue("title").toString();
+            showNameToIdMap.put(title, document.get("showID").toString());
         }
-        SolrDocumentList allDocs = new SolrDocumentList();
-        int size=0;
-        while(documents.size() > 0 && size++<1) {
-            allDocs.addAll(documents);
-            start += fetchSize;
-            params.put("start",fetchSize);
-            documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
-            ListIterator<SolrDocument> iterator=documents.listIterator();
 
-            while (iterator.hasNext())
-            {
-                SolrDocument document=iterator.next();
-                Collection<Object> titleCol=(Collection<Object>)document.getFieldValue("title");
-
-                showNameToIdMap.put(titleCol.toArray()[0].toString(), document.get("showID").toString());
-
-            }
-        }
         return showNameToIdMap;
     }
 
@@ -554,7 +529,9 @@ public class CloudSolrPersistenceLayer {
         return score;
     }
 
-    public void getTitleDocument(String id,String[] hashtag) throws Exception {
+
+
+    public void loadPopularDocuments(String id,String[] hashtag) throws Exception {
         Map<String,String> showNameToIdMap=new HashMap<String, String>();
         Map<String,Object> params = new HashMap<String,Object>();
         int start=0;
@@ -566,19 +543,20 @@ public class CloudSolrPersistenceLayer {
         while (newiterator.hasNext())
         {
             SolrDocument document=newiterator.next();
-            Collection<Object> titleCol=(Collection<Object>)document.getFieldValue("title");
+            String title=document.getFieldValue("title").toString();
 
-                System.out.print(titleCol+"   "+document.get("id")+"   "+"");
+            System.out.print(title + "   " + document.get("id") + "   " + "");
             for(String hash : hashtag)
             {
                 System.out.print(hash);
             }
             System.out.println();
 
-
+            popularDocuments.add(document);
 
         }
 
     }
+
 }
 

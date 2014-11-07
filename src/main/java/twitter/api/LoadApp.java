@@ -58,7 +58,6 @@ public class LoadApp {
 
                     TwitterDataRetriever.populateShowIDToShowName(buffer[0].trim(), null, null, hashtag);
                     count++;
-                    CloudSolrPersistenceLayer.getInstance().getTitleDocument(buffer[0].trim(),hashtag);
                 }
             }
 
