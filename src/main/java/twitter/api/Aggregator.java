@@ -358,7 +358,7 @@ public class Aggregator {
 
     public static void loadRanks(Map<String, Integer> youtubeRankMap, Map<String, Integer> facebookRankMap, Map<String, Integer> torrentzRankMap,
                                  Map<String, Integer> torrentHoundRankMap, Map<String, Integer> twitterRankMap, Map<String,Integer>  tumblrRankMap, Map<String,Integer>  kloutRankMap,
-            , Map<String,Integer>  overAllRank
+             Map<String,Integer>  overAllRank
                                  ) throws Exception
     {
         List<SolrDocument> solrDocuments=CloudSolrPersistenceLayer.getInstance().getPopularDocuments();
