@@ -277,6 +277,38 @@ public class CloudSolrPersistenceLayer {
     }
 
 
+    public  void populateTotal(String id,long count,String category,String type) {
+
+
+        try {
+            SolrInputDocument doc = new SolrInputDocument();
+//            SolrDocument exitingDoc=findSolrDocument("id",showID+"youtube");
+//            if(exitingDoc!=null)
+//            {
+//                deleteDocuments(exitingDoc.get("id").toString());
+//            }
+            doc.addField("id", id+type+category);
+            doc.addField("showID", id);
+            doc.addField("total_l", count);
+            doc.addField("category", category+type);
+
+            server.add(doc);
+
+            server.commit();
+
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally {
+        }
+
+
+    }
+
+
     public void deleteDocuments(String query) {
         try {
             server.deleteByQuery(query);
@@ -492,7 +524,50 @@ public class CloudSolrPersistenceLayer {
         return showNameToIdMap;
     }
 
-    public double getViewsTotal(String id, String type,String field) throws Exception{
+    public long getViewsTotal(String id, String type,String field) throws Exception{
+        Map<String,String> showNameToIdMap=new HashMap<String, String>();
+        Map<String,Object> params = new HashMap<String,Object>();
+        int start=0;
+        int fetchSize=50;
+        params.put("q", "showID:"+id +" AND category:"+type);
+        params.put("start", start);
+        params.put("rows",fetchSize);
+        long score=0;
+        SolrDocumentList documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
+        ListIterator<SolrDocument> newiterator=documents.listIterator();
+
+        while (newiterator.hasNext())
+        {
+            SolrDocument document=newiterator.next();
+            if(document.containsKey(field)) {
+                score += Long.parseLong(document.get(field).toString());
+            }
+        }
+        SolrDocumentList allDocs = new SolrDocumentList();
+        int size=0;
+        while(documents.size() > 0 && size++<950) {
+            allDocs.addAll(documents);
+            start += fetchSize;
+            params.put("start",fetchSize);
+            documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
+            ListIterator<SolrDocument> iterator=documents.listIterator();
+
+            while (iterator.hasNext())
+            {
+                SolrDocument document=iterator.next();
+                if(document.containsKey(field)) {
+                    score += Long.parseLong(document.get(field).toString());
+                }
+
+
+            }
+        }
+        return score;
+    }
+
+
+
+    public double getKloutScore(String id, String type,String field) throws Exception{
         Map<String,String> showNameToIdMap=new HashMap<String, String>();
         Map<String,Object> params = new HashMap<String,Object>();
         int start=0;
@@ -507,27 +582,22 @@ public class CloudSolrPersistenceLayer {
         while (newiterator.hasNext())
         {
             SolrDocument document=newiterator.next();
-            score+=Double.parseDouble(document.get(field).toString());
-        }
-        SolrDocumentList allDocs = new SolrDocumentList();
-        int size=0;
-        while(documents.size() > 0 && size++<950) {
-            allDocs.addAll(documents);
-            start += fetchSize;
-            params.put("start",fetchSize);
-            documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
-            ListIterator<SolrDocument> iterator=documents.listIterator();
-
-            while (iterator.hasNext())
-            {
-                SolrDocument document=iterator.next();
-                score+=Double.parseDouble(document.get(field).toString());
-
-
+            if(document.containsKey(field)) {
+                score += Double.parseDouble(document.get(field).toString());
             }
         }
+
         return score;
     }
+
+
+    public long getTotalCount(String id, String type) throws Exception{
+        SolrQuery q = new SolrQuery("showID:"+id +" AND category:"+type);
+        q.setRows(0);
+
+        return server.query(q).getResults().getNumFound();
+    }
+
 
 
 
