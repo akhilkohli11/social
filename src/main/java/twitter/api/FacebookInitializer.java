@@ -28,7 +28,7 @@ public class FacebookInitializer {
     }
 
 
-    public static void populate( Map<String,String> searchMap) throws Exception {
+    public static void populate( Map<String,String> searchMap,String query) throws Exception {
 
 
         int newcount = 0;
@@ -38,8 +38,8 @@ public class FacebookInitializer {
             for (Map.Entry<String, String> showSearch : searchMap.entrySet()) {
                 try {
                     int count=0;
-                    ResponseList<facebook4j.Page> pages = facebook.searchPages(showSearch.getKey()+" tv show");
-                    for (Page page : pages) {
+                    ResponseList<facebook4j.Page> pages = facebook.searchPages(showSearch.getKey()+query);
+                    for (Page page : pages ) {
                         try {
                             System.out.println("Page" + page.getLink() + page.getLikes() + "  " + page.getTalkingAboutCount()
                                     + page.getLink() + page.getName());

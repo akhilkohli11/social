@@ -274,7 +274,14 @@ public class Aggregator {
 
         for(Map.Entry<String,Long> entry : trends.entrySet())
         {
-            trends1.put(entry.getValue(),entry.getKey());
+            if(trends1.containsKey(entry.getValue()))
+            {
+                Random random=new Random();
+                trends1.put(entry.getValue()+random.nextInt(10),entry.getKey());
+            }
+            else {
+                trends1.put(entry.getValue(), entry.getKey());
+            }
         }
         for(Map.Entry<String,Long> entry : trends.entrySet())
         {

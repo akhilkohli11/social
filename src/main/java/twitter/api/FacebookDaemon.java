@@ -20,7 +20,11 @@ public class FacebookDaemon {
                 FacebookInitializer.init();
                 Map<String,String> map=ShowLoader.getShowLoader().getShowTOIDMap();
 
-                 FacebookInitializer.populate(map);
+                 FacebookInitializer.populate(map," tv");
+                FacebookInitializer.populate(map," series");
+                FacebookInitializer.populate(map," tv show");
+
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -47,7 +51,7 @@ public class FacebookDaemon {
         FacebookInitializer.init();
         Map<String,String> map=ShowLoader.getShowLoader().getShowTOIDMap();
 
-        FacebookInitializer.populate(map);
+    //    FacebookInitializer.populate(map);
 
     }
 }
