@@ -52,7 +52,7 @@ public class TorrentzInitializer {
         String show = new String(query);
         show = show.trim().toLowerCase().replaceAll(" ", "+");
         try {
-            for (int i = 1; i < 6; i++) {
+            for (int i = 1; i <=2; i++) {
 
                 try {
                     String url = "http://torrentz.com/search?f=" + show.toString() + "&p=" + String.valueOf(i);
@@ -82,10 +82,12 @@ public class TorrentzInitializer {
                         }
 
                     }
+                    Thread.sleep(500);
 
                 }  catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
         } finally {
 
@@ -114,7 +116,7 @@ public class TorrentzInitializer {
         String show = new String(query);
         show = show.trim().toLowerCase().replaceAll(" ", "+");
         try {
-            for (int i = 1; i < 6; i++) {
+            for (int i = 1; i <=2; i++) {
 
                 try {
                     u = new URL("http://www.torrenthound.com/search/game+of+thrones");
@@ -153,6 +155,7 @@ public class TorrentzInitializer {
                         }
 
                     }
+                    Thread.sleep(500);
 
 
                 }  catch (Exception e) {

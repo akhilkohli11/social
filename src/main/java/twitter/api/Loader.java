@@ -18,6 +18,7 @@ public static void main(String args[])
             InitializePopularDocuments.init();
             Aggregator aggregator=new Aggregator();
             aggregator.aggregateTrend();
+            aggregator.init();
         //    aggregator.delete();
 //            aggregator.aggregateTrend();
 //            aggregator.aggregateTotal();

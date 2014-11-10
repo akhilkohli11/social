@@ -580,7 +580,7 @@ public class CloudSolrPersistenceLayer {
         params.put("q", "showID:"+id +" AND category:"+type);
         params.put("start", start);
         params.put("rows",fetchSize);
-        double score=-2;
+        double score=1000;
         SolrDocumentList documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
         ListIterator<SolrDocument> newiterator=documents.listIterator();
 
@@ -588,7 +588,7 @@ public class CloudSolrPersistenceLayer {
         {
             SolrDocument document=newiterator.next();
             if(document.containsKey(field)) {
-                score += Double.parseDouble(document.get(field).toString());
+                score += Double.parseDouble(document.get(field).toString())*-2;
             }
         }
 
