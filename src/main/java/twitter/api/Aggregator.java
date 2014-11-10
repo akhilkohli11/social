@@ -163,15 +163,106 @@ public class Aggregator {
             System.out.println("klout day change "+entry.getKey()+"   "+entry.getValue()+"   "+kloutscore);
 
 
-            CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:youtube");
-            CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:facebook");
-            CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:tumblr");
-            CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:twitter");
-            CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:torrentz");
-            CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:torrenthound");
-
 
         }
 
+//        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:youtube");
+//        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:facebook");
+//        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:tumblr");
+//        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:twitter");
+//        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:torrentz");
+//        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:torrenthound");
+
+
+
+    }
+
+    public void aggregateTrend() throws Exception {
+        Map<String, String> showNameToIDMap= ShowLoader.getShowLoader().getShowTOIDMap();
+
+        for(Map.Entry<String,String> entry :showNameToIDMap.entrySet())
+        {
+            long youtubeviews=CloudSolrPersistenceLayer.getInstance().getViewsTotal(entry.getValue(), "youtube", "views");
+            System.out.println("youtube  "+entry.getKey()+"   "+entry.getValue()+"   "+youtubeviews);
+
+            if(youtubeviews>0) {
+
+                CloudSolrPersistenceLayer.getInstance().populateTotal(entry.getValue(), youtubeviews, "youtube", "views");
+            }
+            long youtubecount=CloudSolrPersistenceLayer.getInstance().getTotalCount(entry.getValue(), "youtube");
+            System.out.println("youtube total  "+entry.getKey()+"   "+entry.getValue()+"   "+youtubecount);
+
+            if(youtubecount>0) {
+
+                CloudSolrPersistenceLayer.getInstance().populateTotal(entry.getValue(), youtubecount, "youtube", "count");
+
+            }
+            long facebookviews=CloudSolrPersistenceLayer.getInstance().getViewsTotal(entry.getValue(), "facebook", "views");
+            System.out.println("facebook  "+entry.getKey()+"   "+entry.getValue()+"   "+facebookviews);
+
+            if(facebookviews>0) {
+
+                CloudSolrPersistenceLayer.getInstance().populateTotal(entry.getValue(), facebookviews,
+                        "facebook", "views");
+            }
+
+
+            //also
+
+            long facebookcount=CloudSolrPersistenceLayer.getInstance().getTotalCount(entry.getValue(), "facebook");
+            System.out.println("facebook total  "+entry.getKey()+"   "+entry.getValue()+"   "+facebookcount);
+            if(facebookcount>0) {
+
+                CloudSolrPersistenceLayer.getInstance().populateTotal(entry.getValue(), facebookcount,
+                        "facebook", "count");
+            }
+
+            long torrentzViews=CloudSolrPersistenceLayer.getInstance().getViewsTotal(entry.getValue(), "torrentz", "views");
+            System.out.println("torrentz  "+entry.getKey()+"   "+entry.getValue()+"   "+torrentzViews);
+
+
+
+            long torrentHound=CloudSolrPersistenceLayer.getInstance().getViewsTotal(entry.getValue(), "torrenthound", "views");
+            System.out.println("torrenthound  "+entry.getKey()+"   "+entry.getValue()+"   "+torrentHound);
+
+            if(torrentzViews>0 && torrentHound>0) {
+                CloudSolrPersistenceLayer.getInstance().populateTotal(entry.getValue(), torrentzViews,
+                        "torrentz", "views");
+                CloudSolrPersistenceLayer.getInstance().populateTotal(entry.getValue(), torrentHound,
+                        "torrenthound", "views");
+            }
+
+
+            long twitter=CloudSolrPersistenceLayer.getInstance().getTotalCount(entry.getValue(), "twitter");
+            System.out.println("twitter total  "+entry.getKey()+"   "+entry.getValue()+"   "+twitter);
+            if(twitter>0) {
+                CloudSolrPersistenceLayer.getInstance().populateTotal(entry.getValue(), twitter,
+                        "twitter", "views");
+            }
+
+
+            long tumblrViews=CloudSolrPersistenceLayer.getInstance().getViewsTotal(entry.getValue(), "tumblr", "views");
+            System.out.println("tumblr  "+entry.getKey()+"   "+entry.getValue()+"   "+tumblrViews);
+
+            if(tumblrViews>0) {
+                CloudSolrPersistenceLayer.getInstance().populateTotal(entry.getValue(), tumblrViews,
+                        "tumblr", "views");
+            }
+            //also
+
+            long tumblrCount=CloudSolrPersistenceLayer.getInstance().getTotalCount(entry.getValue(), "tumblr");
+            System.out.println("tumblr total  "+entry.getKey()+"   "+entry.getValue()+"   "+tumblrCount);
+
+            if(tumblrCount>0) {
+                CloudSolrPersistenceLayer.getInstance().populateTotal(entry.getValue(), tumblrCount,
+                        "tumblr", "count");
+            }
+
+            double kloutscore=CloudSolrPersistenceLayer.getInstance().getKloutScore(entry.getValue(), "klout", "day_d");
+            System.out.println("klout day change "+entry.getKey()+"   "+entry.getValue()+"   "+kloutscore);
+
+
+
+        }
     }
 }

@@ -26,8 +26,8 @@ public class YoutubeDaemon {
                 Date after =  new org.joda.time.DateTime(before).minusHours(3).toDate();
                 Map<String,String> map=ShowLoader.getShowLoader().getShowTOIDMap();
 
-                ViewsYoutubeLoader.populate(map,null,null,"viewCount");
-                ViewsYoutubeLoader.populate(map,null,null,"relevance");
+//                ViewsYoutubeLoader.populate(map,null,null,"viewCount");
+//                ViewsYoutubeLoader.populate(map,null,null,"relevance");
                 int count=0;
                 while (count++<=2)
                 {
@@ -38,6 +38,18 @@ public class YoutubeDaemon {
                     ViewsYoutubeLoader.populate(map,after,before,null);
 
                 }
+                 before = new Date();
+                 after =  new org.joda.time.DateTime(before).minusHours(3).toDate();
+                while (count++<=4)
+                {
+                    before=after;
+                    after =  new org.joda.time.DateTime(before).minusDays(3).toDate();
+                    ViewsYoutubeLoader.populate(map,after,before,"relevance");
+                    ViewsYoutubeLoader.populate(map,after,before,"viewCount");
+                    ViewsYoutubeLoader.populate(map,after,before,null);
+
+                }
+
 
             } catch (Exception e) {
                 e.printStackTrace();

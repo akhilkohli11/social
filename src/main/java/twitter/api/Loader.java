@@ -18,6 +18,9 @@ public static void main(String args[])
             InitializePopularDocuments.init();
             Aggregator aggregator=new Aggregator();
             aggregator.aggregateTotal();
+//            aggregator.aggregateTrend();
+//            aggregator.aggregateTotal();
+//            aggregator.delete();
             aggregator.init();
 //            Zap2ItSolrApi.init();
 //            Thread.sleep(10000);
