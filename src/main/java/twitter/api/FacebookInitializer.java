@@ -52,6 +52,10 @@ public class FacebookInitializer {
                                             post.getScheduledPublishTime(), showSearch.getKey(), showSearch.getValue());
                                 }
                             }
+                            if(count++>10)
+                            {
+                                break;
+                            }
                         }
                         catch (Exception e)
                         {
