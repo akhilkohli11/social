@@ -647,7 +647,7 @@ public class CloudSolrPersistenceLayer {
     }
 
     public void populateRanks(SolrDocument document, Integer youtubeRank, Integer facebookRank,Integer torrentzRank,Integer torrentHoundRank,
-                              Integer twtterRank,Integer tumblrRank,Integer kloutRank) throws Exception{
+                              Integer twtterRank,Integer tumblrRank,Integer kloutRank,Integer overAllRank) throws Exception{
         SolrInputDocument doc = new SolrInputDocument();
         doc.addField("id",document.getFieldValue("id")+"ranks");
         doc.addField("showID",document.getFieldValue("id"));
@@ -667,6 +667,10 @@ public class CloudSolrPersistenceLayer {
         doc.addField("twitterrank_i",twtterRank);
         doc.addField("tumblrrank_i",tumblrRank);
         doc.addField("kloutrank_i",kloutRank);
+        if(overAllRank!=null)
+        {
+            doc.addField("popularityrank_i",overAllRank);
+        }
 
         doc.addField("category","ranks");
 

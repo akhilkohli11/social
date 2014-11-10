@@ -258,11 +258,46 @@ public class Aggregator {
         Map<String,Integer>  twitterRankMap=sort(twitterRank);
         Map<String,Integer>  kloutRankMap=sortDouble(kloutRank);
 
-
+        Map<String,Integer> overAllRank=calculateOverAllRank(youtubeRankMap,facebookRankMap,tumblrRankMap,twitterRankMap);
 
 
         loadRanks(youtubeRankMap, facebookRankMap, torrentzRankMap, torrentHoundRankMap, twitterRankMap, tumblrRankMap,
-                kloutRankMap);
+                kloutRankMap,overAllRank);
+    }
+
+    private Map<String, Integer> calculateOverAllRank(Map<String, Integer> youtubeRankMap, Map<String, Integer> facebookRankMap,
+                                                      Map<String, Integer> tumblrRankMap, Map<String, Integer> twitterRankMap) {
+
+        Map<String,Long> sortedMap=new HashMap<String, Long>();
+        for(Map.Entry<String,Integer> entry :youtubeRankMap.entrySet())
+        {
+            long value=0;
+            value+=youtubeRankMap.get(entry.getKey())*6;
+            if(facebookRankMap.containsKey(entry.getKey()) && twitterRankMap.containsKey(entry.getKey()))
+            {
+                value+=facebookRankMap.get(entry.getKey())*4;
+                value+=twitterRankMap.get(entry.getKey())*8;
+                sortedMap.put(entry.getKey(),value);
+                continue;
+            }
+            if(facebookRankMap.containsKey(entry.getKey()) && tumblrRankMap.containsKey(entry.getKey()))
+            {
+                value+=facebookRankMap.get(entry.getKey())*4;
+                value+=tumblrRankMap.get(entry.getKey())*2;
+                sortedMap.put(entry.getKey(),value);
+                continue;
+            }
+            if(twitterRankMap.containsKey(entry.getKey()) && tumblrRankMap.containsKey(entry.getKey()))
+            {
+                value+=twitterRankMap.get(entry.getKey())*8;
+                value+=tumblrRankMap.get(entry.getKey())*2;
+                sortedMap.put(entry.getKey(),value);
+                continue;
+            }
+        }
+        Map<String,Integer>  rankMap=sort(sortedMap);
+        return rankMap;
+
     }
 
 
@@ -322,7 +357,8 @@ public class Aggregator {
     }
 
     public static void loadRanks(Map<String, Integer> youtubeRankMap, Map<String, Integer> facebookRankMap, Map<String, Integer> torrentzRankMap,
-                                 Map<String, Integer> torrentHoundRankMap, Map<String, Integer> twitterRankMap, Map<String,Integer>  tumblrRankMap, Map<String,Integer>  kloutRankMap
+                                 Map<String, Integer> torrentHoundRankMap, Map<String, Integer> twitterRankMap, Map<String,Integer>  tumblrRankMap, Map<String,Integer>  kloutRankMap,
+            , Map<String,Integer>  overAllRank
                                  ) throws Exception
     {
         List<SolrDocument> solrDocuments=CloudSolrPersistenceLayer.getInstance().getPopularDocuments();
@@ -330,7 +366,7 @@ public class Aggregator {
         {
             String id=solrDocument.get("showID").toString();
             CloudSolrPersistenceLayer.getInstance().populateRanks(solrDocument, youtubeRankMap.get(solrDocument.get("showID").toString()), facebookRankMap.get(solrDocument.get("showID").toString()),
-                    torrentzRankMap.get(id),torrentHoundRankMap.get(id),twitterRankMap.get(id),tumblrRankMap.get(id),kloutRankMap.get(id));
+                    torrentzRankMap.get(id),torrentHoundRankMap.get(id),twitterRankMap.get(id),tumblrRankMap.get(id),kloutRankMap.get(id),overAllRank.get(id));
         }
     }
 
