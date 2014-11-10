@@ -17,7 +17,7 @@ public static void main(String args[])
             CloudSolrPersistenceLayer.getInstance().init();
             InitializePopularDocuments.init();
             Aggregator aggregator=new Aggregator();
-            aggregator.aggregateTotal();
+            aggregator.delete();
 //            aggregator.aggregateTrend();
 //            aggregator.aggregateTotal();
 //            aggregator.delete();

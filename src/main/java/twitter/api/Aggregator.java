@@ -177,6 +177,17 @@ public class Aggregator {
 
     }
 
+    public void delete() throws Exception
+    {
+
+        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:youtube");
+        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:facebook");
+        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:tumblr");
+        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:twitter");
+        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:torrentz");
+        CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:torrenthound");
+    }
+
     public void aggregateTrend() throws Exception {
         Map<String, String> showNameToIDMap= ShowLoader.getShowLoader().getShowTOIDMap();
 
