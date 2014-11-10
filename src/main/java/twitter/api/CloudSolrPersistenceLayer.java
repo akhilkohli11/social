@@ -669,7 +669,8 @@ public class CloudSolrPersistenceLayer {
         doc.addField("kloutrank_i",kloutRank);
         if(overAllRank!=null)
         {
-            doc.addField("popularityrank_i",);
+            doc.addField("popularityrank_i",overAllRank);
+
         }
 
         doc.addField("category","ranks");
