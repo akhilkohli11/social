@@ -299,7 +299,7 @@ public class Aggregator {
         Map<String,Integer>  finalRankMap=new HashMap<String, Integer>();
         for(Map.Entry<String,Integer> entry: rankMap.entrySet())
         {
-            finalRankMap.put(entry.getKey(),rankMap.size()-rankMap.get(entry.getKey()));
+            finalRankMap.put(entry.getKey(),rankMap.size()-rankMap.get(entry.getKey())+2);
         }
         System.out.println(rankMap);
         System.out.println(finalRankMap);
