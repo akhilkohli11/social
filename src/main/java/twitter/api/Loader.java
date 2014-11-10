@@ -17,11 +17,12 @@ public static void main(String args[])
             CloudSolrPersistenceLayer.getInstance().init();
             InitializePopularDocuments.init();
             Aggregator aggregator=new Aggregator();
-            aggregator.delete();
+            aggregator.aggregateTrend();
+        //    aggregator.delete();
 //            aggregator.aggregateTrend();
 //            aggregator.aggregateTotal();
 //            aggregator.delete();
-            aggregator.init();
+      //      aggregator.init();
 //            Zap2ItSolrApi.init();
 //            Thread.sleep(10000);
 //            SocialXMLParser.init();

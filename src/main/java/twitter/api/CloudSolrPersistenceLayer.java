@@ -78,7 +78,7 @@ public class CloudSolrPersistenceLayer {
 //            doc.addField("country", selectedCountry);
 //            doc.addField("state", selectedState);
 //            doc.addField("embedCode", embedCode);
-         //   doc.addField("socialcontenttype", type);
+            //   doc.addField("socialcontenttype", type);
             doc.addField("createdOn", new Date(df.parse(createdOn).getTime()));
             doc.addField("last_modified", new Date(df.parse(createdOn).getTime()));
             doc.addField("category", "twitter");
@@ -524,6 +524,11 @@ public class CloudSolrPersistenceLayer {
         return showNameToIdMap;
     }
 
+    public List<SolrDocument> getPopularDocuments()
+    {
+        return popularDocuments;
+    }
+
     public long getViewsTotal(String id, String type,String field) throws Exception{
         Map<String,String> showNameToIdMap=new HashMap<String, String>();
         Map<String,Object> params = new HashMap<String,Object>();
@@ -575,7 +580,7 @@ public class CloudSolrPersistenceLayer {
         params.put("q", "showID:"+id +" AND category:"+type);
         params.put("start", start);
         params.put("rows",fetchSize);
-        double score=0;
+        double score=-2;
         SolrDocumentList documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
         ListIterator<SolrDocument> newiterator=documents.listIterator();
 
@@ -592,10 +597,23 @@ public class CloudSolrPersistenceLayer {
 
 
     public long getTotalCount(String id, String type) throws Exception{
+
         SolrQuery q = new SolrQuery("showID:"+id +" AND category:"+type);
         q.setRows(0);
 
         return server.query(q).getResults().getNumFound();
+    }
+
+    public long getTMSIDTotalCountForTwitter(String id) throws Exception{
+        String tmsID=null;
+        for(SolrDocument solrDocument : popularDocuments)
+        {
+            if(solrDocument.get("showID").toString().equals(id))
+            {
+                return getTotalCount(solrDocument.get("tms_show_id").toString(),"twitter");
+            }
+        }
+        return 0;
     }
 
 
@@ -628,5 +646,35 @@ public class CloudSolrPersistenceLayer {
 
     }
 
+    public void populateRanks(SolrDocument document, Integer youtubeRank, Integer facebookRank,Integer torrentzRank,Integer torrentHoundRank,
+                              Integer twtterRank,Integer tumblrRank,Integer kloutRank) throws Exception{
+        SolrInputDocument doc = new SolrInputDocument();
+        doc.addField("id",document.getFieldValue("id")+"ranks");
+        doc.addField("showID",document.getFieldValue("id"));
+
+        doc.addField("tms_id",document.getFieldValue("tms_id"));
+        doc.addField("tms_show_id",document.getFieldValue("tms_show_id"));
+        doc.addField("title",document.getFieldValue("title"));
+        doc.addField("createdOn",document.getFieldValue("publish_date"));
+        doc.addField("genre",document.getFieldValue("genre"));
+        doc.addField("is_showcard",document.getFieldValue("is_showcard"));
+        doc.addField("is_current",document.getFieldValue("is_current"));
+        doc.addField("is_popular",document.getFieldValue("is_popular"));
+        doc.addField("youtuberank_i",youtubeRank);
+        doc.addField("facebookrank_i",facebookRank);
+        doc.addField("torrentzrank_i",torrentzRank);
+        doc.addField("torrenthoundrank_i",torrentHoundRank);
+        doc.addField("twitterrank_i",twtterRank);
+        doc.addField("tumblrrank_i",tumblrRank);
+        doc.addField("kloutrank_i",kloutRank);
+
+        doc.addField("category","ranks");
+
+
+
+        server.add(doc);
+        server.commit();
+
+    }
 }
 
