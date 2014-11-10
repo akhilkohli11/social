@@ -295,8 +295,16 @@ public class Aggregator {
                 continue;
             }
         }
-        Map<String,Integer>  rankMap=sortDescending(sortedMap);
-        return rankMap;
+        Map<String,Integer>  rankMap=sort(sortedMap);
+        Map<String,Integer>  finalRankMap=new HashMap<String, Integer>();
+        for(Map.Entry<String,Integer> entry: rankMap.entrySet())
+        {
+            finalRankMap.put(entry.getKey(),rankMap.size()-rankMap.get(entry.getKey()));
+        }
+        System.out.println(rankMap);
+        System.out.println(finalRankMap);
+
+        return finalRankMap;
 
     }
 
@@ -312,7 +320,7 @@ public class Aggregator {
             if(trends1.containsKey(entry.getValue()))
             {
                 Random random=new Random();
-                trends1.put(entry.getValue()+random.nextInt(10),entry.getKey());
+                trends1.put(entry.getValue()+random.nextInt(6),entry.getKey());
             }
             else {
                 trends1.put(entry.getValue(), entry.getKey());
@@ -356,60 +364,7 @@ public class Aggregator {
         return showRankMap;
     }
 
-    public Map<String,Integer> sortDescending(Map<String,Long> trends)
-    {
-        long numbers[]=new long[10000];
-        int count1=0;
-        Map<Long,String> trends1=new HashMap<Long, String>();
 
-        for(Map.Entry<String,Long> entry : trends.entrySet())
-        {
-            if(trends1.containsKey(entry.getValue()))
-            {
-                Random random=new Random();
-                trends1.put(entry.getValue()+random.nextInt(10),entry.getKey());
-            }
-            else {
-                trends1.put(entry.getValue(), entry.getKey());
-            }
-        }
-        for(Map.Entry<String,Long> entry : trends.entrySet())
-        {
-            numbers[count1++] =entry.getValue();
-        }
-
-
-        long temp;
-
-        for(int i = 0; i < numbers.length; i++)
-        {
-            for(int j = 1; j < (numbers.length-i); j++)
-            {
-                //if numbers[j-1] < numbers[j], swap the elements
-                if(numbers[j-1] > numbers[j])
-                {
-                    temp = numbers[j-1];
-                    numbers[j-1]=numbers[j];
-                    numbers[j]=temp;
-                }
-            }
-        }
-        Map<Integer,String> rankMap=new HashMap<Integer, String>();
-        Map<String,Integer> showRankMap=new HashMap<String, Integer>();
-
-        int rank=1;
-        for(int i = 0; i < numbers.length; i++)
-        {
-            rankMap.put(rank++,trends1.get(numbers[i]));
-
-
-        }
-        for(Map.Entry<Integer,String> entry :rankMap.entrySet())
-        {
-            showRankMap.put(entry.getValue(),entry.getKey());
-        }
-        return showRankMap;
-    }
 
     public static void loadRanks(Map<String, Integer> youtubeRankMap, Map<String, Integer> facebookRankMap, Map<String, Integer> torrentzRankMap,
                                  Map<String, Integer> torrentHoundRankMap, Map<String, Integer> twitterRankMap, Map<String,Integer>  tumblrRankMap, Map<String,Integer>  kloutRankMap,
