@@ -54,7 +54,7 @@ public class CloudSolrPersistenceLayer {
 
     public void init()
     {
-        server = new HttpSolrServer("http://localhost:8983/solr/collection1");
+        server = new HttpSolrServer("http://ec2-54-200-230-35.us-west-2.compute.amazonaws.com:8983/solr/social");
 
     }
 
@@ -65,20 +65,10 @@ public class CloudSolrPersistenceLayer {
 
         try {
             SolrInputDocument doc = new SolrInputDocument();
-//            SolrDocument exitingDoc=findSolrDocument("id",  showName+createdOn);
-//            if(exitingDoc!=null)
-//            {
-//                deleteDocuments(exitingDoc.get("id").toString());
-//            }
+
             doc.addField("id", showID+id+"twitter");
 
-//            doc.addField("city", selectedCity);
-//            doc.addField("socialTextcontent", tweetText);
-//            doc.addField("sentimentalScore", sentimentalScore);
-//            doc.addField("country", selectedCountry);
-//            doc.addField("state", selectedState);
-//            doc.addField("embedCode", embedCode);
-            //   doc.addField("socialcontenttype", type);
+
             doc.addField("createdOn", new Date(df.parse(createdOn).getTime()));
             doc.addField("last_modified", new Date(df.parse(createdOn).getTime()));
             doc.addField("category", "twitter");
@@ -109,11 +99,7 @@ public class CloudSolrPersistenceLayer {
                                     String time,String url,String postURL, String showID) throws Exception {
         try {
             SolrInputDocument doc = new SolrInputDocument();
-//            SolrDocument exitingDoc=findSolrDocument("id",  showName+postID);
-//            if(exitingDoc!=null)
-//            {
-//                deleteDocuments(exitingDoc.get("id").toString());
-//            }
+
             doc.addField("id", showName+postID+"tumblr");
             doc.addField("showName", showName);
             doc.addField("socialTextcontent", text);
@@ -156,11 +142,7 @@ public class CloudSolrPersistenceLayer {
             SolrInputDocument doc = new SolrInputDocument();
             Date date=new Date();
             solrDate.setTimeZone(TimeZone.getTimeZone("UTC"));
-//            SolrDocument exitingDoc=findSolrDocument("id", showID+"torrentz");
-//            if(exitingDoc!=null)
-//            {
-//                deleteDocuments(exitingDoc.get("id").toString());
-//            }
+
             doc.addField("id", showID+type+count+peers);
             doc.addField("showName", showName);
             doc.addField("views", peers);
@@ -192,11 +174,7 @@ public class CloudSolrPersistenceLayer {
                                      String showID) throws Exception {
         try {
             SolrInputDocument doc = new SolrInputDocument();
-//            SolrDocument exitingDoc=findSolrDocument("id",showID+"youtube");
-//            if(exitingDoc!=null)
-//            {
-//                deleteDocuments(exitingDoc.get("id").toString());
-//            }
+
             doc.addField("id", showName+id+"youtube");
             doc.addField("showName", showName);
             doc.addField("sentimentalScore", -1);
@@ -238,11 +216,7 @@ public class CloudSolrPersistenceLayer {
 
         try {
             SolrInputDocument doc = new SolrInputDocument();
-//            SolrDocument exitingDoc=findSolrDocument("id",showID+"youtube");
-//            if(exitingDoc!=null)
-//            {
-//                deleteDocuments(exitingDoc.get("id").toString());
-//            }
+
             doc.addField("id", showID+id+"facebook");
             doc.addField("showName", showName);
             doc.addField("showID", showID);
@@ -282,11 +256,7 @@ public class CloudSolrPersistenceLayer {
 
         try {
             SolrInputDocument doc = new SolrInputDocument();
-//            SolrDocument exitingDoc=findSolrDocument("id",showID+"youtube");
-//            if(exitingDoc!=null)
-//            {
-//                deleteDocuments(exitingDoc.get("id").toString());
-//            }
+
             doc.addField("id", id+type+category);
             doc.addField("showID", id);
             doc.addField("total_l", count);

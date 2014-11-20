@@ -40,8 +40,8 @@ public class Aggregator {
     {
         ViewsYoutubeLoader.init();
         RefactoredTumblrLoader.init();
-        KloutDaemon kloutDaemon=new KloutDaemon();
-        kloutDaemon.init();
+//        KloutDaemon kloutDaemon=new KloutDaemon();
+//        kloutDaemon.init();
         YoutubeDaemon youtubeDaemon=new YoutubeDaemon();
         youtubeDaemon.init();
 
@@ -51,9 +51,6 @@ public class Aggregator {
 
         TumblrDaemon tumblrDaemon=new TumblrDaemon();
         tumblrDaemon.init();
-
-
-
 
 
         TwitterTweetDaeomon twitterTweetDaeomon=new TwitterTweetDaeomon();

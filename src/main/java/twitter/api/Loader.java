@@ -14,12 +14,13 @@ public static void main(String args[])
 
     public void init() {
         try {
+            Zap2ItSolrApi.init();
             CloudSolrPersistenceLayer.getInstance().init();
             InitializePopularDocuments.init();
             Aggregator aggregator=new Aggregator();
-            aggregator.aggregateTrend();
-           // aggregator.init();
-        //    aggregator.delete();
+//            aggregator.aggregateTrend();
+//            aggregator.delete();
+            aggregator.init();
 //            aggregator.aggregateTrend();
 //            aggregator.aggregateTotal();
 //            aggregator.delete();
