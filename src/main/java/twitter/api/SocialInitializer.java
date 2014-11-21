@@ -1,35 +1,32 @@
 package twitter.api;
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-/**
- * Created by akohli on 6/5/14.
- */
-public class Loader extends HttpServlet {
 
-public static void main(String args[])
-{
-    new Loader().init();
-}
+/**
+ * Created by akohli on 11/20/14.
+ */
+public class SocialInitializer {
+    public static void main(String args[])
+    {
+        new SocialInitializer().init();
+    }
 
     public void init() {
         try {
-        //    Zap2ItSolrApi.init();
+         //   Zap2ItSolrApi.init();
             CloudSolrPersistenceLayer.getInstance().init();
             InitializePopularDocuments.init();
             Aggregator aggregator=new Aggregator();
             aggregator.aggregateTrend();
 //            aggregator.delete();
-   //         aggregator.init();
+        //    aggregator.init();
 //            aggregator.aggregateTrend();
 //            aggregator.aggregateTotal();
 //            aggregator.delete();
-      //      aggregator.init();
+            //      aggregator.init();
 //            Zap2ItSolrApi.init();
 //            Thread.sleep(10000);
 //            SocialXMLParser.init();
 //            Thread.sleep(2000);
-      //      MapSocialWebsitesToShows.init();
+            //      MapSocialWebsitesToShows.init();
 
 //            ViewsYoutubeLoader.init();
 //            RefactoredTumblrLoader.init();
@@ -65,15 +62,4 @@ public static void main(String args[])
             e.printStackTrace();
         }
     }
-
-
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-                throws IOException, ServletException
-        {
-            System.out.println("dskjsjksdjkkdj");
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-
-
-        }
-    }
+}
