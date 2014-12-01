@@ -20,7 +20,7 @@ public class TwitterTweetDaeomon {
             try {
 
                 LoadApp.init();
-                LoadApp.initialize(0,200);
+                LoadApp.initialize(0,118);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -35,8 +35,9 @@ public class TwitterTweetDaeomon {
     };
     public  void init()
     {
+
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 0, 12, TimeUnit.HOURS);
+        service.scheduleAtFixedRate(command, 0, 30, TimeUnit.HOURS);
     }
 
 

@@ -27,7 +27,7 @@ public class KloutDaemon {
 
             try {
 
-                initlize();
+             //   initlize();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -47,43 +47,43 @@ public class KloutDaemon {
         service.scheduleAtFixedRate(command, 5, 60, TimeUnit.MINUTES);
     }
 
-    public void initlize() throws Exception
-    {
-        KloutLoader kloutLoader=new KloutLoader();
-        kloutLoader.init();
-        Map<String,Object> params = new HashMap<String,Object>();
-        int start=0;
-        int fetchSize=50;
-        params.put("q", "category:shows");
-        params.put("start", start);
-        params.put("rows",fetchSize);
-        SolrDocumentList documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
-        ListIterator<SolrDocument> newiterator=documents.listIterator();
-
-        while (newiterator.hasNext())
-        {
-            SolrDocument document=newiterator.next();
-            String title=document.getFieldValue("title").toString();
-
-            kloutLoader.populate(title,document.get("showID").toString(),document.get("twit"));
-        }
-        SolrDocumentList allDocs = new SolrDocumentList();
-        while(documents.size() > 0) {
-            allDocs.addAll(documents);
-            start += fetchSize;
-            params.put("start",fetchSize);
-            documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
-            ListIterator<SolrDocument> iterator=documents.listIterator();
-
-            while (iterator.hasNext())
-            {
-                SolrDocument document=iterator.next();
-                String title=document.getFieldValue("title").toString();
-
-                kloutLoader.populate(title,document.get("showID").toString(),document.get("twit"));
-
-            }
-        }
-    }
+//    public void initlize() throws Exception
+//    {
+//        KloutLoader kloutLoader=new KloutLoader();
+//        kloutLoader.init();
+//        Map<String,Object> params = new HashMap<String,Object>();
+//        int start=0;
+//        int fetchSize=50;
+//        params.put("q", "category:shows");
+//        params.put("start", start);
+//        params.put("rows",fetchSize);
+//        SolrDocumentList documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
+//        ListIterator<SolrDocument> newiterator=documents.listIterator();
+//
+//        while (newiterator.hasNext())
+//        {
+//            SolrDocument document=newiterator.next();
+//            String title=document.getFieldValue("title").toString();
+//
+//            kloutLoader.populate(title,document.get("showID").toString(),document.get("twit"));
+//        }
+//        SolrDocumentList allDocs = new SolrDocumentList();
+//        while(documents.size() > 0) {
+//            allDocs.addAll(documents);
+//            start += fetchSize;
+//            params.put("start",fetchSize);
+//            documents = CloudSolrPersistenceLayer.getInstance().getSolrDocumentsWithPagination(params, start, fetchSize);
+//            ListIterator<SolrDocument> iterator=documents.listIterator();
+//
+//            while (iterator.hasNext())
+//            {
+//                SolrDocument document=iterator.next();
+//                String title=document.getFieldValue("title").toString();
+//
+//                kloutLoader.populate(title,document.get("showID").toString(),document.get("twit"));
+//
+//            }
+//        }
+//    }
     }
 

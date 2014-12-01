@@ -52,7 +52,7 @@ public class FacebookInitializer {
                                             post.getScheduledPublishTime(), showSearch.getKey(), showSearch.getValue());
                                 }
                             }
-                            if(count++>10)
+                            if(count++>2)
                             {
                                 break;
                             }

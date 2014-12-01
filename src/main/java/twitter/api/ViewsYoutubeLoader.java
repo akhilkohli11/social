@@ -14,11 +14,14 @@ import com.google.api.services.youtube.model.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by akohli on 8/25/14.
  */
 public class ViewsYoutubeLoader {
+    private static List<String> allowedKeyWords=Arrays.asList( "show","clip","season","series","episode","premiere","preview","recap","tease");
 
     public static void main(String args[]) throws Exception
     {
@@ -26,7 +29,7 @@ public class ViewsYoutubeLoader {
         ViewsYoutubeLoader.init();
         Map<String,String> map=new HashMap<String, String>();
         map.put("Big Bang Theory","1");
-    //    map.put("Friends","2");
+        //    map.put("Friends","2");
         Date before = new Date();
         Date after =  new org.joda.time.DateTime(before).minusHours(3).toDate();
 
@@ -211,34 +214,45 @@ public class ViewsYoutubeLoader {
         while (iteratorVideoResults.hasNext()) {
             String official="false";
             Video singleVideo = iteratorVideoResults.next();
-            try{
-                if(singleVideo.getSnippet()==null)
-                {
+            try {
+                if (singleVideo.getSnippet() == null) {
                     continue;
                 }
 //                if(singleVideo.getSnippet().getChannelTitle().toLowerCase().contains(officialChannel)) {
 //                    official="true";
 //                }
-                int likes=0;
-                int dislikes=0;
-                int comments=0;
-                int views=0;
-                if(singleVideo.getStatistics()!=null) {
-                    VideoStatistics singleVideoStatistics=singleVideo.getStatistics();
-                    likes=Integer.parseInt(singleVideoStatistics.getLikeCount().toString());
-                    dislikes=Integer.parseInt(singleVideoStatistics.getDislikeCount().toString());
-                    comments=Integer.parseInt(singleVideoStatistics.getCommentCount().toString());
-                    views=Integer.parseInt(singleVideoStatistics.getViewCount().toString());
+                int likes = 0;
+                int dislikes = 0;
+                int comments = 0;
+                int views = 0;
+                if (singleVideo.getStatistics() != null) {
+                    VideoStatistics singleVideoStatistics = singleVideo.getStatistics();
+                    likes = Integer.parseInt(singleVideoStatistics.getLikeCount().toString());
+                    dislikes = Integer.parseInt(singleVideoStatistics.getDislikeCount().toString());
+                    comments = Integer.parseInt(singleVideoStatistics.getCommentCount().toString());
+                    views = Integer.parseInt(singleVideoStatistics.getViewCount().toString());
 
 
                 }
-                VideoSnippet videoSnippet=singleVideo.getSnippet();
+                VideoSnippet videoSnippet = singleVideo.getSnippet();
+                String trimmedTitle=videoSnippet.getTitle().trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
+                String trimmedShowName=CloudSolrPersistenceLayer.getInstance().getSocialObjectMap().get(showName).getShowName().trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'", "");
+                String channel=CloudSolrPersistenceLayer.getInstance().getSocialObjectMap().get(showName).getOfficalChannel();
 
-                CloudSolrPersistenceLayer.getInstance().populateYoutubeData(singleVideo.getId(),showName,videoSnippet.getTitle(),
-                        official,likes,dislikes,views,comments,singleVideo.getPlayer().getEmbedHtml(),null,null,
-                        videoSnippet.getPublishedAt(),videoSnippet.getChannelTitle(),null,id);
+                if (trimmedTitle.contains(trimmedShowName)) {
+                    for (String keyword : allowedKeyWords) {
+                        if (trimmedTitle.contains(keyword) || trimmedTitle.contains(channel)
+                                || isMatchFound(trimmedTitle, "S[0-9][0-9]*E[0-9][0-9]*") || isMatchFound(trimmedTitle, "s[0-9][0-9]*e[0-9][0-9]*")
+                                || isMatchFound(trimmedTitle, "[0-9][0-9]*x[0-9][0-9]*")) {
+
+                            CloudSolrPersistenceLayer.getInstance().populateYoutubeData(singleVideo.getId(), showName, videoSnippet.getTitle(),
+                                    official, likes, dislikes, views, comments, singleVideo.getPlayer().getEmbedHtml(), null, null,
+                                    videoSnippet.getPublishedAt(), videoSnippet.getChannelTitle(), null, id);
+                        }
 
 
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -247,6 +261,20 @@ public class ViewsYoutubeLoader {
 
         }
     }
+
+
+    public static boolean isMatchFound(String input,String pattern)
+    {
+        Pattern p = Pattern.compile("S[0-9][0-9]*E[0-9][0-9]*");
+        Matcher m = p.matcher(input);
+        while (m.find()) { // find next match
+            String match = m.group();
+            System.out.println(match);
+        }
+        return m.matches();
+    }
+
+
 
 
 

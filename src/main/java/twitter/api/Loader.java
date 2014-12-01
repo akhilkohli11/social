@@ -18,8 +18,10 @@ public static void main(String args[])
             CloudSolrPersistenceLayer.getInstance().init();
             InitializePopularDocuments.init();
             Aggregator aggregator=new Aggregator();
+         //   CloudSolrPersistenceLayer.getInstance().deleteDocuments("category:ranks");
             aggregator.aggregateTrend();
-//            aggregator.delete();
+          //  aggregator.initialize();
+          //  aggregator.delete();
    //         aggregator.init();
 //            aggregator.aggregateTrend();
 //            aggregator.aggregateTotal();

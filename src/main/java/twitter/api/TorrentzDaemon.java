@@ -11,29 +11,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class TorrentzDaemon {
 
-    Runnable command = new Runnable() {
-        public void run() {
-            BufferedReader br = null;
 
-            try {
-
-                TorrentzInitializer.init();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (br != null) br.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-            }
-        }
-    };
     public  void init()
     {
-        ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 0, 60*60, TimeUnit.MINUTES);
+        try {
+            TorrentzInitializer.init();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 }

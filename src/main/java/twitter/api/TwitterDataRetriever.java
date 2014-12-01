@@ -65,6 +65,7 @@ public class TwitterDataRetriever {
                 }
             }
         }
+        System.out.println("size size size "+followTerms.size());
         shows.add(showName.trim());
 
         if(!StringUtils.isNullOrEmpty(showName) && !StringUtils.isNullOrEmpty(showName)) {

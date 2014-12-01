@@ -10,9 +10,6 @@ import java.util.concurrent.TimeUnit;
  * Created by akohli on 7/7/14.
  */
 public class TumblrDaemon {
-    public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
-    public static final String MYSQL_URL = "jdbc:mysql://localhost/social?"
-            + "user=root";
 
     Runnable command = new Runnable() {
         public void run() {
@@ -35,7 +32,9 @@ public class TumblrDaemon {
     };
     public  void init()
     {
+
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 0, 20, TimeUnit.HOURS);
+        service.scheduleAtFixedRate(command, 0, 30, TimeUnit.HOURS);
+
     }
 }

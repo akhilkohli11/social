@@ -14,28 +14,15 @@ public class TwitterOneMore {
     public static final String MYSQL_URL = "jdbc:mysql://localhost/social?"
             + "user=root";
 
-    Runnable command = new Runnable() {
-        public void run() {
-            BufferedReader br = null;
-            try {
 
-                TwitterDataRetriever.getTweets(5000, LoadApp.getSocialMysqlLayer(),201,405);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (br != null) br.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-            }
-        }
-    };
     public  void init()
     {
-        ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 2, 60*80, TimeUnit.MINUTES);
+        try {
+
+            TwitterDataRetriever.getTweets(5000, LoadApp.getSocialMysqlLayer(),201,405);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

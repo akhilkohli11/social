@@ -41,8 +41,7 @@ public class FacebookDaemon {
     public  void init()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 0, 50*60, TimeUnit.MINUTES);
-    }
+        service.scheduleAtFixedRate(command, 0, 30, TimeUnit.HOURS);    }
 
     public static void main(String args[]) throws Exception
     {

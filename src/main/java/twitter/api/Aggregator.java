@@ -17,13 +17,29 @@ import java.util.concurrent.TimeUnit;
  */
 public class Aggregator {
 
+    int started=0;
     Runnable command = new Runnable() {
         public void run() {
             BufferedReader br = null;
 
             try {
+                if(started==1)
+                {
+                    int count=0;
+                    while (count++<15) {
+                        aggregateTrend();
+                        Thread.sleep(120 * 1000);
+                    }
+                      delete();
+                    Thread.sleep(120*1000);
+                    System.exit(1);
+                }
+                if(started==0)
+                {
+                    init();
+                    started=1;
+                }
 
-                // socialMysqlLayer.populateLocationDataForTwitter();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -35,41 +51,38 @@ public class Aggregator {
 
             }
         }
+
+
     };
+
+    public  void initialize()
+    {
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+        service.scheduleAtFixedRate(command, 0, 2, TimeUnit.HOURS);
+    }
+
     public  void init() throws Exception
     {
         ViewsYoutubeLoader.init();
         RefactoredTumblrLoader.init();
-//        KloutDaemon kloutDaemon=new KloutDaemon();
-//        kloutDaemon.init();
+
+        TwitterTweetDaeomon twitterTweetDaeomon=new TwitterTweetDaeomon();
+        twitterTweetDaeomon.init();
+
+       // new TwitterOneMore().init();
         YoutubeDaemon youtubeDaemon=new YoutubeDaemon();
         youtubeDaemon.init();
 
-        TorrentzDaemon torrentzDaemon = new TorrentzDaemon();
-        torrentzDaemon.init();
-
+//        TorrentzDaemon torrentzDaemon=new TorrentzDaemon();
+//        torrentzDaemon.init();
 
         TumblrDaemon tumblrDaemon=new TumblrDaemon();
         tumblrDaemon.init();
 
 
-        TwitterTweetDaeomon twitterTweetDaeomon=new TwitterTweetDaeomon();
-        twitterTweetDaeomon.init();
-
-
-        new TwitterOneMore().init();
 
         FacebookDaemon facebookDaemon=new FacebookDaemon();
         facebookDaemon.init();
-    }
-
-    public static void main(String args[]) throws Exception
-    {
-        CloudSolrPersistenceLayer.getInstance().init();
-        InitializePopularDocuments.init();
-
-        Aggregator aggregator=new Aggregator();
-        //run first then run all then run trends
     }
 
     public void delete() throws Exception
@@ -179,6 +192,7 @@ public class Aggregator {
 
 
     public void aggregateTrend() throws Exception {
+
         Map<String, String> showNameToIDMap= ShowLoader.getShowLoader().getShowTOIDMap();
         Map<String,Long> youtubeRank=new HashMap<String, Long>();
         Map<String,Long> facebookRank=new HashMap<String, Long>();
@@ -269,34 +283,63 @@ public class Aggregator {
         for(Map.Entry<String,Integer> entry :youtubeRankMap.entrySet())
         {
             long value=0;
-            value+=youtubeRankMap.get(entry.getKey())*6;
+            value+=youtubeRankMap.get(entry.getKey())*8;
             if(facebookRankMap.containsKey(entry.getKey()) && twitterRankMap.containsKey(entry.getKey()))
             {
                 value+=facebookRankMap.get(entry.getKey())*4;
-                value+=twitterRankMap.get(entry.getKey())*8;
+                value+=twitterRankMap.get(entry.getKey())*14;
                 sortedMap.put(entry.getKey(),value);
                 continue;
             }
             if(facebookRankMap.containsKey(entry.getKey()) && tumblrRankMap.containsKey(entry.getKey()))
             {
                 value+=facebookRankMap.get(entry.getKey())*4;
-                value+=tumblrRankMap.get(entry.getKey())*2;
+                value+=tumblrRankMap.get(entry.getKey())*6;
                 sortedMap.put(entry.getKey(),value);
                 continue;
             }
             if(twitterRankMap.containsKey(entry.getKey()) && tumblrRankMap.containsKey(entry.getKey()))
             {
-                value+=twitterRankMap.get(entry.getKey())*8;
-                value+=tumblrRankMap.get(entry.getKey())*2;
+                value+=twitterRankMap.get(entry.getKey())*14;
+                value+=tumblrRankMap.get(entry.getKey())*6;
                 sortedMap.put(entry.getKey(),value);
                 continue;
             }
         }
+
+        for(Map.Entry<String,Integer> entry :twitterRankMap.entrySet())
+        {
+            long value=0;
+            value+=twitterRankMap.get(entry.getKey())*14;
+            sortedMap.put(entry.getKey(),value);
+            if(facebookRankMap.containsKey(entry.getKey()) && youtubeRankMap.containsKey(entry.getKey()))
+            {
+                value+=facebookRankMap.get(entry.getKey())*4;
+                value+=youtubeRankMap.get(entry.getKey())*8;
+                sortedMap.put(entry.getKey(),value);
+                continue;
+            }
+            if(facebookRankMap.containsKey(entry.getKey()) && tumblrRankMap.containsKey(entry.getKey()))
+            {
+                value+=facebookRankMap.get(entry.getKey())*4;
+                value+=tumblrRankMap.get(entry.getKey())*6;
+                sortedMap.put(entry.getKey(),value);
+                continue;
+            }
+            if(youtubeRankMap.containsKey(entry.getKey()) && tumblrRankMap.containsKey(entry.getKey()))
+            {
+                value+=youtubeRankMap.get(entry.getKey())*8;
+                value+=tumblrRankMap.get(entry.getKey())*6;
+                sortedMap.put(entry.getKey(),value);
+                continue;
+            }
+        }
+
         Map<String,Integer>  rankMap=sort(sortedMap);
         Map<String,Integer>  finalRankMap=new HashMap<String, Integer>();
         for(Map.Entry<String,Integer> entry: rankMap.entrySet())
         {
-            finalRankMap.put(entry.getKey(),rankMap.size()-rankMap.get(entry.getKey())+2);
+            finalRankMap.put(entry.getKey(),rankMap.size()-rankMap.get(entry.getKey())+1);
         }
         System.out.println(rankMap);
         System.out.println(finalRankMap);

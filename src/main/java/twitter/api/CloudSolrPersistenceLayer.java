@@ -35,6 +35,7 @@ public class CloudSolrPersistenceLayer {
 
     List<String> deleteIDs=new ArrayList<String>();
     int deleteCount=0;
+    Map<String,SocialObject> map=new HashMap<String, SocialObject>();
     DateFormat solrDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
@@ -77,7 +78,7 @@ public class CloudSolrPersistenceLayer {
 
             server.add(doc);
             commitCounttwitter++;
-            if (commitCounttwitter % 100 == 0) {
+            if (commitCounttwitter % 10 == 0) {
                 server.commit();
             }
 
@@ -589,7 +590,7 @@ public class CloudSolrPersistenceLayer {
 
 
 
-    public void loadPopularDocuments(String id,String[] hashtag) throws Exception {
+    public void loadPopularDocuments(String id) throws Exception {
         Map<String,String> showNameToIdMap=new HashMap<String, String>();
         Map<String,Object> params = new HashMap<String,Object>();
         int start=0;
@@ -604,11 +605,7 @@ public class CloudSolrPersistenceLayer {
             String title=document.getFieldValue("title").toString();
 
             System.out.print(title + "   " + document.get("id") + "   " + "");
-            for(String hash : hashtag)
-            {
-                System.out.print(hash);
-            }
-            System.out.println();
+
 
             popularDocuments.add(document);
 
@@ -650,6 +647,15 @@ public class CloudSolrPersistenceLayer {
         server.add(doc);
         server.commit();
 
+    }
+
+    public void loadSocialObject(String tmsID, SocialObject socialObject) {
+        map.put(tmsID,socialObject);
+    }
+
+    public Map<String,SocialObject> getSocialObjectMap()
+    {
+        return map;
     }
 }
 

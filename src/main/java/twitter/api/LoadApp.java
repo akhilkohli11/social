@@ -6,6 +6,8 @@ import org.apache.commons.lang.StringUtils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoadApp {
     public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
@@ -46,20 +48,18 @@ public class LoadApp {
 
             String sCurrentLine;
             socialMysqlLayer=new SocialMysqlLayer(MYSQL_DRIVER,MYSQL_URL);
-
             br = new BufferedReader(new FileReader("/tmp/okbro"));
-            int count=1;
-            //  socialMysqlLayer.readData();
             while ((sCurrentLine = br.readLine()) != null) {
-
-                String[] buffer= StringUtils.split(sCurrentLine, "#", 2);
-                if(buffer.length>1) {
-                    String[] hashtag = ("#" + buffer[1].trim()).split("#");
-
-                    TwitterDataRetriever.populateShowIDToShowName(buffer[0].trim(), null, null, hashtag);
-                    count++;
+                String[] buffer= StringUtils.split(sCurrentLine, "###", 9);
+                boolean isGeneric=buffer[3].trim().toLowerCase().equals("yes")?true:false;
+                System.out.println(buffer[0].trim()+"  "+buffer[1].trim()+"  "+buffer[2].trim()+"  "+buffer[5].trim()+"  "+
+                        isGeneric+"  "+buffer[8].trim());
+                if(!isGeneric) {
+                    TwitterDataRetriever.populateShowIDToShowName(buffer[0].trim(), null, null, new String[]{buffer[8].trim()});
                 }
+                count++;
             }
+
 
         } catch (Exception e) {
              e.printStackTrace();
