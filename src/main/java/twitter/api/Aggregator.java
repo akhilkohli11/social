@@ -23,17 +23,7 @@ public class Aggregator {
             BufferedReader br = null;
 
             try {
-                if(started==1)
-                {
-                    int count=0;
-                    while (count++<15) {
-                        aggregateTrend();
-                        Thread.sleep(120 * 1000);
-                    }
-                      delete();
-                    Thread.sleep(120*1000);
-                    System.exit(1);
-                }
+
                 if(started==0)
                 {
                     init();
@@ -41,6 +31,7 @@ public class Aggregator {
                 }
 
             } catch (Exception e) {
+                System.exit(0);
                 e.printStackTrace();
             } finally {
                 try {
@@ -58,7 +49,7 @@ public class Aggregator {
     public  void initialize()
     {
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-        service.scheduleAtFixedRate(command, 0, 2, TimeUnit.HOURS);
+        service.scheduleAtFixedRate(command, 0, 4, TimeUnit.HOURS);
     }
 
     public  void init() throws Exception
@@ -83,6 +74,9 @@ public class Aggregator {
 
         FacebookDaemon facebookDaemon=new FacebookDaemon();
         facebookDaemon.init();
+
+        Thread.sleep(1000*60*70);
+        System.exit(0);
     }
 
     public void delete() throws Exception
@@ -201,7 +195,7 @@ public class Aggregator {
         Map<String,Long> twitterRank=new HashMap<String, Long>();
         Map<String,Long> tumblrRank=new HashMap<String, Long>();
         Map<String,Double> kloutRank=new HashMap<String, Double>();
-
+        int totalTwitterCount=0;
 
 
         for(Map.Entry<String,String> entry :showNameToIDMap.entrySet())
@@ -243,6 +237,7 @@ public class Aggregator {
             if(twitter>0) {
                 twitterRank.put(entry.getValue(),twitter);
             }
+            totalTwitterCount+=twitter;
 
 
             long tumblrViews=CloudSolrPersistenceLayer.getInstance().getViewsTotal(entry.getValue(), "tumblr", "views");
@@ -260,6 +255,10 @@ public class Aggregator {
             System.out.println("klout day change "+entry.getKey()+"   "+entry.getValue()+"   "+kloutscore);
             kloutRank.put(entry.getValue(),kloutscore);
 
+        }
+        if(totalTwitterCount<500)
+        {
+            System.exit(0);
         }
         Map<String,Integer>  youtubeRankMap=sort(youtubeRank);
         Map<String,Integer>  facebookRankMap=sort(facebookRank);
@@ -284,27 +283,28 @@ public class Aggregator {
         {
             long value=0;
             value+=youtubeRankMap.get(entry.getKey())*8;
-            if(facebookRankMap.containsKey(entry.getKey()) && twitterRankMap.containsKey(entry.getKey()))
+            if(twitterRankMap.containsKey(entry.getKey()))
             {
-                value+=facebookRankMap.get(entry.getKey())*4;
                 value+=twitterRankMap.get(entry.getKey())*14;
                 sortedMap.put(entry.getKey(),value);
                 continue;
+
             }
-            if(facebookRankMap.containsKey(entry.getKey()) && tumblrRankMap.containsKey(entry.getKey()))
+            if(tumblrRankMap.containsKey(entry.getKey()))
             {
-                value+=facebookRankMap.get(entry.getKey())*4;
                 value+=tumblrRankMap.get(entry.getKey())*6;
                 sortedMap.put(entry.getKey(),value);
                 continue;
             }
-            if(twitterRankMap.containsKey(entry.getKey()) && tumblrRankMap.containsKey(entry.getKey()))
+
+            if(facebookRankMap.containsKey(entry.getKey()))
             {
-                value+=twitterRankMap.get(entry.getKey())*14;
-                value+=tumblrRankMap.get(entry.getKey())*6;
+                value+=facebookRankMap.get(entry.getKey())*4;
                 sortedMap.put(entry.getKey(),value);
                 continue;
             }
+
+
         }
 
         for(Map.Entry<String,Integer> entry :twitterRankMap.entrySet())
@@ -312,24 +312,22 @@ public class Aggregator {
             long value=0;
             value+=twitterRankMap.get(entry.getKey())*14;
             sortedMap.put(entry.getKey(),value);
-            if(facebookRankMap.containsKey(entry.getKey()) && youtubeRankMap.containsKey(entry.getKey()))
+            if(tumblrRankMap.containsKey(entry.getKey()))
             {
-                value+=facebookRankMap.get(entry.getKey())*4;
-                value+=youtubeRankMap.get(entry.getKey())*8;
-                sortedMap.put(entry.getKey(),value);
-                continue;
-            }
-            if(facebookRankMap.containsKey(entry.getKey()) && tumblrRankMap.containsKey(entry.getKey()))
-            {
-                value+=facebookRankMap.get(entry.getKey())*4;
                 value+=tumblrRankMap.get(entry.getKey())*6;
                 sortedMap.put(entry.getKey(),value);
                 continue;
             }
-            if(youtubeRankMap.containsKey(entry.getKey()) && tumblrRankMap.containsKey(entry.getKey()))
+
+            if(facebookRankMap.containsKey(entry.getKey()))
             {
-                value+=youtubeRankMap.get(entry.getKey())*8;
-                value+=tumblrRankMap.get(entry.getKey())*6;
+                value+=facebookRankMap.get(entry.getKey())*4;
+                sortedMap.put(entry.getKey(),value);
+                continue;
+            }
+            if(youtubeRankMap.containsKey(entry.getKey()))
+            {
+                value+=youtubeRankMap.get(entry.getKey())*7;
                 sortedMap.put(entry.getKey(),value);
                 continue;
             }

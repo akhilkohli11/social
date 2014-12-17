@@ -21,8 +21,6 @@ public class FacebookDaemon {
                 Map<String,String> map=ShowLoader.getShowLoader().getShowTOIDMap();
 
                  FacebookInitializer.populate(map," tv");
-                FacebookInitializer.populate(map," series");
-                FacebookInitializer.populate(map," tv show");
 
 
 

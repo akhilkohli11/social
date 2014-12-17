@@ -2,21 +2,11 @@ package twitter.api;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.CloudSolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.response.RangeFacet;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.schema.DateField;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
-import java.io.IOException;
-import java.net.URL;
-import java.sql.DriverManager;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -55,7 +45,7 @@ public class CloudSolrPersistenceLayer {
 
     public void init()
     {
-        server = new HttpSolrServer("http://ec2-54-200-230-35.us-west-2.compute.amazonaws.com:8983/solr/social");
+        server = new HttpSolrServer("http://ec2-54-200-230-35.us-west-2.compute.amazonaws.com:8988/solr/social");
 
     }
 
@@ -639,7 +629,7 @@ public class CloudSolrPersistenceLayer {
             doc.addField("popularityrank_i",overAllRank);
 
         }
-
+        System.out.println("Rank "+overAllRank+" show  "+document.getFieldValue("title"));
         doc.addField("category","ranks");
 
 

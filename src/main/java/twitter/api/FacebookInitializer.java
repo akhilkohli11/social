@@ -52,7 +52,7 @@ public class FacebookInitializer {
                                             post.getScheduledPublishTime(), showSearch.getKey(), showSearch.getValue());
                                 }
                             }
-                            if(count++>2)
+                            if(count++>3)
                             {
                                 break;
                             }
@@ -69,6 +69,7 @@ public class FacebookInitializer {
                 }
             }
         }
+        Thread.sleep(1000*30);
     }
 
 

@@ -27,7 +27,7 @@ public class YoutubeDaemon {
                 int count = 0;
                 while (count++ <= 3) {
                     before = after;
-                    after = new org.joda.time.DateTime(before).minusHours(3).toDate();
+                    after = new org.joda.time.DateTime(before).minusHours(9).toDate();
                     ViewsYoutubeLoader.populate(map, after, before, "relevance");
                     ViewsYoutubeLoader.populate(map, after, before, "viewCount");
                     ViewsYoutubeLoader.populate(map, after, before, null);

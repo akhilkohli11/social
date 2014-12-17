@@ -238,21 +238,17 @@ public class ViewsYoutubeLoader {
                 String trimmedTitle=videoSnippet.getTitle().trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'","");
                 String trimmedShowName=CloudSolrPersistenceLayer.getInstance().getSocialObjectMap().get(showName).getShowName().trim().toLowerCase().replaceAll(" ","").replaceAll("\"","").replaceAll("'", "");
                 String channel=CloudSolrPersistenceLayer.getInstance().getSocialObjectMap().get(showName).getOfficalChannel();
-
-                if (trimmedTitle.contains(trimmedShowName)) {
-                    for (String keyword : allowedKeyWords) {
-                        if (trimmedTitle.contains(keyword) || trimmedTitle.contains(channel)
-                                || isMatchFound(trimmedTitle, "S[0-9][0-9]*E[0-9][0-9]*") || isMatchFound(trimmedTitle, "s[0-9][0-9]*e[0-9][0-9]*")
-                                || isMatchFound(trimmedTitle, "[0-9][0-9]*x[0-9][0-9]*")) {
+                boolean isGeneric=CloudSolrPersistenceLayer.getInstance().getSocialObjectMap().get(showName).isGeneric();
+                if (!isGeneric && trimmedTitle.contains(trimmedShowName)) {
 
                             CloudSolrPersistenceLayer.getInstance().populateYoutubeData(singleVideo.getId(), showName, videoSnippet.getTitle(),
                                     official, likes, dislikes, views, comments, singleVideo.getPlayer().getEmbedHtml(), null, null,
                                     videoSnippet.getPublishedAt(), videoSnippet.getChannelTitle(), null, id);
                         }
 
-
-                    }
-                }
+//
+//                    }
+//                }
             }
             catch (Exception e)
             {

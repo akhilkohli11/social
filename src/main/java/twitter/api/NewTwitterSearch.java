@@ -30,21 +30,33 @@
             //persist to the accessToken for future reference.
             twitter.setOAuthAccessToken(accessToken);
 
+            ResponseList<twitter4j.Status> statusResponseList=twitter.getUserTimeline("GameOfThrones");
+            int i=0;
+            while ((i<statusResponseList.size()))
             {
-                Query query = new Query("Gameofthrones");
+                System.out.println(statusResponseList.get(i).getText());
+                MediaEntity[] mediaEntities=statusResponseList.get(i).getExtendedMediaEntities();
+                Status status=statusResponseList.get(i);
+                String url= "https://twitter.com/" + status.getUser().getScreenName()
+                        + "/status/" + status.getId();
+                System.out.println("url "+url);
+                for(MediaEntity mediaEntity : mediaEntities)
+                {
+                    System.out.println(mediaEntity.getMediaURL());
+                    System.out.println(mediaEntity.getDisplayURL());
 
-                //query.setUntil(formatter5.format(until).toString());
-                // query.setUntil(formatter5.format(until).toString());
-                query.setSince("2014-09-01");
-
-                QueryResult result = twitter.search(query);
-                for (Status status1 : result.getTweets()) {
-                    System.out.println("@" + status1.getUser().getScreenName() + ":" + status1.getText() + ":" + status1.getCreatedAt());
 
                 }
+                System.out.println(statusResponseList.get(i).getRetweetCount());
 
 
+                // System.out.println(statusResponseList.get(i).getSource());
+
+
+                //  System.out.println(statusResponseList.get(i).getId());
+                i++;
             }
+
         }
         private static void storeAccessToken(int useId, AccessToken accessToken){
             //store accessToken.getToken()
