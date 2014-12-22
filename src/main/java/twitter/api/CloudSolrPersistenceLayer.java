@@ -45,7 +45,7 @@ public class CloudSolrPersistenceLayer {
 
     public void init()
     {
-        server = new HttpSolrServer("http://ec2-54-200-230-35.us-west-2.compute.amazonaws.com:8988/solr/social");
+        server = new HttpSolrServer("someurl");
 
     }
 

@@ -31,7 +31,7 @@ public class Zap2ItSolrApi {
     public static void init() throws Exception
     {
         CloudSolrPersistenceLayer.getInstance().init();
-        HttpSolrServer server = new HttpSolrServer("http://zap2it-prod-solr-lb1-337769341.us-west-2.elb.amazonaws.com:8983/solr/content");
+        HttpSolrServer server = new HttpSolrServer("someurl");
         Map<String,Object> params = new HashMap<String,Object>();
         int start=0;
         int fetchSize=50;
