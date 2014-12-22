@@ -28,7 +28,6 @@ public static void main(String args[])
 //            aggregator.aggregateTotal();
 //            aggregator.delete();
       //      aggregator.init();
-//            Zap2ItSolrApi.init();
 //            Thread.sleep(10000);
 //            SocialXMLParser.init();
 //            Thread.sleep(2000);

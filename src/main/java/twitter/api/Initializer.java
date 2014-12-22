@@ -13,7 +13,6 @@ public class Initializer  {
 
     public void init() {
         try {
-             //Zap2ItSolrApi.init();
             CloudSolrPersistenceLayer.getInstance().init();
             InitializePopularDocuments.init();
             Aggregator aggregator=new Aggregator();

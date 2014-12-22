@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by akohli on 10/29/14.
  */
-public class Zap2ItSolrApi {
+public class SomeData {
     public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
     public static final String MYSQL_URL = "jdbc:mysql://localhost/social?"
             + "user=root";

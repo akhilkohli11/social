@@ -1,4 +1,3 @@
-package org.zap2it.ingester.social;
 
 import javax.swing.text.html.HTMLEditorKit;
 import java.util.regex.Matcher;

@@ -61,7 +61,6 @@
             <!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>2.2.1</version>
                 <configuration> <finalName>${project.artifactId}-mt</finalName> <descriptorRefs>
                 <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> <archive>
-                <manifest> <mainClass>org.zap2it.ingester.movable_type.Ingester</mainClass>
                 </manifest> </archive> </configuration> <executions> <execution> <id>make-all-in-one-jar</id>
                 <phase>package</phase> <goals> <goal>single</goal> </goals> </execution>
                 </executions> </plugin> -->
