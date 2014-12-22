@@ -7,19 +7,64 @@
     <groupId>testproject</groupId>
     <artifactId>test</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <build>
         <plugins>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>8.1.9.v20130131</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
                 <configuration>
-                    <stopKey>STOP</stopKey>
-                    <stopPort>9999</stopPort>
-                    <scanIntervalSeconds>5</scanIntervalSeconds>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>${project.artifactId}</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-all-in-one-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <version>2.15.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <args>
+                                <arg>-make:transitive</arg>
+                                <arg>-dependencyfile</arg>
+                                <arg>${project.build.directory}/.scala_dependencies</arg>
+                            </args>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>2.2.1</version>
+                <configuration> <finalName>${project.artifactId}-mt</finalName> <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> <archive>
+                <manifest> <mainClass>org.zap2it.ingester.movable_type.Ingester</mainClass>
+                </manifest> </archive> </configuration> <executions> <execution> <id>make-all-in-one-jar</id>
+                <phase>package</phase> <goals> <goal>single</goal> </goals> </execution>
+                </executions> </plugin> -->
         </plugins>
     </build>
     <properties>
@@ -29,8 +74,6 @@
         <project.oauth.version>1.12.0-beta</project.oauth.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-
 
 
     <repositories>
@@ -179,19 +222,25 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <groupId>org.apache.solr</groupId>
-            <version>4.7.0</version>
-            <type>jar</type>
-            <scope>compile</scope>
+            <version>4.6.0</version>
         </dependency>
-        <dependency>
-            <artifactId>solr-core</artifactId>
-            <groupId>org.apache.solr</groupId>
-            <version>4.7.0</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
+
+        <!--<dependency>-->
+            <!--<artifactId>solr-solrj</artifactId>-->
+            <!--<groupId>org.apache.solr</groupId>-->
+            <!--<version>4.7.0</version>-->
+            <!--<type>jar</type>-->
+            <!--<scope>compile</scope>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<artifactId>solr-core</artifactId>-->
+            <!--<groupId>org.apache.solr</groupId>-->
+            <!--<version>4.7.0</version>-->
+            <!--<type>jar</type>-->
+            <!--<scope>compile</scope>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -253,13 +302,13 @@
             <version>${project.oauth.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>sample</groupId>
-            <artifactId>com.sample</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>/tmp/klout-java-wrapper.jar</systemPath>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>sample</groupId>-->
+            <!--<artifactId>com.sample</artifactId>-->
+            <!--<version>1.0</version>-->
+            <!--<scope>system</scope>-->
+            <!--<systemPath>/tmp/klout-java-wrapper.jar</systemPath>-->
+        <!--</dependency>-->
 
 
 
